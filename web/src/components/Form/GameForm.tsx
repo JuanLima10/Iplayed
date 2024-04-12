@@ -14,35 +14,34 @@ import {
   WhatsappShareButton
 } from 'next-share';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { DialogFormProps } from '@/Types/Dialog';
-import { api } from '@/lib/api';
-import { headers } from '@/lib/header';
-import { useRouter } from 'next/navigation';
 import { LikeForm } from './LikeForm';
 import { RatingForm } from './RatingForm';
 import { WishForm } from './WishForm';
 
+import { getGameUser } from '@/lib/fetch/game';
+import { DialogFormProps } from '@/Types/Dialog';
+import { GameFormProps } from '@/Types/Form';
+
 export function GameForm(props: DialogFormProps) {
   const router = useRouter()
-  const [rating, setRating] = useState(null)
-  const [isReview, setIsReview] = useState(false)
-  const [isLike, setIsLike] = useState(false)
-  const [isWish, setIsWish] = useState(false)
+  const [data, setData] = useState<GameFormProps>()
   const [loading, setLoading] = useState(false)
   const twitch = `https://www.twitch.tv/directory/category/${props.slug}`
 
   async function handleOpen() {
     setLoading(true)
-    const isReviwed = await api.get(`/game/user/${props.slug}`, headers)
-      .then(response => response.data)
+    const isReviwed = await getGameUser(props.slug)
 
     if (isReviwed) {
-      setRating(isReviwed.rating)
-      setIsReview(isReviwed?.review?.length > 0)
-      setIsLike(isReviwed.likes.length > 0)
-      setIsWish(isReviwed.wish.length > 0)
+      setData({
+        rating: isReviwed.rating,
+        review: isReviwed?.review?.length > 0,
+        like: isReviwed.likes.length > 0,
+        wish: isReviwed.wish.length > 0,
+      })
       setLoading(false)
     }
     setLoading(false)
@@ -63,7 +62,7 @@ export function GameForm(props: DialogFormProps) {
               </Dialog.Title>
               <header className="flex items-start justify-center gap-16 mt-6 px-5 small-screen:gap-8">
                 <div className="cursor-pointer font-semibold text-sm text-center text-gray-500 p-2 transition-colors hover:text-blue-300 responsive:text-xs small-screen:text-2xs">
-                  {!isReview ?
+                  {!data?.review ?
                     <Link className="flex flex-col items-center gap-1" href={`/reviews/${props.slug}/write`}>
                       <Pencil />
                       <p>Write a review</p>
@@ -76,19 +75,19 @@ export function GameForm(props: DialogFormProps) {
                 </div>
                 <LikeForm
                   slug={props.slug}
-                  isLike={isLike}
+                  isLike={data?.like}
                   title={true}
                   currentUserId={props.userId}
                 />
                 <WishForm
                   slug={props.slug}
-                  isWish={isWish}
+                  isWish={data?.wish}
                   title={true}
                   currentUserId={props.userId}
                 />
               </header>
               <section className="flex flex-col items-center gap-[10px] mt-6 mb-4 px-5">
-                <RatingForm slug={props.slug} value={Number(rating)} />
+                <RatingForm slug={props.slug} value={Number(data?.rating)} />
                 <p className="font-semibold text-sm text-center text-white-200">rate</p>
               </section>
               <hr className="border-white-200" />

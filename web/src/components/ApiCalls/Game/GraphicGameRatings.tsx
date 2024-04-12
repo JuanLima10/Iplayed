@@ -5,12 +5,11 @@ import Link from 'next/link';
 
 import { Stars } from '../../Stars';
 
-import { api } from '@/lib/api';
+import { getGameRating } from '@/lib/fetch/rating';
 import { sliceGameRating } from '@/utils/sliceGamesRating';
 
 export async function GraphicGameRatings({ slug }: { slug: string }) {
-  const { ratings, rating_count } = await api.get(`/game/ratings/${slug}`)
-    .then(res => res.data)
+  const { ratings, rating_count } = await getGameRating(slug)
 
   if (ratings.length) {
     const option = {

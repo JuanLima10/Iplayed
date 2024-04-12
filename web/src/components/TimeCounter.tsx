@@ -23,11 +23,11 @@ export function TimeCounter({ date }: { date: number }) {
   return (
     <div className="w-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-0 flex flex-col items-center responsive:top-[30%]">
       <span className="font-bold text-xl text-white-100 small-screen:text-lg ml-2">
-        {day < 10 ? '0' + day : day} : {' '}
-        {hour < 10 ? '0' + hour : hour} : {' '}
-        {min < 10 ? '0' + min : min}
+        {day > 0 ? (day < 10 || day === 0 ? '0' + day : day) : "00"} : {' '}
+        {hour > 0 ? (hour < 10 || hour === 0 ? '0' + hour : hour) : "00"} : {' '}
+        {min > 0 ? (min < 10 || min === 0 ? '0' + min : min) : "00"}
         <b className="text-xs ml-1">
-          {second < 10 ? '0' + second : second}
+          {second > 0 ? (second < 10 || second === 0 ? '0' + second : second) : "00"}
         </b>
       </span>
       <p className="flex items-center justify-center gap-6 font-bold text-sm text-white-100 px-2 small-screen:hidden">

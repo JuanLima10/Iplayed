@@ -4,7 +4,7 @@ export interface UserProps {
   id: string;
   sub?: string;
   login: string;
-  email: string;
+  email?: string;
   name: string;
   avatarUrl?: string;
   created_at?: string;

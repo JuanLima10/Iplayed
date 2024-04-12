@@ -1,13 +1,11 @@
 'use client'
+import { Heart } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { Heart } from 'lucide-react';
-
+import { deleteLikeWish, postLikeWish } from '@/lib/fetch/like-wish';
 import { LikeFormProps } from '@/Types/Form';
-import { api } from '@/lib/api';
-import { headers } from '@/lib/header';
-import { useRouter } from 'next/navigation';
 
 export function LikeForm(props: LikeFormProps) {
   const router = useRouter()
@@ -23,13 +21,11 @@ export function LikeForm(props: LikeFormProps) {
       }
       setIsLike(!isLike)
       if (isLike) {
-        const likeId = await api.get(`/like/${props.slug}`, headers)
-          .then(res => res.data)
-        const like = await api.delete(`/game/like/${likeId.id}`, headers)
+        const like = await deleteLikeWish("like", props.slug)
         setLoading(false)
         return like
       }
-      const like = await api.post(`/game/like/${props.slug}`, data, headers)
+      const like = await postLikeWish("like", props.slug, data)
       setLoading(false)
       return like
     }

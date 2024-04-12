@@ -4,33 +4,8 @@ import { PlusCircle, X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { ChangeEvent, FormEvent, ReactNode, useState } from 'react';
 
-import { api } from '@/lib/api';
-import { headers } from '@/lib/header';
+import { deleteFavorites, postFavorites } from '@/lib/fetch/favorites';
 import { toastMessage } from '@/utils/toastMessage';
-
-export function FavDelete({ slug }: { slug: string }) {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-
-  async function handleDelete() {
-    setLoading(true)
-    const favId = await api.get(`/fav/${slug}`, headers)
-      .then(response => response.data)
-    if (favId) {
-      await api.delete(`/game/fav/${favId.id}`, headers)
-        .then((res) => (router.refresh(), toastMessage(res.data)))
-        .catch((err) => toastMessage(err.response.data))
-      setLoading(false)
-    }
-    setLoading(false)
-  }
-
-  return (
-    <button className="absolute -right-2 -top-2 bg-gray-500 rounded-full p-1" onClick={handleDelete} disabled={loading}>
-      <X className="text-blue-900" size={18} />
-    </button>
-  )
-}
 
 export function FavForm({ children }: { children: ReactNode }) {
   const router = useRouter()
@@ -49,9 +24,16 @@ export function FavForm({ children }: { children: ReactNode }) {
       id: pathName.replace('/user/', '').replace('/settings', ''),
     }
     if (data.slug !== null) {
-      await api.post(`/game/fav/${data.slug}`, data, headers)
-        .then((res) => (router.refresh(), toastMessage(res.data)))
-        .catch((err) => toastMessage(err.response.data))
+
+      const fav = await postFavorites(data.slug, data)
+        .then((res) => (res.json()))
+
+      if (fav.type === 'Success') {
+        toastMessage(fav)
+        router.refresh()
+      } else {
+        toastMessage(fav)
+      }
     }
   }
 
@@ -81,5 +63,24 @@ export function FavForm({ children }: { children: ReactNode }) {
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
+  )
+}
+
+export function FavDelete({ slug }: { slug: string }) {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
+  async function handleDelete() {
+    setLoading(true)
+    const deleteFav = await deleteFavorites(slug)
+    toastMessage(deleteFav)
+    router.refresh()
+    setLoading(false)
+  }
+
+  return (
+    <button className="absolute -right-2 -top-2 bg-gray-500 rounded-full p-1" onClick={handleDelete} disabled={loading}>
+      <X className="text-blue-900" size={18} />
+    </button>
   )
 }

@@ -15,7 +15,7 @@ export async function SearchGame(props: SearchGetProps) {
   return (
     <div className="flex flex-wrap gap-2 responsive:flex-col">
       {data.map((game: GameProps) => (
-        <Link className="flex items-start rounded-md hover:bg-white-200" key={game.id} href={`/games/${game.slug}`}>
+        <Link className="flex items-start rounded-md hover:bg-white-200" key={game.id} href={`/game/${game.slug}`}>
           <Image
             className="w-[75px] max-w-full h-[100px] rounded-md"
             src={convertImgToHd(game.cover?.url)}

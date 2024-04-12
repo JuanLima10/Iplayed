@@ -1,15 +1,15 @@
-import { RatingProps } from "@/Types/Form"
-import { api } from "@/lib/api"
-import { headers } from "@/lib/header"
+'use client'
 import { ConfigProvider, Rate } from "antd"
+
+import { RatingProps } from "@/Types/Form"
+import { postGame } from "@/lib/fetch/game"
 
 export function RatingForm(props: RatingProps) {
   async function handleStar(value: any) {
     const data = {
       rating: value,
     }
-    const rating = await api.post(`/game/${props.slug}`, data, headers)
-      .then(response => response.data)
+    const rating = await postGame(props.slug, data)
     return rating
   }
 

@@ -1,7 +1,9 @@
+import Link from 'next/link';
+import { Suspense } from 'react';
+
 import { BestRatingsGames } from '@/components/ApiCalls/Home/BestRatingsGames';
 import { PopularGames } from '@/components/ApiCalls/Home/PopularGames';
 import { CarouselSkeleton } from '@/components/Carousel';
-import { Suspense } from 'react';
 
 export default function Home() {
   return (
@@ -20,9 +22,9 @@ export default function Home() {
           <span className="font-semibold text-md text-white-100">
             Popular Games
           </span>
-          <a href="/games#Games" className="font-normal text-sm text-green-300 hover:underline">
+          <Link href="/games#Games" className="font-normal text-sm text-green-300 hover:underline">
             See more +
-          </a>
+          </Link>
         </div>
         <Suspense fallback={<CarouselSkeleton />}>
           <PopularGames />
@@ -34,9 +36,9 @@ export default function Home() {
           <span className="font-semibold text-md text-white-100">
             Best Ratings
           </span>
-          <a href="/games#Games" className="font-normal text-sm text-green-300 hover:underline">
+          <Link href="/games#Games" className="font-normal text-sm text-green-300 hover:underline">
             See more +
-          </a>
+          </Link>
         </div>
         <Suspense fallback={<CarouselSkeleton />}>
           <BestRatingsGames />

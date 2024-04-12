@@ -1,11 +1,10 @@
 import { Gamepad2, Heart, List } from 'lucide-react';
 
-import { api } from '@/lib/api';
+import { getGameInfo } from '@/lib/fetch/game';
 import { bigToShortNumbers } from '@/utils/bigToShortNumbers';
 
 export async function InfoStatsGame({ slug }: { slug: string }) {
-  const { plays, likes, wish } = await api.get(`/game/info/${slug}`)
-    .then(res => res.data)
+  const { plays, likes, wish } = await getGameInfo(slug)
 
   return (
     <div className="flex items-start justify-center gap-4">

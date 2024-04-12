@@ -13,7 +13,7 @@ export async function PopularGames() {
   return (
     <Carousel>
       {popular && popular.map((game: GameProps) => (
-        <Link key={game.id} className="keen-slider__slide" href={`/games/${game.slug}`}>
+        <Link key={game.id} className="keen-slider__slide" href={`/game/${game.slug}`}>
           <Image
             className="rounded-lg transition-all hover:brightness-75"
             src={convertImgToHd(game.cover.url)}

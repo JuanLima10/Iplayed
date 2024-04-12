@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { Suspense } from "react"
 
-import { ReviewsGameCard, ReviewsGameCardSkeleton } from "@/components/ApiCalls/Games/ReviewsGameCard"
+import { ReviewsGameCard, ReviewsGameCardSkeleton } from "@/components/ApiCalls/Game/ReviewsGameCard"
 import { fetchGame, gameBody } from "@/lib/igdb"
 
 import { GameProps } from "@/Types/Game"

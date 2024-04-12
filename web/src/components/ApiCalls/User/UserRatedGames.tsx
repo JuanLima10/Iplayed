@@ -18,7 +18,7 @@ export async function UserRatedGames(props: UserInfoGameProps) {
     return (
       <>
         {data.map((game: any) => (
-          <Link className={`${props.isList && 'w-full'}`} key={game[0].id} href={`/games/${game[0].slug}`}>
+          <Link className={`${props.isList && 'w-full'}`} key={game[0].id} href={`/game/${game[0].slug}`}>
             {props.isList ?
               <div className="w-full flex justify-between items-center rounded-md hover:bg-white-200">
                 <div className="w-full flex items-center gap-2">

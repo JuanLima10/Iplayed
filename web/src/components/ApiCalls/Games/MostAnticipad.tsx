@@ -15,7 +15,7 @@ export async function MostAnticipated() {
     <section className="my-8">
       <div className="flex items-start justify-center gap-8 mx-16 mb-[54px] navbar:flex-wrap responsive:mx-5 responsive:mb-8">
         {mostAnticipated && mostAnticipated.slice(0, 2).map((game: GameProps) => (
-          <Link key={game.id} className="max-w-full" href={`/games/${game.slug}`}>
+          <Link key={game.id} className="max-w-full" href={`/game/${game.slug}`}>
             <div className="relative w-full max-w-[640px]">
               <TimeCounter date={game.first_release_date} />
               <Image
@@ -51,7 +51,7 @@ export async function MostAnticipated() {
       </div>
       <Carousel>
         {mostAnticipated && mostAnticipated.slice(2, 12).map((game: GameProps) => (
-          <Link key={game.id} className="keen-slider__slide" href={`/games/${game.slug}`}>
+          <Link key={game.id} className="keen-slider__slide" href={`/game/${game.slug}`}>
             <Image
               className="rounded-lg transition-all hover:brightness-75"
               src={convertImgToHd(game.cover.url)}

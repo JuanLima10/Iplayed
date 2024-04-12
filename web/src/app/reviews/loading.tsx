@@ -1,4 +1,4 @@
-import { ReviewsGameCardSkeleton } from '@/components/ApiCalls/Games/ReviewsGameCard';
+import { ReviewsGameCardSkeleton } from '@/components/ApiCalls/Game/ReviewsGameCard';
 import { CarouselSkeleton } from '@/components/Carousel';
 
 export default function LoadingReviewPage() {

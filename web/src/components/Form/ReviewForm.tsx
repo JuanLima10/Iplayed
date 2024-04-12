@@ -3,11 +3,10 @@ import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 
-import { api } from '@/lib/api';
-import { headers } from '@/lib/header';
 import { RatingForm } from './RatingForm';
 
 import { ReviewFormProps } from '@/Types/Form';
+import { postGame } from '@/lib/fetch/game';
 import { toastMessage } from '@/utils/toastMessage';
 
 export function ReviewForm(props: ReviewFormProps) {
@@ -22,15 +21,18 @@ export function ReviewForm(props: ReviewFormProps) {
 
     const formData = new FormData(event.currentTarget)
     if (formData.get('review')) {
-      await api.post(`/game/${props.slug}`, {
+      const review = await postGame(props.slug, {
         review: formData.get('review')
-      }, headers)
-        .then(res => toastMessage(res.data))
-        .catch(err => toastMessage(err))
+      })
+      toastMessage(review)
+      router.push(`/game/${props.slug}`)
       setLoading(false)
-      router.push(`/games/${props.slug}`)
+    } else {
+      toastMessage({
+        type: "Conflict",
+        message: "⚠️ You need to write something"
+      })
     }
-    toastMessage({type: "Conflict", message: "⚠️ You need to write something"})
     setLoading(false)
   }
 

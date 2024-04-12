@@ -53,7 +53,7 @@ export function UserGamesLoad(props: LoadScrollProps) {
           {data.map((game: GameProps) => (
             <FadeInRightDiv key={game.id}>
               <div className="w-full flex justify-between items-center rounded-md hover:bg-white-200">
-                <Link className="w-full flex items-center gap-2" href={`/games/${game.slug}`}>
+                <Link className="w-full flex items-center gap-2" href={`/game/${game.slug}`}>
                   <Image
                     className="w-[75px] max-w-full h-[100px] rounded-md responsive:max-w-full"
                     src={convertImgToHd(game.cover.url)}
@@ -79,7 +79,7 @@ export function UserGamesLoad(props: LoadScrollProps) {
         {data.map((game: any) => (
           <FadeInRightDiv key={game[0].id}>
             <div className="w-full flex justify-between items-center rounded-md hover:bg-white-200">
-              <Link className="w-full flex items-center gap-2" href={`/games/${game[0].slug}`}>
+              <Link className="w-full flex items-center gap-2" href={`/game/${game[0].slug}`}>
                 <Image
                   className="w-[75px] max-w-full h-[100px] rounded-md responsive:max-w-full"
                   src={convertImgToHd(game[0].cover.url)}

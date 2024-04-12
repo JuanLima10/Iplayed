@@ -1,25 +1,26 @@
+import { UserProps } from "@/Types/User";
 import Image from "next/image";
 import { Suspense } from "react";
 import { BannerUser } from "./BannerUser";
 import { InfoStatsUser, InfoStatsUserSkeleton } from "./InfoStatsUser";
 
-export async function HeaderProfileUser(props: { userId: string, name: string, login: string, avatarUrl?: string }) {
+export async function HeaderProfileUser(props: UserProps) {
   return (
     <>
-      <BannerUser userId={props.userId} />
+      <BannerUser userId={props.id} />
       <header className="relative flex flex-wrap justify-center items-center gap-4 z-0 -mt-4 mb-4">
         <Image
-          className="w-[200px] h-[200px] rounded-full -mt-14 responsive:w-32 responsive:h-32 responsive:-mt-6"
+          className="w-[200px] h-[200px] rounded-full -mt-14 mx-2 responsive:w-32 responsive:h-32 responsive:-mt-6"
           src={props.avatarUrl ? props.avatarUrl : '/img-not-found.png'}
           alt="Avatar"
           width={600} height={600}
         />
         <div className="text-start mr-4 small-screen:text-center">
-          <span className="font-bold text-xl text-white-100">{props.name}</span>
+          <span className="font-bold text-xl text-white-100 responsive:text-md">{props.name}</span>
           <p className="font-semibold text-md text-gray-500 responsive:text-base">@{props.login}</p>
         </div>
         <Suspense fallback={<InfoStatsUserSkeleton />}>
-          <InfoStatsUser id={props.userId} />
+          <InfoStatsUser id={props.id} />
         </Suspense>
       </header>
     </>

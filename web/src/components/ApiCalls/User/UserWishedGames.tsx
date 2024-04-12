@@ -1,26 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { UserGamesLoad } from '@/components/LoadScroll/UserGamesLoad';
+
 import { GameProps } from '@/Types/Game';
 import { UserInfoGameProps } from '@/Types/User';
-import { UserGamesLoad } from '@/components/LoadScroll/UserGamesLoad';
-import { api } from '@/lib/api';
+import { getUserLikeWish } from '@/lib/fetch/like-wish';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export async function UserWishedGames(props: UserInfoGameProps) {
-  const { data, count } = await api.get(`/user/wish/${props.userId}`, {
-    params: {
-      offset: props.offset,
-      limit: props.limit,
-    }
-  }).then(res => res.data)
+  const { data, count } = await getUserLikeWish("like", props.userId, props.offset, props.limit)
 
   if (data) {
     return (
       <>
         {data.map((game: GameProps) => (
           <div className={props.isList ? "w-full flex justify-between items-center rounded-md hover:bg-white-200" : ""} key={game.id}>
-            <Link className={props.isList ? "w-full flex items-center gap-2" : ""} href={`/games/${game.slug}`}>
+            <Link className={props.isList ? "w-full flex items-center gap-2" : ""} href={`/game/${game.slug}`}>
               <Image
                 className={props.isList ? "w-[75px] max-w-full h-[100px] rounded-md responsive:max-w-full" : "w-[150px] h-[200px] rounded-lg transition-all responsive:w-[60px] responsive:h-[82px] hover:brightness-75"}
                 src={convertImgToHd(game.cover.url)}

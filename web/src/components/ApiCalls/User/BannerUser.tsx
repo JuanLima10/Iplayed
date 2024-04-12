@@ -1,10 +1,9 @@
-import { api } from "@/lib/api"
+import { getUserBanner } from "@/lib/fetch/user"
 import { randomBackground } from "@/utils/randomBackground"
 import Image from "next/image"
 
 export async function BannerUser({ userId }: { userId: string }) {
-  const banner = await api.get(`/user/banner/${userId}`)
-    .then(res => res.data)
+  const banner = await getUserBanner(userId)
     
   return (
     <div className="relative">

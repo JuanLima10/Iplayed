@@ -1,6 +1,6 @@
 
 import { Tabs } from '@/components/Tabs/Tabs';
-import { api } from '@/lib/api';
+import { getUserInfos } from '@/lib/fetch/user';
 import { bigToShortNumbers } from '@/utils/bigToShortNumbers';
 import { Heart, List, Pencil, Star } from 'lucide-react';
 import { LikeModal } from './Modal/LikeModal';
@@ -8,8 +8,7 @@ import { RatingModal } from './Modal/RatingModal';
 import { WishModal } from './Modal/WishModal';
 
 export async function InfoStatsUser({ id }: { id: string }) {
-  const { like, wish, ratings, reviews } = await api.get(`/user/info/${id}`)
-    .then(res => res.data)
+  const { like, wish, ratings, reviews } = await getUserInfos(id)
 
   return (
     <section id="overflow-menu" className="flex items-center justify-center gap-4 responsive:justify-start navbar:gap-2 responsive:overflow-auto navbar:mt-2 responsive:-mb-2 responsive:pl-5">

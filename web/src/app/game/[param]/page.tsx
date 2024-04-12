@@ -3,13 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-import { GalleryScreenshotsGame } from '@/components/ApiCalls/Games/GalleryScreenshotsGame';
-import { GraphicGameRatings, GraphicGameRatingsSkeleton } from '@/components/ApiCalls/Games/GraphicGameRatings';
-import { InfoGameCard, InfoGameCardSkeleton } from '@/components/ApiCalls/Games/InfoCardGame';
-import { InfoStatsGame, InfoStatsGameSkeleton } from '@/components/ApiCalls/Games/InfoStatsGame';
-import { ReviewsGameCard, ReviewsGameCardSkeleton } from '@/components/ApiCalls/Games/ReviewsGameCard';
-import { ScreenshotGame } from '@/components/ApiCalls/Games/ScreenshotsGame';
-import { SimilarGames } from '@/components/ApiCalls/Games/SimilarGames';
+import { GalleryScreenshotsGame } from '@/components/ApiCalls/Game/GalleryScreenshotsGame';
+import { GraphicGameRatings, GraphicGameRatingsSkeleton } from '@/components/ApiCalls/Game/GraphicGameRatings';
+import { InfoGameCard, InfoGameCardSkeleton } from '@/components/ApiCalls/Game/InfoCardGame';
+import { InfoStatsGame, InfoStatsGameSkeleton } from '@/components/ApiCalls/Game/InfoStatsGame';
+import { ReviewsGameCard, ReviewsGameCardSkeleton } from '@/components/ApiCalls/Game/ReviewsGameCard';
+import { ScreenshotGame } from '@/components/ApiCalls/Game/ScreenshotsGame';
+import { SimilarGames } from '@/components/ApiCalls/Game/SimilarGames';
 import { CarouselGallerySkeleton, CarouselSkeleton } from '@/components/Carousel';
 import { GameForm } from '@/components/Form/GameForm';
 import { ReadMore } from '@/components/ReadMore';
@@ -27,8 +27,8 @@ export default async function Game({ params }: ParamsProps) {
   const game: GameProps = await fetchGame(gameBody(params.param))
 
   const user = getUser()
-  const igdb = `https://www.igdb.com/games/${game.slug}`
-  const twitch = `https://www.twitch.tv/directory/category/${game.slug}`
+  const igdb = `https://www.igdb.com/games/${params.param}`
+  const twitch = `https://www.twitch.tv/directory/category/${params.param}`
 
   return (
     <>

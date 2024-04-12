@@ -5,8 +5,7 @@ import { useState } from 'react';
 import { ListPlus, ListX } from 'lucide-react';
 
 import { WishFormProps } from '@/Types/Form';
-import { api } from '@/lib/api';
-import { headers } from '@/lib/header';
+import { deleteLikeWish, postLikeWish } from '@/lib/fetch/like-wish';
 
 export function WishForm(props: WishFormProps) {
   const router = useRouter()
@@ -23,13 +22,11 @@ export function WishForm(props: WishFormProps) {
       setIsWish(!isWish)
 
       if (isWish) {
-        const wishId = await api.get(`/wish/${props.slug}`, headers)
-          .then(response => response.data)
-        const wish = await api.delete(`/game/wish/${wishId.id}`, headers)
+        const wish = await deleteLikeWish("wish", props.slug)
         setLoading(false)
         return wish
       }
-      const wish = await api.post(`/game/wish/${props.slug}`, data, headers)
+      const wish = await postLikeWish("wish", props.slug, data)
       setLoading(false)
       return wish
     }

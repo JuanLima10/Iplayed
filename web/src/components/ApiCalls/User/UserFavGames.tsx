@@ -3,18 +3,17 @@ import Link from 'next/link';
 
 import { GameProps } from '@/Types/Game';
 import { UserFavGameProps } from '@/Types/User';
-import { api } from '@/lib/api';
+import { getUserFavorites } from '@/lib/fetch/favorites';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export async function UserFavGames(props: UserFavGameProps) {
-  const { data } = await api.get(`/user/fav/${props.userId}`)
-    .then(res => res)
+  const favorites = await getUserFavorites(props.userId)
 
-  if (data !== null) {
+  if (favorites !== null) {
     return (
       <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-        {data.map((game: GameProps) => (
-          <Link key={game.id} href={`/games/${game.slug}`}>
+        {favorites.map((game: GameProps) => (
+          <Link key={game.id} href={`/game/${game.slug}`}>
             <Image
               className="w-[150px] h-[200px] rounded-lg transition-all responsive:w-[65px] responsive:h-[90px] hover:brightness-75"
               src={convertImgToHd(game.cover.url)}

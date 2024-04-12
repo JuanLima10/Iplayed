@@ -3,19 +3,14 @@ import Link from 'next/link';
 
 import { ReviewModal } from '@/components/Modal/ReviewModal';
 import { Stars } from '@/components/Stars';
-import { api } from '@/lib/api';
 
 import { ReviewCardProps, ReviewProps } from '@/Types/Review';
 import { ReviewsLoad } from '@/components/LoadScroll/ReviewsLoad';
+import { getGameReviews } from '@/lib/fetch/review';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export async function ReviewsGameCard(props: ReviewCardProps) {
-  const { data, count }: any = await api.get(`/game/reviews/${props.slug}`, {
-    params: {
-      limit: props.limit,
-      offset: props.offset,
-    }
-  }).then(res => res.data)
+  const { data, count }: any = await getGameReviews(props.slug, props.offset, props.limit)
 
   if (count > 0) {
     return (
@@ -73,7 +68,7 @@ export async function ReviewsGameCard(props: ReviewCardProps) {
                   </div>
                 </div>
                 {props.src && props.isImg &&
-                  <Link className="w-[150px] -ml-2 responsive:w-[100px]" href={props.slug ? `/games/${props.slug}` : ""}>
+                  <Link className="w-[150px] -ml-2 responsive:w-[100px]" href={props.slug ? `/game/${props.slug}` : ""}>
                     <Image
                       className="object-cover rounded-r-lg transition-all ml-2 responsive:rounded-lg responsive:-mt-2 hover:brightness-75"
                       alt={review.name}

@@ -6,17 +6,12 @@ import { ReviewsLoad } from '@/components/LoadScroll/ReviewsLoad';
 import { ReviewModal } from '@/components/Modal/ReviewModal';
 import { Stars } from '@/components/Stars';
 
-import { api } from '@/lib/api';
 import { RecentReviewCardProps } from '@/Types/Review';
+import { getRecentReviews } from '@/lib/fetch/review';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export async function RecentReviewsCard(props: RecentReviewCardProps) {
-  const { data, count } = await api.get(`/game/reviews`, {
-    params: {
-      limit: props.limit,
-      offset: props.offset,
-    }
-  }).then(res => res.data).catch((err) => console.error(err))
+  const { data, count } = await getRecentReviews(props.offset, props.limit)
 
   return (
     <>
@@ -67,7 +62,7 @@ export async function RecentReviewsCard(props: RecentReviewCardProps) {
                       }
                     </div>
                   </div>
-                  <Link className="w-[150px] -ml-2 responsive:w-[100px]" href={info.slug ? `/games/${info.slug}` : ""}>
+                  <Link className="w-[150px] -ml-2 responsive:w-[100px]" href={info.slug ? `/game/${info.slug}` : ""}>
                     <Image
                       className="object-cover rounded-r-lg transition-all ml-2 responsive:rounded-lg responsive:-mt-2 hover:brightness-75"
                       alt={review.data[0].name}

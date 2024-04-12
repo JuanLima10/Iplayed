@@ -1,3 +1,4 @@
+'use client';
 import { MotionProps, motion } from 'framer-motion';
 
 export function FadeInRightDiv(props: MotionProps) {

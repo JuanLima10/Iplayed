@@ -1,5 +1,12 @@
 import { StarProps } from './Stars';
 
+export interface GameFormProps {
+  rating: string; 
+  review: boolean; 
+  like: boolean; 
+  wish: boolean;
+}
+
 export interface LikeFormProps {
   slug: string;
   title?: boolean;

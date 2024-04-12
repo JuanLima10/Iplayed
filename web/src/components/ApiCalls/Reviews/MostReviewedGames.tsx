@@ -4,17 +4,16 @@ import Link from 'next/link';
 import { Carousel } from '../../Carousel';
 
 import { GameProps } from '@/Types/Game';
-import { api } from '@/lib/api';
+import { getMostReviewed } from '@/lib/fetch/review';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export async function MostReviewedGames() {
-  const MostReviewed = await api.get('/game/most-reviewed')
-    .then(res => res.data).catch((err) => console.error(err))
+  const mostReviewed = await getMostReviewed()
 
   return (
     <Carousel>
-      {MostReviewed && MostReviewed.map((game: GameProps) => (
-        <Link key={game.id} className="keen-slider__slide" href={`/games/${game.slug}`}>
+      {mostReviewed && mostReviewed.map((game: GameProps) => (
+        <Link key={game.id} className="keen-slider__slide" href={`game/${game.slug}`}>
           <Image
             className="rounded-lg transition-all hover:brightness-75"
             src={convertImgToHd(game.cover.url)}

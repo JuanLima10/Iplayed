@@ -15,7 +15,7 @@ export async function TopGames() {
       </span>
       <div className="flex flex-wrap items-center gap-8 my-8 mx-16 responsive:mx-5">
         {topGames && topGames.map((game: GameProps) => (
-          <Link className="w-[304px] flex items-center rounded-md hover:bg-white-200 responsive:w-full" key={game.id} href={`/games/${game.slug}`}>
+          <Link className="w-[304px] flex items-center rounded-md hover:bg-white-200 responsive:w-full" key={game.id} href={`/game/${game.slug}`}>
             <Image
               className="w-[100px] max-w-full h-[133px] rounded-md"
               src={game.cover.url ? convertImgToHd(game.cover?.url) : "/img-not-found.png"}

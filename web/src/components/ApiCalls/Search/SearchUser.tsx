@@ -1,17 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { api } from '@/lib/api';
 import { SearchGetProps } from '@/Types/Search';
 import { UserProps } from '@/Types/User';
+import { searchUser } from '@/lib/fetch/user';
 
 export async function SearchUser(props: SearchGetProps) {
-  await new Promise((resolve) => setTimeout(resolve, 2000))
-  const users = props.search &&
-    await api.get(`/user`).then(response => response.data.filter((user: UserProps) =>
-      user.login?.toLowerCase().includes(String(props.search)) ||
-      user.name?.toLowerCase().includes(String(props.search))
-    ))
+  const users = props.search && await searchUser(props.search)
 
   return (
     <div className="flex flex-col gap-4">

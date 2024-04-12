@@ -13,7 +13,7 @@ export async function SimilarGames({slug}: {slug: string}) {
   return (
     <Carousel>
       {similar_games && similar_games.map((game: GameProps) => (
-        <Link key={game.id} href={`/games/${game.slug}`} className="keen-slider__slide">
+        <Link key={game.id} href={`/game/${game.slug}`} className="keen-slider__slide">
           <Image
             className="w-full h-full rounded-lg transition-all hover:brightness-75"
             src={convertImgToHd(game.cover?.url)}

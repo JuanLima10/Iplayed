@@ -3,9 +3,8 @@ import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 
+import { putUser } from '@/lib/fetch/user';
 import { SettingsFormProps } from '@/Types/Form';
-import { api } from '@/lib/api';
-import { headers } from '@/lib/header';
 import { toastMessage } from '@/utils/toastMessage';
 
 export function SettingsForm(props: SettingsFormProps) {
@@ -20,19 +19,12 @@ export function SettingsForm(props: SettingsFormProps) {
     event.preventDefault()
     setLoading(true)
 
-    if (name !== '' && email !== '') {
+    if (name !== '' || email !== '') {
       setWarning(false)
-      await api.put(`/user/${props.id}`, {
-        name: name,
-        email: email
-      }, headers)
-        .then((res) => (
-          router.refresh(),
-          toastMessage(res.data),
-          setLoading(false)
-        ))
-        .catch(err => toastMessage(err.response.data))
+      const user = await putUser(props.id, { name: name, email: email })
       setLoading(false)
+      toastMessage(user)
+      router.refresh()
     } else {
       setLoading(false)
       setWarning(true)

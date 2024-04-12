@@ -98,7 +98,7 @@ export function ReviewsLoad(props: ReviewLoadScrollProps) {
                       </div>
                     </div>
                     {props.isCover &&
-                      <Link className="w-[150px] -ml-2 responsive:w-[100px]" href={info.slug ? `/games/${info.slug}` : ""}>
+                      <Link className="w-[150px] -ml-2 responsive:w-[100px]" href={info.slug ? `/game/${info.slug}` : ""}>
                         <Image
                           className="object-cover rounded-r-lg transition-all ml-2 responsive:rounded-lg responsive:-mt-2 hover:brightness-75"
                           alt={review.data[0].name}

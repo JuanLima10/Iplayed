@@ -6,17 +6,15 @@ import { SearchFav, SearchFavSkeleton } from '@/components/ApiCalls/Search/Searc
 import { FavDelete, FavForm } from '@/components/Form/FavForm';
 import { SettingsForm } from '@/components/Form/SettingsForm';
 
-import { api } from '@/lib/api';
-import { getUser } from '@/lib/auth';
-
 import { ParamsProps } from '@/Types/Params';
 import { ProfileProps } from '@/Types/User';
+import { getUser } from '@/lib/auth';
+import { getUserProfile } from '@/lib/fetch/user';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export default async function Settings({ params, searchParams }: ParamsProps) {
   if (getUser() && getUser().sub === params.param) {
-    const profile: ProfileProps = await api.get(`/user/profile/${params.param}`)
-      .then(res => res.data)
+    const profile: ProfileProps = await getUserProfile(params.param)
 
     const end = 5
     const page = Number(searchParams['page'] ?? '1')

@@ -1,7 +1,8 @@
 import { ParamsProps } from '@/Types/Params';
 import { ReviewForm } from '@/components/Form/ReviewForm';
-import { api } from '@/lib/api';
 import { getUser } from '@/lib/auth';
+import { getGameRating } from '@/lib/fetch/rating';
+import { getUserReviews } from '@/lib/fetch/user';
 import { fetchGame } from '@/lib/igdb';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 import Image from 'next/image';
@@ -20,10 +21,8 @@ export default async function Write({ params }: ParamsProps) {
     where slug = "${params.param}";`)
 
   if (game && user) {
-    const isReviwed = await api.get(`/game/${user.sub}/${params.param}`)
-      .then(res => res.data)
-    const rating = await api.get(`/game/ratings/${params.param}`)
-      .then(res => res.data)
+    const isReviwed = await getUserReviews(`${user.sub}/${params.param}`)
+    const rating = await getGameRating(params.param)
 
     return (
       <main className="max-w-[1440px] relative mx-auto pt-16">

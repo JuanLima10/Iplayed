@@ -1,7 +1,11 @@
+import { ArrowLeft } from 'lucide-react';
 import { Suspense } from 'react';
 
 import { LikeModal } from '@/components/ApiCalls/User/Modal/LikeModal';
 import { RatingModal } from '@/components/ApiCalls/User/Modal/RatingModal';
+import { Tabs } from '@/components/Tabs/Tabs';
+
+import { HeaderProfileUser, HeaderProfileUserSkeleton } from '@/components/ApiCalls/User/HeaderProfileUser';
 import { UserFavGames, UserFavGamesSkeleton } from '@/components/ApiCalls/User/UserFavGames';
 import { UserLikedGames, UserLikedGamesSkeleton } from '@/components/ApiCalls/User/UserLikedGames';
 import { UserRatedGames, UserRatedGamesSkeleton } from '@/components/ApiCalls/User/UserRatedGames';
@@ -9,16 +13,13 @@ import { UserReviewedGames, UserReviewedGamesSkeleton } from '@/components/ApiCa
 
 import { ParamsProps } from '@/Types/Params';
 import { UserProps } from '@/Types/User';
-import { HeaderProfileUser, HeaderProfileUserSkeleton } from '@/components/ApiCalls/User/HeaderProfileUser';
-import { Tabs } from '@/components/Tabs/Tabs';
-import { api } from '@/lib/api';
-import { ArrowLeft } from 'lucide-react';
+import { getUserById } from '@/lib/fetch/user';
 
 export const metadata = { title: 'User' }
 
 export default async function User({ params }: ParamsProps) {
-  const user: UserProps = await api.get(`/user/${params.param}`)
-    .then(res => res.data).catch((err) => console.error(err))
+  const user: UserProps = await getUserById(params.param)
+  console.log(user)
 
   if (user) {
     return (
@@ -26,7 +27,7 @@ export default async function User({ params }: ParamsProps) {
         <Tabs.List>
           <Suspense fallback={<HeaderProfileUserSkeleton />}>
             <HeaderProfileUser
-              userId={params.param}
+              id={params.param}
               name={user.name}
               login={user.login}
               avatarUrl={user.avatarUrl}
@@ -36,7 +37,7 @@ export default async function User({ params }: ParamsProps) {
 
         <Tabs.Content className="outline-none" value="profile">
           <section className="w-[860px] max-w-full text-center mt-4 mx-auto">
-            <span className="font-semibold text-lg text-white-100 responsive:text-base">Favorites Games</span>
+            <span className="font-semibold text-lg text-white-100 responsive:text-base">Favorite Games</span>
             <Suspense fallback={<UserFavGamesSkeleton />}>
               <UserFavGames userId={params.param} />
             </Suspense>
