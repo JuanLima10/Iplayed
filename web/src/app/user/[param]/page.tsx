@@ -19,7 +19,6 @@ export const metadata = { title: 'User' }
 
 export default async function User({ params }: ParamsProps) {
   const user: UserProps = await getUserById(params.param)
-  console.log(user)
 
   if (user) {
     return (

@@ -16,7 +16,6 @@ export async function UserReviewedGames(props: UserReviewCardProps) {
       offset: props.offset,
     }
   }).then(res => res.data).catch((err) => console.error(err))
-  console.log(data)
 
   if (count > 0) {
     return (
