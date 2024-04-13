@@ -117,7 +117,7 @@ export async function wishPublicRoutes(app: FastifyInstance){
         `fields slug, name, cover.url; sort name asc; limit ${limit};
         where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`)
         .then(res => res.data)
-        .catch(err => (console.error(err), reply.status(204).send({
+        .catch(err => (reply.status(204).send({
           type: "Error", 
           message: "❌ Wish games not found"
         })

@@ -120,7 +120,6 @@ export async function likePublicRoutes(app: FastifyInstance){
         where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`)
         .then(res => res.data)
         .catch(err => (
-          console.error(err), 
           reply.status(204).send({
             type: "Error", 
             message: "❌ Likes not found"

@@ -12,7 +12,7 @@ import { wishPrivateRoutes, wishPublicRoutes } from './routes/wish';
 const app = fastify()
 
 app.register(cors, {
-  origin: [ `${process.env.WEB_URL}`],
+  origin: true,
 })
 
 app.register(jwt, {

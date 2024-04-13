@@ -162,7 +162,6 @@ export async function reviewRoutes(app: FastifyInstance){
       where slug=(${String(game.map(game=>'"'+game.slug+'"'))});`)
       .then(res => res.data)
       .catch((err) => (
-        console.error(err),
         reply.status(204).send({
           type: "Error",
           message: "❌ Review not found"

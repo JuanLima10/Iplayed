@@ -108,7 +108,6 @@ export async function favPublicRoutes(app: FastifyInstance){
         where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`)
         .then(res => res.data)
         .catch(err => (
-          console.error(err), 
           reply.status(204).send({
             type: "Error", 
             message: "❌ Favorites not found"
@@ -132,7 +131,6 @@ export async function favPublicRoutes(app: FastifyInstance){
         where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`)
         .then(res => res.data)
         .catch(err => (
-          console.error(err), 
           reply.status(204).send({
             type: "Error", 
             message: "❌ Favorites not found"
