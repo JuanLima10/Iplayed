@@ -40,7 +40,7 @@ export async function userPublicRoutes(app: FastifyInstance){
         grant_type: 'authorization_code',
         client_id: process.env.DISCORD_CLIENT_ID,
         client_secret: process.env.DISCORD_CLIENT_SECRET,
-        redirect_uri: 'http://localhost:3333/api/auth/discord/redirect',
+        redirect_uri: 'https://iplayed.onrender.com/api/auth/discord/redirect',
       });
 
       const access = await axios.post(
