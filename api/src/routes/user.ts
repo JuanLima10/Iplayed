@@ -94,8 +94,7 @@ export async function userPublicRoutes(app: FastifyInstance){
           sub: user.id,
           expiresIn: '90 days',
         })
-        reply.header('set-cookie', `iplayed_session=${token}; domain=localhost; Path=/; maxAge=3600;`)
-        reply.redirect('http://localhost:3000/home')
+        reply.redirect(`${process.env.WEB_URL}/api/auth/callback?token=${token}`)
       }
     }
   })
