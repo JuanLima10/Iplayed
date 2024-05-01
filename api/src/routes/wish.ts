@@ -4,6 +4,7 @@ import { FastifyInstance } from 'fastify';
 import { api } from '../lib/api';
 
 import { GameParamsSchema, GameSchema } from '../types/Game';
+import { QueryAuthSchema } from '../types/Query';
 import { UserQuerySchema, UserSchema } from '../types/User';
 
 const prisma = new PrismaClient()
@@ -97,6 +98,7 @@ export async function wishPublicRoutes(app: FastifyInstance){
   app.get('/user/wish/:id', async (request, reply) => {
     const { id } = UserSchema.parse(request.params)
     const { limit, offset } = UserQuerySchema.parse(request.query)
+    const { token } = QueryAuthSchema.parse(request.query)
 
     const {_count} = await prisma.wish.aggregate({
       _count: {
@@ -115,7 +117,9 @@ export async function wishPublicRoutes(app: FastifyInstance){
       })
       const igdb = await api.post('/games',
         `fields slug, name, cover.url; sort name asc; limit ${limit};
-        where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`)
+        where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
         .then(res => res.data)
         .catch(err => (reply.status(204).send({
           type: "Error", 

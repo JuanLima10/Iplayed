@@ -4,6 +4,7 @@ import { FastifyInstance } from 'fastify';
 
 import { api } from '../lib/api';
 import { GameParamsSchema, GameSchema } from '../types/Game';
+import { QueryAuthSchema } from '../types/Query';
 import { UserSchema } from '../types/User';
 
 const prisma = new PrismaClient()
@@ -97,6 +98,7 @@ export async function favPrivateRoutes(app: FastifyInstance){
 export async function favPublicRoutes(app: FastifyInstance){
   app.get('/user/fav/:id', async (request, reply) => {
     const { id } = UserSchema.parse(request.params)
+    const { token } = QueryAuthSchema.parse(request.query)
 
     const games = await prisma.fav.findMany({
       where: { userId: id },
@@ -105,7 +107,9 @@ export async function favPublicRoutes(app: FastifyInstance){
     if(games.length > 0){
       const igdb = await api.post('/games',
         `fields slug, name, cover.url; sort name asc; limit 4;
-        where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`)
+        where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`,{
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
         .then(res => res.data)
         .catch(err => (
           reply.status(204).send({
@@ -120,6 +124,7 @@ export async function favPublicRoutes(app: FastifyInstance){
 
   app.get('/user/banner/:id', async (request, reply) => {
     const { id } = UserSchema.parse(request.params)
+    const { token } = QueryAuthSchema.parse(request.query)
 
     const games = await prisma.fav.findMany({
       where: { userId: id },
@@ -128,7 +133,9 @@ export async function favPublicRoutes(app: FastifyInstance){
     if(games.length > 0){
       const igdb = await api.post('/games',
         `fields artworks.url; sort name asc; limit 4;
-        where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`)
+        where slug=(${String(games.map(game=>'"'+game.slug+'"'))});`,{
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
         .then(res => res.data)
         .catch(err => (
           reply.status(204).send({

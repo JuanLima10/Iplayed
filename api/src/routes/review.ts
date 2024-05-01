@@ -5,13 +5,16 @@ import { PrismaClient } from '@prisma/client';
 
 import { api } from '../lib/api';
 import { GameParamsSchema } from "../types/Game";
+import { QueryAuthSchema } from "../types/Query";
 import { concatArray } from '../utils/concatArray';
 
 const prisma = new PrismaClient()
 
 export async function reviewRoutes(app: FastifyInstance){
   app.get('/game/reviews', async (request, reply) => {
-    const { limit, offset } = UserQuerySchema.parse(request.query);
+    const { limit, offset } = UserQuerySchema.parse(request.query)
+    const { token } = QueryAuthSchema.parse(request.query)
+    
     const { _count } = await prisma.game.aggregate({
       _count: {
         review: true,
@@ -42,7 +45,9 @@ export async function reviewRoutes(app: FastifyInstance){
       })
       const igdb = await api.post('/games',
         `fields slug, name, cover.url; limit ${limit};
-        where slug=(${String(review.map(game=>'"'+game.slug+'"'))});`)
+        where slug=(${String(review.map(game=>'"'+game.slug+'"'))});`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
         .then(res => res.data)
       const concat = concatArray(igdb.concat(review))
       return {
@@ -103,6 +108,7 @@ export async function reviewRoutes(app: FastifyInstance){
   app.get('/user/reviews/:id', async (request, reply) => {
     const { id } = UserParamsSchema.parse(request.params);
     const { limit, offset } = UserQuerySchema.parse(request.query);
+    const { token } = QueryAuthSchema.parse(request.query)
 
     const {_count} = await prisma.game.aggregate({
       _count: {
@@ -136,7 +142,9 @@ export async function reviewRoutes(app: FastifyInstance){
 
       const igdb = await api.post('/games',
         `fields slug, name, cover.url; limit ${limit};
-        where slug=(${String(review.map(game=>'"'+game.slug+'"'))});`)
+        where slug=(${String(review.map(game=>'"'+game.slug+'"'))});`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
         .then(res => res.data)
       const concat = concatArray(igdb.concat(review))
       return {
@@ -151,6 +159,8 @@ export async function reviewRoutes(app: FastifyInstance){
   })
 
   app.get('/game/most-reviewed', async (request, reply) => {
+    const { token } = QueryAuthSchema.parse(request.query)
+
     const game = await prisma.game.groupBy({
       by: ['slug'],
       where: { review: { not: null } },
@@ -159,7 +169,9 @@ export async function reviewRoutes(app: FastifyInstance){
     })
     return await api.post('/games',
       `fields slug, name, cover.url; limit 12;
-      where slug=(${String(game.map(game=>'"'+game.slug+'"'))});`)
+      where slug=(${String(game.map(game=>'"'+game.slug+'"'))});`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
       .then(res => res.data)
       .catch((err) => (
         reply.status(204).send({

@@ -4,6 +4,7 @@ import { FastifyInstance } from "fastify";
 import axios from "axios";
 import { api } from "../lib/api";
 
+import { QueryAuthSchema } from "../types/Query";
 import { DiscordSchema, UserParamsSchema, UserQuerySchema, UserSchema } from "../types/User";
 import { concatArray } from "../utils/concatArray";
 
@@ -101,6 +102,7 @@ export async function userPublicRoutes(app: FastifyInstance){
 
   app.get('/user/profile/:id', async (request) => {
     const { id } = UserParamsSchema.parse(request.params)
+    const { token } = QueryAuthSchema.parse(request.query)
 
     const user = await prisma.user.findUnique({
       where: { id: id },
@@ -117,7 +119,9 @@ export async function userPublicRoutes(app: FastifyInstance){
     const favs = user?.favs && user?.favs.length > 0 && 
     await api.post('/games',
       `fields slug, name, cover.url, screenshots.url, artworks.url; limit 4;
-      where slug=(${String(user?.favs.map(game=>'"'+game.slug+'"'))});`)
+      where slug=(${String(user?.favs.map(game=>'"'+game.slug+'"'))});`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
       .then(res => res.data)
     return {
       user, 
@@ -128,6 +132,7 @@ export async function userPublicRoutes(app: FastifyInstance){
   app.get('/user/ratings/:id', async (request, reply) => {
     const { id } = UserParamsSchema.parse(request.params)
     const { limit, offset } = UserQuerySchema.parse(request.query)
+    const { token } = QueryAuthSchema.parse(request.query)
 
     const {_count} = await prisma.game.aggregate({
       _count: {
@@ -153,7 +158,9 @@ export async function userPublicRoutes(app: FastifyInstance){
       
       const igdb = await api.post('/games',
         `fields slug, name, cover.url; limit ${limit}; sort name asc;
-        where slug=(${String(rating.map(game=>'"'+game.slug+'"'))});`)
+        where slug=(${String(rating.map(game=>'"'+game.slug+'"'))});`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
         .then(res => res.data)
       const concat = concatArray(igdb.concat(rating))
         .map((res: any) => res.data)
