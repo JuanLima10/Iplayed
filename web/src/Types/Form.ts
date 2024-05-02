@@ -37,7 +37,7 @@ export interface SettingsFormProps {
   id: string;
   login: string;
   name: string;
-  email: string;
+  email?: string;
 }
 
 export interface RatingProps extends StarProps{
