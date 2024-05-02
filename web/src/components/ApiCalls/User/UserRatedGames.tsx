@@ -5,14 +5,12 @@ import { Stars } from '@/components/Stars';
 
 import { UserInfoGameProps } from '@/Types/User';
 import { UserGamesLoad } from '@/components/LoadScroll/UserGamesLoad';
-import { api } from '@/lib/api';
+import { getUserRatings } from '@/lib/fetch/rating';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 
 export async function UserRatedGames(props: UserInfoGameProps) {
-  const { data, count } = await api.get(
-    `/user/ratings/${props.userId}?offset=${props.offset ? props.offset : 0}&limit=${props.limit}`
-  ).then(res => res.data)
+  const { data, count } = await getUserRatings(props.userId, props.offset, props.limit)
 
   if (data) {
     return (

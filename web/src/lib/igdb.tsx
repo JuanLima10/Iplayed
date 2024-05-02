@@ -1,10 +1,9 @@
 export async function token() {
-  const igdb_token = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${process.env.API_CLIENT_ID}&client_secret=${process.env.API_CLIENT_SECRET}&grant_type=client_credentials`, {
+  const igdb_token = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${process.env.NEXT_PUBLIC_API_CLIENT_ID}&client_secret=${process.env.NEXT_PUBLIC_API_CLIENT_SECRET}&grant_type=client_credentials`, {
     method: 'POST',
-    next: { revalidate: 5259600 },
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.API_CLIENT_ID}`,
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_CLIENT_ID}`,
     }
   })
   const token = igdb_token.json()
@@ -13,12 +12,12 @@ export async function token() {
 
 export async function fetchGame(body: string) {
   const { access_token } = await token()
-  const response = await fetch(`https://api.igdb.com/v4/games`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL_GAMES}`, {
     method: 'POST',
     body: body,
     headers: {
       'Accept': 'application/json',
-      'Client-ID': `${process.env.API_CLIENT_ID}`,
+      'Client-ID': `${process.env.NEXT_PUBLIC_API_CLIENT_ID}`,
       Authorization: `Bearer ${access_token}`,
     }
   }).then(res => res.json())
@@ -28,12 +27,12 @@ export async function fetchGame(body: string) {
 
 export async function fetchGames(body: string) {
   const { access_token } = await token()
-  const response = await fetch(`https://api.igdb.com/v4/games`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL_GAMES}`, {
     method: 'POST',
     body: body,
     headers: {
       'Accept': 'application/json',
-      'Client-ID': `${process.env.API_CLIENT_ID}`,
+      'Client-ID': `${process.env.NEXT_PUBLIC_API_CLIENT_ID}`,
       Authorization: `Bearer ${access_token}`,
     }
   })
@@ -43,12 +42,12 @@ export async function fetchGames(body: string) {
 
 export async function fetchPlatfotms(body: string) {
   const { access_token } = await token()
-  const response = await fetch(`https://api.igdb.com/v4/platforms`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL_PLATFORMS}`, {
     method: 'POST',
     body: body,
     headers: {
       'Accept': 'application/json',
-      'Client-ID': `${process.env.API_CLIENT_ID}`,
+      'Client-ID': `${process.env.NEXT_PUBLIC_API_CLIENT_ID}`,
       Authorization: `Bearer ${access_token}`,
     }
   })
@@ -59,7 +58,7 @@ export async function fetchPlatfotms(body: string) {
 export async function fetchSearch(search: string, offset: number, limit: number) {
   let count = 0
   const { access_token } = await token()
-  const response = await fetch(`https://api.igdb.com/v4/games`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL_GAMES}`, {
     method: 'POST',
     body: `fields name, slug, cover.url, first_release_date; 
     where version_parent = null & status = null & category != (1,2,3,5,10,13,14) 
@@ -67,7 +66,7 @@ export async function fetchSearch(search: string, offset: number, limit: number)
     offset ${offset}; limit ${limit}; search "${search}";`,
     headers: {
       'Accept': 'application/json',
-      'Client-ID': `${process.env.API_CLIENT_ID}`,
+      'Client-ID': `${process.env.NEXT_PUBLIC_API_CLIENT_ID}`,
       Authorization: `Bearer ${access_token}`,
     }
   }).then(res => (count = Number(res.headers.get('x-count')), res.json()))

@@ -8,9 +8,9 @@ import { useInView } from 'react-intersection-observer';
 import { FadeInRightDiv } from '../Motion/FadeInRight';
 import { Stars } from '../Stars';
 
-import { api } from '@/lib/api';
 import { GameProps } from '@/Types/Game';
 import { LoadScrollProps } from '@/Types/LoadScroll';
+import { getUserGames } from '@/lib/fetch/load-more';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export function UserGamesLoad(props: LoadScrollProps) {
@@ -25,20 +25,14 @@ export function UserGamesLoad(props: LoadScrollProps) {
       while (offset < props.count) {
         setLoading(true)
         const wait = setTimeout(async () => {
-          await api.get(`/user/${props.type}/${props.param}`, {
-            params: {
-              offset: offset,
-              limit: 10
-            }
-          }).then((res) => {
-            setData([...data, ...res.data.data])
-            if (offset >= props.count) {
-              setOffset(props.count)
-            } else {
-              setOffset(offset + 10)
-            }
-          }).catch((err) => (console.error(err)))
-
+          const games = await getUserGames(props.type, props.param, offset, 10)
+          setData([...data, ...games])
+          if (offset >= props.count) {
+            setOffset(props.count)
+            setLoading(false)
+          } else {
+            setOffset(offset + 10)
+          }
           setLoading(false)
         }, 500)
         return () => clearTimeout(wait)

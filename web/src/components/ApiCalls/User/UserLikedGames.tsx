@@ -10,7 +10,7 @@ import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export async function UserLikedGames(props: UserInfoGameProps) {
   const { data, count } = await getUserLikeWish("like", props.userId, props.offset, props.limit)
-
+  
   if (data) {
     return (
       <>

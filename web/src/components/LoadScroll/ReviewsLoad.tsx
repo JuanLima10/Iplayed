@@ -10,7 +10,7 @@ import { Stars } from '../Stars';
 
 import { ReviewLoadScrollProps } from '@/Types/LoadScroll';
 import { ReviewProps } from '@/Types/Review';
-import { api } from '@/lib/api';
+import { getGamesReviews } from '@/lib/fetch/load-more';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 import { FadeInRightDiv } from '../Motion/FadeInRight';
 
@@ -27,20 +27,14 @@ export function ReviewsLoad(props: ReviewLoadScrollProps) {
       while (offset < props.count) {
         setLoading(true)
         const wait = setTimeout(async () => {
-          await api.get(`/${props.isUserReview ? 'user' : 'game'}/${props.type}${props.param}`, {
-            params: {
-              offset: offset,
-              limit: 6
-            }
-          }).then((res) => {
-            setData([...data, ...res.data.data])
-            if (offset >= props.count) {
-              setOffset(props.count)
-            } else {
-              setOffset(offset + 6)
-            }
-          }).catch((err) => (console.error(err)))
-
+          const games = await getGamesReviews(props.isUserReview ? 'user' : 'game', props.type, props.param, offset, 6)
+          setData([...data, ...games])
+          if (offset >= props.count) {
+            setOffset(props.count)
+            setLoading(false)
+          } else {
+            setOffset(offset + 6)
+          }
           setLoading(false)
         }, 500)
         return () => clearTimeout(wait)
@@ -52,7 +46,7 @@ export function ReviewsLoad(props: ReviewLoadScrollProps) {
     return (
       <>
         {data.map((review: any) => (
-          review.data.map((info: any) => ( info.user && 
+          review.data.map((info: any) => (info.user &&
             <FadeInRightDiv key={info.id}>
               <div className="w-full flex items-start gap-2 mb-4 responsive:gap-1 responsive:mb-6">
                 {props.isProfile &&

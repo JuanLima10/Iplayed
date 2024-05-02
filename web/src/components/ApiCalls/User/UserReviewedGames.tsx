@@ -1,21 +1,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { ReviewsLoad } from '@/components/LoadScroll/ReviewsLoad';
 import { ReviewModal } from '@/components/Modal/ReviewModal';
 import { Stars } from '@/components/Stars';
-import { api } from '@/lib/api';
 
 import { UserReviewCardProps } from '@/Types/Review';
-import { ReviewsLoad } from '@/components/LoadScroll/ReviewsLoad';
+import { getUserReviews } from '@/lib/fetch/review';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export async function UserReviewedGames(props: UserReviewCardProps) {
-  const { data, count } = await api.get(`/user/reviews/${props.userId}`, {
-    params: {
-      limit: props.limit,
-      offset: props.offset,
-    }
-  }).then(res => res.data).catch((err) => console.error(err))
+  const { data, count } = await getUserReviews(props.userId, props.offset, props.limit)
 
   if (count > 0) {
     return (

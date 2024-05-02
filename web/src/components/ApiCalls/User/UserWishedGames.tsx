@@ -9,7 +9,7 @@ import { getUserLikeWish } from '@/lib/fetch/like-wish';
 import { convertImgToHd } from '@/utils/convertImgToHd';
 
 export async function UserWishedGames(props: UserInfoGameProps) {
-  const { data, count } = await getUserLikeWish("like", props.userId, props.offset, props.limit)
+  const { data, count } = await getUserLikeWish("wish", props.userId, props.offset, props.limit)
 
   if (data) {
     return (

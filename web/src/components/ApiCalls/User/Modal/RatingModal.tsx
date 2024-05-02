@@ -8,7 +8,7 @@ import { UserRatedGames } from '../UserRatedGames';
 import { UserGamesModal } from '@/Types/Dialog';
 
 export function RatingModal(props: UserGamesModal) {
-
+  
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
