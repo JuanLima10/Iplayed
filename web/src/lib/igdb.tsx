@@ -1,6 +1,7 @@
 export async function token() {
   const igdb_token = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${process.env.NEXT_PUBLIC_API_CLIENT_ID}&client_secret=${process.env.NEXT_PUBLIC_API_CLIENT_SECRET}&grant_type=client_credentials`, {
     method: 'POST',
+    cache: 'force-cache',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_CLIENT_ID}`,
