@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
-    <div className="animate-pulse h-screen overflow-hidden">
-      <main className="flex flex-col max-w-[2160px] mx-auto responsive:items-center">
+    <div className="animate-pulse h-screen overflow-hidden w-full">
+      <main className="flex flex-col max-w-[2160px] w-full mx-auto responsive:items-center">
         <div className="relative">
           <div className="w-full h-[450px] bg-current responsive:h-60"></div>
           <div className="w-full h-[450px] absolute top-0 bg-linear-t-blue responsive:h-60"></div>

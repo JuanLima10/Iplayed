@@ -19,15 +19,15 @@ export function NavbarSearch() {
 
   return (
     <div className="relative flex flex-col justify-center responsive:w-full">
-      <form className="w-[245px] h-8 max-w-full relative responsive:w-full" onSubmit={handleSubmit}>
+      <form className="w-[245px] h-8 max-w-full relative responsive:w-full responsive:h-[38px]" onSubmit={handleSubmit}>
         <input
-          className="w-full h-8 max-w-full font-bold text-sm text-blue-900 bg-gray-500 rounded-2xl outline-none pl-7 pr-3 responsive:rounded-lg placeholder:font-normal placeholder:text-blue-900"
+          className="w-full h-8 max-w-full font-bold text-sm text-blue-900 bg-gray-500 rounded-2xl outline-none pl-7 pr-3 responsive:h-[38px] responsive:text-base responsive:rounded-lg placeholder:font-normal placeholder:text-blue-900"
           type="text"
           value={search}
           placeholder="Search a game or user..."
           onChange={handleChange}
         />
-        <div className="absolute top-[9px] left-2 font-semibold text-blue-900">
+        <div className="absolute top-[9px] left-2 font-semibold text-blue-900 responsive:top-[12px]">
           <SearchIcon size={14} absoluteStrokeWidth />
         </div>
       </form>
