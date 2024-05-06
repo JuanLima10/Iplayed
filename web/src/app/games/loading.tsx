@@ -14,9 +14,9 @@ export default function GamesPageLoading() {
             <div key={index} className="w-full max-w-[640px]">
               <div className="w-full h-[240px] bg-slate-700 rounded-lg brightness-[45%] opacity-75 responsive:h-[180px]"></div>
               <div className="flex items-end gap-4 small-screen:flex-wrap small-screen:justify-center small-screen:gap-1">
-                <div className="w-[136px] max-w-full h-[189px] relative z-10 bg-slate-700 rounded-lg -mt-[115px] ml-6 responsive:w-[100px] responsive:h-[133px] responsive:-mt-20 responsive:ml-4"></div>
-                <div className="text-white-100 py-2 small-screen:text-center">
-                  <div className="w-80 max-w-full h-[20px] bg-slate-700 rounded-full mb-4 responsive:h-4"></div>
+                <div className="min-w-[136px] h-[189px] relative z-10 bg-slate-700 rounded-lg -mt-[115px] ml-6 responsive:min-w-[100px] responsive:h-[133px] responsive:-mt-20 responsive:ml-4"></div>
+                <div className="py-2 small-screen:text-center">
+                  <div className="w-80 h-[20px] bg-slate-700 rounded-full mb-4 responsive:w-80 responsive:h-4"></div>
                   <div className="w-36 max-w-full h-4 bg-slate-700 rounded-full responsive:h-[14px]"></div>
                 </div>
               </div>

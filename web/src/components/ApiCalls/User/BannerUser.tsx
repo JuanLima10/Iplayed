@@ -11,7 +11,7 @@ export async function BannerUser({ userId }: { userId: string }) {
         <>
           <div className="w-full h-[290px] absolute -z-30 bg-slate-700 animate-pulse responsive:h-60"></div>
           <Image
-            className="w-full h-[290px] object-cover object-center responsive:h-60"
+            className="w-full h-[290px] object-cover object-start responsive:h-60"
             src={randomBackground(banner)}
             alt="Profile background"
             width={1920} height={1080}

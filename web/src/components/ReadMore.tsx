@@ -17,5 +17,5 @@ export function ReadMore({ children }: { children?: ReactNode }) {
       </div>
     )
   }
-  return <p className="font-normal text-sm text-white-100 responsive:text-2xs">{children}</p>
+  return <p className="font-normal text-sm text-white-100 responsive:text-xs">{children}</p>
 }

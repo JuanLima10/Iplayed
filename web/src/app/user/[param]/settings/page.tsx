@@ -80,8 +80,9 @@ export default async function Settings({ params, searchParams }: ParamsProps) {
         </main>
         <footer className="w-full max-w-[800px] mt-16 mx-auto">
           <p className="font-normal text-center text-sm text-white-200 mx-5">
-            Thank you for being here this site was developed by me <a className="transition-colors text-blue-300 hover:text-white-100" target="_blank" href="https://portfolio-juan-juanlima10.vercel.app/">Juan Lima</a> to find out more about my
-            two passion games and web development. I used <a className="transition-colors text-blue-300 hover:text-white-100" target="_blank" href="https://www.igdb.com/">IGDB</a> API to get the games list.
+            Thank you for being here! This web site was developed by me <a className="transition-colors text-blue-300 hover:text-white-100" target="_blank" href="https://portfolio-juan-juanlima10.vercel.app/">Juan Lima</a>  
+            where you can explore more about my dual passions: gaming and web development. I utilized the <a className="transition-colors text-blue-300 hover:text-white-100" target="_blank" href="https://www.igdb.com/">IGDB API</a> 
+            to get the game informations.
           </p>
         </footer>
       </>

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     default: 'IPlayed',
     template: 'IPlayed | %s',
   },
-  description: 'Organization games app',
+  description: 'Dynamic platform where gamers converge to share their insights, critique, and celebrate the world of gaming.',
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

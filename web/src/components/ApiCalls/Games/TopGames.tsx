@@ -13,7 +13,7 @@ export async function TopGames() {
       <span className="font-semibold text-lg text-white-100 mx-16 responsive:mx-5">
         Hot 100 Games now
       </span>
-      <div className="flex flex-wrap items-center gap-8 my-8 mx-16 responsive:mx-5">
+      <div className="flex flex-wrap items-center gap-8 my-8 mx-16 responsive:gap-4 responsive:mx-5">
         {topGames && topGames.map((game: GameProps) => (
           <Link className="w-[304px] flex items-center rounded-md hover:bg-white-200 responsive:w-full" key={game.id} href={`/game/${game.slug}`}>
             <Image
@@ -44,7 +44,7 @@ export function TopGamesSkeleton() {
   return (
     <div className="animate-pulse">
       <div className="w-56 h-6 bg-slate-700 rounded-full mt-8 mx-16 responsive:mx-5"></div>
-      <div className="flex flex-wrap items-center gap-8 my-8 mx-16 responsive:mx-5">
+      <div className="flex flex-wrap items-center gap-8 my-8 mx-16 responsive:gap-4 responsive:mx-5">
         {[...Array(100)].map((topGames, index) => (
           <div className="w-[304px] flex items-center" key={index}>
             <div className="w-[150px] h-[133px] bg-slate-700 rounded-md"></div>

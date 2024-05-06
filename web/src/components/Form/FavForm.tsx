@@ -44,7 +44,7 @@ export function FavForm({ children }: { children: ReactNode }) {
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="bg-blue-900 opacity-90 data-[state=open]:animate-overlayShow fixed z-10 inset-0" />
-        <Dialog.Content className="w-[600px] max-w-[90%] h-auto max-h-[90%] min-h-[200px] flex justify-center fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-20 bg-blue-700 rounded-3xl data-[state=open]:animate-contentShow focus:outline-none" onCloseAutoFocus={() => router.push(pathName)}>
+        <Dialog.Content className="w-[600px] max-w-[90%] h-auto max-h-[90%] min-h-[200px] flex justify-center fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-20 bg-blue-700 rounded-3xl responsive:top-2 responsive:translate-x-[100%] data-[state=open]:animate-contentShow focus:outline-none" onCloseAutoFocus={() => router.push(pathName)}>
           <div className="w-full m-4">
             <input
               className="w-full h-8 max-w-full font-bold text-sm text-blue-900 bg-gray-500 rounded-full outline-none px-4 placeholder:font-normal placeholder:text-blue-900"

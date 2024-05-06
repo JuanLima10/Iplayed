@@ -99,7 +99,7 @@ export async function ReviewsGameCard(props: ReviewCardProps) {
 
 export function ReviewsGameCardSkeleton() {
   return (
-    <div className="w-full mt-0 animate-pulse">
+    <div className="w-full mt-0 animate-pulse responsive:px-5">
       <div className="w-full flex items-center justify-between mb-11 responsive:mx-0">
         <div className="w-28 h-4 bg-slate-700 rounded-full px-4"></div>
       </div>
