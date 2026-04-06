@@ -3,7 +3,6 @@ import { ApiOkResponse } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
-
   @Get('/ping')
   @ApiOkResponse()
   ping(): { ping: string } {
