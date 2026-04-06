@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 enum progress_status {
@@ -14,14 +14,15 @@ enum progress_status {
 }
 
 model user {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   provider    String
   provider_id String
   username    String?
+  name        String?
   email       String?
   avatar_url  String?
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  created_at  DateTime  @default(now())
+  updated_at  DateTime? @updatedAt
 
   game_statuses game_status[]
   lists         game_list[]
@@ -33,12 +34,12 @@ model user {
 }
 
 model game {
-  id         String   @id @default(uuid())
-  igdb_id    Int?     @unique
+  id         String    @id @default(uuid())
+  igdb_id    Int?      @unique
   title      String
   slug       String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
 
   statuses   game_status[]
   reviews    review[]
@@ -59,7 +60,7 @@ model game_status {
   rating         Float?
   last_played_at DateTime?
   created_at     DateTime        @default(now())
-  updated_at     DateTime        @updatedAt
+  updated_at     DateTime?       @updatedAt
 
   @@unique([user_id, game_id])
   @@index([user_id])
@@ -67,15 +68,15 @@ model game_status {
 }
 
 model review {
-  id         String   @id @default(uuid())
-  user       user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id         String    @id @default(uuid())
+  user       user      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String
-  game       game     @relation(fields: [game_id], references: [id], onDelete: Cascade)
+  game       game      @relation(fields: [game_id], references: [id], onDelete: Cascade)
   game_id    String
   text       String
   stars      Float?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
 
   @@index([user_id])
   @@index([game_id])
@@ -87,7 +88,7 @@ model game_list {
   user_id    String
   name       String
   created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
+  updated_at DateTime?   @updatedAt
   items      list_item[]
 
   @@unique([user_id, name])
