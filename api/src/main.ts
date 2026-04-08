@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -24,7 +26,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('IPlayed API')
     .setDescription('API for IPlayed')
-    .setVersion('0.0.3')
+    .setVersion('0.0.4')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
