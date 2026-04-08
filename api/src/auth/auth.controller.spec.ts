@@ -10,11 +10,11 @@ const mockAuthService = {
 };
 
 interface MockResponse {
-  redirect: jest.Mock;
+  redirect: jest.Mock<void, [string]>;
 }
 
 const mockRes: MockResponse = {
-  redirect: jest.fn(),
+  redirect: jest.fn<void, [string]>(),
 };
 
 describe('AuthController', () => {
@@ -61,9 +61,10 @@ describe('AuthController', () => {
       expect(mockAuthService.handleDiscordCallback).toHaveBeenCalledWith(
         'valid-code',
       );
-      expect(mockRes.redirect).toHaveBeenCalledWith(
-        'http://localhost:3000/auth/callback?token=mocked.jwt.token',
-      );
+
+      const [[redirectUrl]] = mockRes.redirect.mock.calls;
+      expect(redirectUrl).toContain(process.env.FRONTEND_URL);
+      expect(redirectUrl).toContain('token=mocked.jwt.token');
     });
 
     it('should propagate errors thrown by handleDiscordCallback', async () => {

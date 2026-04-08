@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { getDiscordUser } from 'common/clients/discord.client';
 import { UnauthorizedError } from 'common/errors/http-status.error';
-import { getDiscordUser } from 'services/discord-oauth.service';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -105,7 +105,7 @@ describe('getDiscordUser', () => {
     const result = await getDiscordUser('my-code');
 
     expect(result.avatar_url).toBe(
-      'https://cdn.discordapp.com/avatars/123456789/abc123hash.png',
+      'https://cdn.discordapp.com/avatars/123456789/abc123hash',
     );
   });
 

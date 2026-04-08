@@ -23,6 +23,7 @@ model user {
   avatar_url  String?
   created_at  DateTime  @default(now())
   updated_at  DateTime? @updatedAt
+  active      Boolean
 
   game_statuses game_status[]
   lists         game_list[]
