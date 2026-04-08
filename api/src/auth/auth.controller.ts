@@ -15,8 +15,9 @@ export class AuthController {
   @Get('discord/callback')
   async discordCallback(@Res() res: Response, @Query('code') code: string) {
     const token = await this.service.handleDiscordCallback(code);
-    return res.redirect(
-      `${process.env.FRONTEND_URL}/auth/callback?token=${token}`,
-    );
+    const redirectUrl = new URL(process.env.FRONTEND_URL!);
+    // redirectUrl.searchParams.set('token', token);
+
+    return res.redirect(`${redirectUrl.toString()}?token=${token}`);
   }
 }

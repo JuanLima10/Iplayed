@@ -1,7 +1,11 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+export abstract class DomainError extends Error {
+  readonly isDomainError = true;
 
-export class DomainError extends HttpException {
-  constructor(message: string, status: HttpStatus) {
-    super(message, status);
+  constructor(
+    message: string,
+    public readonly statusCode: number,
+    public readonly type: string,
+  ) {
+    super(message);
   }
 }

@@ -1,27 +1,30 @@
-import 'dotenv/config';
-
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AllExceptionsFilter } from '../common/filters/all-exceptions.filter';
+import { PrismaErrorInterceptor } from 'common/errors/prisma.inteceptor';
+import { HttpExceptionFilter } from 'common/filters/http-exception.filter';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      forbidNonWhitelisted: true,
       transform: true,
     }),
   );
 
-  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new PrismaErrorInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('IPlayed API')
     .setDescription('API for IPlayed')
-    .setVersion('0.0.2')
+    .setVersion('0.0.3')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -30,4 +33,4 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3001);
 }
 
-bootstrap();
+void bootstrap();

@@ -12,6 +12,7 @@ CREATE TABLE "user" (
     "avatar_url" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
+    "active" BOOLEAN NOT NULL,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );

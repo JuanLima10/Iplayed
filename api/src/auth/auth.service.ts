@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { getDiscordUser } from 'common/clients/discord.client';
 import { UnauthorizedError } from 'common/errors/http-status.error';
-import { handlePrismaError } from 'common/errors/prisma-error.mapper';
 import { PrismaService } from 'prisma/prisma.service';
-import { getDiscordUser } from 'services/discord-oauth.service';
 
 @Injectable()
 export class AuthService {
@@ -23,25 +22,23 @@ export class AuthService {
     return `${process.env.DISCORD_OAUTH_URL}?${params.toString()}`;
   }
 
-  async handleDiscordCallback(code: string): Promise<string> {
+  async handleDiscordCallback(code: string) {
     if (!code) throw new UnauthorizedError();
     const data = await getDiscordUser(code);
+    const { email, name, username, ...update } = data;
 
-    try {
-      const { id: sub } = await this.prisma.user.upsert({
-        where: {
-          provider_provider_id: {
-            provider: 'discord',
-            provider_id: data.provider_id,
-          },
+    const user = await this.prisma.user.upsert({
+      where: {
+        provider_provider_id: {
+          provider: 'discord',
+          provider_id: data.provider_id,
         },
-        update: data,
-        create: data,
-      });
+      },
+      update: { ...update, active: true },
+      create: { ...data, name, active: true },
+    });
 
-      return this.jwtService.sign({ sub });
-    } catch (error) {
-      handlePrismaError(error);
-    }
+    const { id: sub } = user;
+    return this.jwtService.sign({ sub, email, username });
   }
 }

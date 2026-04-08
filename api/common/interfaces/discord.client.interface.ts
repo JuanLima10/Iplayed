@@ -1,8 +1,4 @@
-export interface DiscordTokenResponse {
-  access_token?: string;
-}
-
-export interface DiscordUserResponse {
+export interface IDiscordResponse {
   id: string;
   username: string;
   global_name: string | null;
@@ -10,7 +6,7 @@ export interface DiscordUserResponse {
   avatar: string | null;
 }
 
-export interface DiscordUserData {
+export interface IDiscordData {
   provider: 'discord';
   provider_id: string;
   username: string;
