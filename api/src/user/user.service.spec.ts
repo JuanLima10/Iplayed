@@ -6,11 +6,11 @@ import { UserService } from './user.service';
 
 jest.mock('common/utils/paginate-normalize.util');
 jest.mock('common/utils/query-normalize');
-jest.mock('prisma/prisma-query.builder');
+jest.mock('common/builders/prisma-query.builder');
 
+import { buildPrismaQuery } from 'common/builders/prisma-query.builder';
 import { normalizePaginate } from 'common/utils/paginate-normalize.util';
 import { normalizeQuery } from 'common/utils/query-normalize';
-import { buildPrismaQuery } from 'prisma/prisma-query.builder';
 
 const mockPrisma = {
   user: {
@@ -80,6 +80,8 @@ describe('UserService', () => {
     expect(service).toBeDefined();
   });
 
+  // findAll
+
   describe('findAll', () => {
     it('should return paginated users', async () => {
       mockPrisma.user.count.mockResolvedValue(1);
@@ -132,6 +134,8 @@ describe('UserService', () => {
     });
   });
 
+  // findById
+
   describe('findById', () => {
     it('should return a user when found', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(mockPrismaUser);
@@ -152,6 +156,8 @@ describe('UserService', () => {
       );
     });
   });
+
+  // update
 
   describe('update', () => {
     const updateDto = { username: 'updateduser' };
@@ -179,6 +185,8 @@ describe('UserService', () => {
     });
   });
 
+  // delete
+
   describe('delete', () => {
     it('should soft-delete user by setting active to false', async () => {
       mockPrisma.user.update.mockResolvedValue({
@@ -205,6 +213,8 @@ describe('UserService', () => {
       );
     });
   });
+
+  // destroy
 
   describe('destroy', () => {
     it('should permanently delete user when found', async () => {

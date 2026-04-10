@@ -1,4 +1,5 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
+import { InternalServerError } from 'common/errors/http-status.error';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 
@@ -15,9 +16,13 @@ export class AuthController {
   @Get('discord/callback')
   async discordCallback(@Res() res: Response, @Query('code') code: string) {
     const token = await this.service.handleDiscordCallback(code);
-    const redirectUrl = new URL(process.env.FRONTEND_URL!);
-    // redirectUrl.searchParams.set('token', token);
 
-    return res.redirect(`${redirectUrl.toString()}?token=${token}`);
+    const url = process.env.FRONTEND_URL;
+    if (!url) throw new InternalServerError('FRONTEND_URL is not defined');
+
+    const redirectUrl = new URL(url);
+    redirectUrl.searchParams.set('token', token);
+
+    return res.redirect(redirectUrl.toString());
   }
 }

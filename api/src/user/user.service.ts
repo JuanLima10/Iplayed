@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { buildPrismaQuery } from 'common/builders/prisma-query.builder';
 import { NotFoundError } from 'common/errors/http-status.error';
 import { IPaginate } from 'common/interfaces/paginate.util.interface';
 import { normalizePaginate } from 'common/utils/paginate-normalize.util';
 import { normalizeQuery } from 'common/utils/query-normalize';
-import { buildPrismaQuery } from 'prisma/prisma-query.builder';
 import { PrismaService } from 'prisma/prisma.service';
 import { UserQuery, UserQueryDto } from './dto/query-user.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
