@@ -5,10 +5,10 @@ import {
 } from 'common/interfaces/paginate.util.interface';
 
 export function normalizePaginate({
-  page,
-  limit,
-  count,
-}: IPaginateInput): IPaginateResponse {
+  page = 1,
+  limit = 10,
+  count = 0,
+}: IPaginateInput = {}): IPaginateResponse {
   if (page < 1 || limit < 1) {
     throw new BadRequestError('Invalid pagination parameters');
   }

@@ -1,11 +1,11 @@
 export interface IPaginateInput {
-  page: number;
-  limit: number;
-  count: number;
+  page?: number;
+  limit?: number;
+  count?: number;
 }
 
 export interface IPaginateResponse extends IPaginateInput {
-  pages: number;
+  pages?: number;
 }
 
 export interface IPaginate<T> {
