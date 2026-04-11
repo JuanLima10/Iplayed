@@ -1,13 +1,31 @@
-import { game } from '@prisma/client';
+import { gameSelect, IGameSelect } from 'common/interfaces/game.interface';
 import { IGameIgdb } from 'common/interfaces/igdb.client.interface';
 import { extractCompanies } from 'common/utils/companies-extract.util';
 import { parseDate } from 'common/utils/date-parser.util';
 import { parseImageIgdb } from 'common/utils/image-parser.util';
 import { parseYoutube } from 'common/utils/youtube-parser.util';
+import { PrismaMapper } from 'prisma/prisma.mapper';
 import { ResponseGameDto } from './dto/response-game.dto';
+import { ResponseIgdbDto } from './dto/response-igdb.dto';
 
-export const GameMapper = {
-  fromIgdb(igdb: IGameIgdb): ResponseGameDto {
+export const GameMapper: PrismaMapper<IGameSelect, ResponseGameDto> = {
+  select: gameSelect,
+
+  toResponse(this: void, game) {
+    return {
+      id: game.id,
+      igdbId: game.igdb_id,
+      title: game.title,
+      slug: game.slug,
+      coverUrl: parseImageIgdb(game.cover_id),
+      createdAt: game.created_at,
+      updatedAt: game.updated_at,
+    };
+  },
+};
+
+export const IgdbMapper = {
+  toResponse(igdb: IGameIgdb): ResponseIgdbDto {
     const { publishers, developers } = extractCompanies(
       igdb.involved_companies,
     );
@@ -35,17 +53,6 @@ export const GameMapper = {
         slug: g.slug,
         coverUrl: parseImageIgdb(g.cover?.url),
       })),
-    };
-  },
-
-  fromPrisma(game: game, igdb?: Partial<IGameIgdb>): ResponseGameDto {
-    return {
-      id: game.id,
-      igdbId: game.igdb_id!,
-      title: game.title,
-      slug: game.slug!,
-      summary: igdb?.summary,
-      coverUrl: igdb?.cover?.url?.replace('t_thumb', 't_1080p'),
     };
   },
 };

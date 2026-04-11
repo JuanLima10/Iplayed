@@ -51,6 +51,8 @@ describe('GameController', () => {
     expect(controller).toBeDefined();
   });
 
+  // findAll
+
   describe('findAll', () => {
     it('should return paginated games', async () => {
       const query: GameQueryDto = { page: 1, limit: 10 };
@@ -63,6 +65,8 @@ describe('GameController', () => {
       expect(result).toEqual(expected);
     });
   });
+
+  // findById
 
   describe('findById', () => {
     it('should return a game by IGDB id', async () => {
@@ -82,6 +86,8 @@ describe('GameController', () => {
       await expect(controller.findById(999)).rejects.toThrow(NotFoundError);
     });
   });
+
+  // findBySlug
 
   describe('findBySlug', () => {
     it('should return a game by slug', async () => {

@@ -39,6 +39,7 @@ model game {
   igdb_id    Int?      @unique
   title      String
   slug       String?
+  cover_id   String?
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
 
@@ -57,6 +58,7 @@ model game_status {
   game_id        String
   status         progress_status
   progress       Int?
+  best           Int?
   is_favorite    Boolean         @default(false)
   rating         Float?
   last_played_at DateTime?

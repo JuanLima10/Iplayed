@@ -32,7 +32,7 @@ export class IgdbClient {
 
   async getIgdbById(id: number): Promise<IGameIgdb | undefined> {
     const where = `id = ${id}`;
-    const query = buildIgdbQuery({ fields: IGDB_FIELDS_FULL, where });
+    const query = buildIgdbQuery({ fields: IGDB_FIELDS_BASIC, where });
 
     const { data } = await this.client.post<IGameIgdb[]>('/games', query);
     return data[0];

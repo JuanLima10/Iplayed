@@ -3,16 +3,33 @@ import { IPrismaQuery, IPrismaWhere } from 'common/interfaces/prisma.interface';
 
 export function buildPrismaQuery({
   query,
-  searchableFields,
-  allowedOrderBy,
+  searchableFields = [],
+  allowedOrderBy = [],
   where: baseWhere = {},
 }: IPrismaQuery) {
   const where: IPrismaWhere = { ...baseWhere };
 
-  if (query.search) {
+  if (query.search && searchableFields.length > 0) {
     where.OR = searchableFields.map((field) => ({
       [field]: { contains: query.search, mode: 'insensitive' },
     }));
+  }
+
+  if (query.rating !== undefined) {
+    where.rating = query.rating;
+  }
+
+  if (query.status !== undefined) {
+    where.status = query.status;
+  }
+
+  if (query.isBest !== undefined) {
+    const isBest = query.isBest ? { not: null } : { equals: null };
+    where.best = isBest;
+  }
+
+  if (query.isFavorite !== undefined) {
+    where.is_favorite = query.isFavorite;
   }
 
   if (query.year || query.month || query.day) {
@@ -35,8 +52,11 @@ export function buildPrismaQuery({
   }
 
   const sortOrder: Prisma.SortOrder = query.order ?? 'asc';
+
   const orderBy =
-    query.orderBy && allowedOrderBy.includes(query.orderBy)
+    query.orderBy &&
+    allowedOrderBy.length > 0 &&
+    allowedOrderBy.includes(query.orderBy)
       ? { [query.orderBy]: sortOrder }
       : { created_at: 'desc' as Prisma.SortOrder };
 
