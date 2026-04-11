@@ -59,7 +59,7 @@ export class UserController {
     return this.service.delete(id);
   }
 
-  @Delete('/destroy')
+  @Delete('destroy')
   @Auth({ owner: true })
   @Swagger({ status: 204 })
   async destroy(@CurrentUser() { sub: id }: { sub: string }) {

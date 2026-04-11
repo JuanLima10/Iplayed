@@ -8,17 +8,16 @@ import { GameService } from './game.service';
 jest.mock('common/utils/paginate-normalize.util');
 jest.mock('common/utils/query-normalize');
 jest.mock('./game.mapper', () => ({
-  GameMapper: {
-    fromIgdb: jest.fn(),
-    fromPrisma: jest.fn(),
+  IgdbMapper: {
+    toResponse: jest.fn(),
   },
 }));
 
 import { normalizePaginate } from 'common/utils/paginate-normalize.util';
 import { normalizeQuery } from 'common/utils/query-normalize';
-import { GameMapper } from './game.mapper';
+import { IgdbMapper } from './game.mapper';
 
-const mockFromIgdb = GameMapper.fromIgdb as jest.Mock;
+const mockToResponse = IgdbMapper.toResponse as jest.Mock;
 
 const mockPrisma = {};
 
@@ -45,7 +44,7 @@ const mockIgdbGame = {
   similar_games: [],
 };
 
-const mockResponseGame = {
+const mockResponseIgdb = {
   igdbId: 1,
   title: 'The Legend of Zelda',
   slug: 'the-legend-of-zelda',
@@ -80,7 +79,7 @@ describe('GameService', () => {
     service = moduleRef.get<GameService>(GameService);
 
     jest.clearAllMocks();
-    mockFromIgdb.mockReturnValue(mockResponseGame);
+    mockToResponse.mockReturnValue(mockResponseIgdb);
     (normalizeQuery as jest.Mock).mockReturnValue({ page: 1, limit: 10 });
     (normalizePaginate as jest.Mock).mockReturnValue(mockPaginate);
   });
@@ -105,14 +104,14 @@ describe('GameService', () => {
         page: 1,
         limit: 10,
       });
-      expect(mockFromIgdb).toHaveBeenCalledTimes(2);
+      expect(mockToResponse).toHaveBeenCalledTimes(2);
       expect(normalizePaginate).toHaveBeenCalledWith({
         page: 1,
         limit: 10,
         count: 2,
       });
       expect(result).toEqual({
-        data: [mockResponseGame, mockResponseGame],
+        data: [mockResponseIgdb, mockResponseIgdb],
         paginate: mockPaginate,
       });
     });
@@ -157,15 +156,15 @@ describe('GameService', () => {
       const result = await service.findByIgdbId(1);
 
       expect(mockIgdbClient.getIgdbById).toHaveBeenCalledWith(1);
-      expect(mockFromIgdb).toHaveBeenCalledWith(mockIgdbGame);
-      expect(result).toEqual(mockResponseGame);
+      expect(mockToResponse).toHaveBeenCalledWith(mockIgdbGame);
+      expect(result).toEqual(mockResponseIgdb);
     });
 
     it('should throw NotFoundError when game does not exist', async () => {
       mockIgdbClient.getIgdbById.mockResolvedValue(undefined);
 
       await expect(service.findByIgdbId(999)).rejects.toThrow(NotFoundError);
-      expect(mockFromIgdb).not.toHaveBeenCalled();
+      expect(mockToResponse).not.toHaveBeenCalled();
     });
   });
 
@@ -180,8 +179,8 @@ describe('GameService', () => {
       expect(mockIgdbClient.getIgdbBySlug).toHaveBeenCalledWith(
         'the-legend-of-zelda',
       );
-      expect(mockFromIgdb).toHaveBeenCalledWith(mockIgdbGame);
-      expect(result).toEqual(mockResponseGame);
+      expect(mockToResponse).toHaveBeenCalledWith(mockIgdbGame);
+      expect(result).toEqual(mockResponseIgdb);
     });
 
     it('should throw NotFoundError when game does not exist', async () => {
@@ -190,7 +189,7 @@ describe('GameService', () => {
       await expect(service.findBySlug('nonexistent-slug')).rejects.toThrow(
         NotFoundError,
       );
-      expect(mockFromIgdb).not.toHaveBeenCalled();
+      expect(mockToResponse).not.toHaveBeenCalled();
     });
   });
 });

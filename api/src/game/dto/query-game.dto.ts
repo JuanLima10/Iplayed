@@ -16,6 +16,7 @@ export class GameQueryDto {
   @IsString()
   search?: string;
 
+  @ApiPropertyOptional({ example: IgdbOrderBy.POPULAR })
   @IsOptional()
   @IsEnum(IgdbOrderBy)
   orderBy?: IgdbOrderBy;

@@ -13,8 +13,8 @@ export type IPrismaWhere = Record<string, IWhere>;
 
 export interface IPrismaQuery {
   query: IQuery;
-  searchableFields: string[];
-  allowedOrderBy: string[];
+  searchableFields?: string[];
+  allowedOrderBy?: string[];
   allowedDateFields?: string[];
   where?: IPrismaWhere;
 }
