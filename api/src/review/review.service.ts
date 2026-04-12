@@ -1,0 +1,162 @@
+import { Injectable } from '@nestjs/common';
+import { buildPrismaQuery } from 'common/builders/prisma-query.builder';
+import { IgdbClient } from 'common/clients/igdb.client';
+import { NotFoundError } from 'common/errors/http-status.error';
+import { extractCoverId } from 'common/utils/cover-id-extract.util';
+import { normalizePaginate } from 'common/utils/paginate-normalize.util';
+import { normalizeQuery } from 'common/utils/query-normalize';
+import { PrismaService } from 'prisma/prisma.service';
+import { GameStatusMapper } from 'src/game-status/game-status.mapper';
+import { GameMapper } from 'src/game/game.mapper';
+import { CreateReviewDto } from './dto/create-review.dto';
+import { QueryReviewDto, ReviewQuery } from './dto/query-review.dto';
+import { UpdateReviewDto } from './dto/update-review.dto';
+import { ReviewMapper } from './review.mapper';
+
+@Injectable()
+export class ReviewService {
+  constructor(
+    private prisma: PrismaService,
+    private igdb: IgdbClient,
+  ) {}
+
+  async findAll(filter?: QueryReviewDto) {
+    const { isFavorite, rating, ...query } = normalizeQuery(filter);
+    const { page = 1, limit = 10 } = query;
+
+    const filters = buildPrismaQuery({ query, ...ReviewQuery });
+    const include = { game: { include: { statuses: true } } };
+    if (rating !== undefined || isFavorite !== undefined) {
+      filters.where.game = {
+        statuses: { some: { rating, is_favorite: isFavorite } },
+      };
+    }
+
+    const [count, reviews] = await Promise.all([
+      this.prisma.review.count({ where: filters.where }),
+      this.prisma.review.findMany({ ...filters, include }),
+    ]);
+
+    const data = reviews.map(({ game, ...review }) => ({
+      ...ReviewMapper.toResponse(review),
+      game: GameMapper.toResponse(game),
+      status:
+        game.statuses?.[0] && GameStatusMapper.toResponse(game.statuses[0]),
+    }));
+    const paginate = normalizePaginate({ page, limit, count });
+
+    return { data, paginate };
+  }
+
+  async findByUserId(user_id: string, filter?: QueryReviewDto) {
+    const { isFavorite, rating, ...query } = normalizeQuery(filter);
+    const { page = 1, limit = 10 } = query;
+
+    const where = { user_id };
+    const filters = buildPrismaQuery({ query, ...ReviewQuery, where });
+    const include = { game: { include: { statuses: { where: { user_id } } } } };
+
+    if (rating !== undefined || isFavorite !== undefined) {
+      filters.where.game = {
+        statuses: { some: { user_id, rating, is_favorite: isFavorite } },
+      };
+    }
+
+    const [count, reviews] = await Promise.all([
+      this.prisma.review.count({ where: filters.where }),
+      this.prisma.review.findMany({ ...filters, include }),
+    ]);
+
+    const data = reviews.map(({ game, ...review }) => ({
+      ...ReviewMapper.toResponse(review),
+      game: GameMapper.toResponse(game),
+      status:
+        game.statuses?.[0] && GameStatusMapper.toResponse(game.statuses[0]),
+    }));
+    const paginate = normalizePaginate({ page, limit, count });
+
+    return { data, paginate };
+  }
+
+  async findBySlug(slug: string, filter: QueryReviewDto) {
+    const game = await this.prisma.game.findFirst({ where: { slug } });
+    if (!game) throw new NotFoundError('Game not found');
+
+    const { isFavorite, rating, ...query } = normalizeQuery(filter);
+    const { page = 1, limit = 10 } = query;
+
+    const where = { game_id: game.id };
+    const filters = buildPrismaQuery({ query, ...ReviewQuery, where });
+    const include = { game: { include: { statuses: true } } };
+
+    if (rating !== undefined || isFavorite !== undefined) {
+      filters.where.game = {
+        statuses: { some: { rating, is_favorite: isFavorite } },
+      };
+    }
+
+    const [count, reviews] = await Promise.all([
+      this.prisma.review.count({ where: filters.where }),
+      this.prisma.review.findMany({ ...filters, include }),
+    ]);
+
+    const data = reviews.map(({ game, ...review }) => ({
+      ...ReviewMapper.toResponse(review),
+      game: GameMapper.toResponse(game),
+      status:
+        game.statuses?.[0] && GameStatusMapper.toResponse(game.statuses[0]),
+    }));
+    const paginate = normalizePaginate({ page, limit, count });
+
+    return { data, paginate };
+  }
+
+  async upsert(user_id: string, dto: CreateReviewDto) {
+    const { slug, text, isFavorite, lastPlayedAt, ...status } = dto;
+    const formatted = { is_favorite: isFavorite, last_played_at: lastPlayedAt };
+
+    const igdb = await this.igdb.getIgdbBySlug(slug);
+    if (!igdb) throw new NotFoundError('Game not found');
+
+    const cover_id = extractCoverId(igdb.cover?.url);
+    const { id: game_id } = await this.prisma.game.upsert({
+      where: { igdb_id: igdb.id },
+      update: { slug: igdb.slug, cover_id },
+      create: { igdb_id: igdb.id, title: igdb.name, slug: igdb.slug, cover_id },
+    });
+
+    await this.prisma.game_status.upsert({
+      where: { user_id_game_id: { user_id, game_id } },
+      update: { ...status, ...formatted },
+      create: { ...status, ...formatted, user_id, game_id },
+    });
+
+    const review = await this.prisma.review.upsert({
+      where: { user_id_game_id: { user_id, game_id } },
+      update: { text },
+      create: { text, user_id, game_id },
+    });
+
+    return ReviewMapper.toResponse(review);
+  }
+
+  async update(user_id: string, slug: string, dto: UpdateReviewDto) {
+    const game = await this.prisma.game.findFirst({ where: { slug } });
+    if (!game) throw new NotFoundError('Game not found');
+
+    const data = { text: dto.text };
+    const where = { user_id_game_id: { user_id, game_id: game.id } };
+    const review = await this.prisma.review.update({ where, data });
+
+    return ReviewMapper.toResponse(review);
+  }
+
+  async delete(user_id: string, slug: string) {
+    const { count } = await this.prisma.review.deleteMany({
+      where: { user_id, game: { slug } },
+    });
+
+    if (!count) throw new NotFoundError('Review not found');
+    return { deleted: true };
+  }
+}

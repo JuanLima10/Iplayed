@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { GameStatusModule } from './game-status/game-status.module';
 import { GameModule } from './game/game.module';
 import { UserModule } from './user/user.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     GameModule,
     GameStatusModule,
+    ReviewModule,
   ],
   controllers: [AppController],
 })
