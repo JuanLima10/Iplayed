@@ -9,14 +9,6 @@ import {
 import { PrismaService } from 'prisma/prisma.service';
 import { GameStatusService } from './game-status.service';
 
-import { buildGameStatusCount } from 'common/builders/game-status-count.builder';
-import { buildPrismaQuery } from 'common/builders/prisma-query.builder';
-import { extractCoverId } from 'common/utils/cover-id-extract.util';
-import { normalizePaginate } from 'common/utils/paginate-normalize.util';
-import { normalizeQuery } from 'common/utils/query-normalize';
-import { GameMapper } from '../game/game.mapper';
-import { GameStatusMapper } from './game-status.mapper';
-
 jest.mock('common/builders/prisma-query.builder');
 jest.mock('common/builders/game-status-count.builder');
 jest.mock('common/utils/paginate-normalize.util');
@@ -25,9 +17,21 @@ jest.mock('common/utils/cover-id-extract.util');
 jest.mock('./game-status.mapper', () => ({
   GameStatusMapper: { toResponse: jest.fn() },
 }));
-jest.mock('../game/game.mapper', () => ({
-  GameMapper: { toResponse: jest.fn() },
-}));
+jest.mock(
+  'src/game/game.mapper',
+  () => ({
+    GameMapper: { toResponse: jest.fn() },
+  }),
+  { virtual: true },
+);
+
+import { buildGameStatusCount } from 'common/builders/game-status-count.builder';
+import { buildPrismaQuery } from 'common/builders/prisma-query.builder';
+import { extractCoverId } from 'common/utils/cover-id-extract.util';
+import { normalizePaginate } from 'common/utils/paginate-normalize.util';
+import { normalizeQuery } from 'common/utils/query-normalize';
+import { GameMapper } from 'src/game/game.mapper';
+import { GameStatusMapper } from './game-status.mapper';
 
 const mockToResponse = GameStatusMapper.toResponse as jest.Mock;
 const mockGameToResponse = GameMapper.toResponse as jest.Mock;

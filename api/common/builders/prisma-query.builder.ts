@@ -10,9 +10,18 @@ export function buildPrismaQuery({
   const where: IPrismaWhere = { ...baseWhere };
 
   if (query.search && searchableFields.length > 0) {
-    where.OR = searchableFields.map((field) => ({
-      [field]: { contains: query.search, mode: 'insensitive' },
-    }));
+    where.OR = searchableFields.map((field) => {
+      if (field.includes('.')) {
+        const [relation, column] = field.split('.');
+
+        return {
+          [relation]: {
+            [column]: { contains: query.search, mode: 'insensitive' },
+          },
+        };
+      }
+      return { [field]: { contains: query.search, mode: 'insensitive' } };
+    });
   }
 
   if (query.rating !== undefined) {
@@ -53,12 +62,25 @@ export function buildPrismaQuery({
 
   const sortOrder: Prisma.SortOrder = query.order ?? 'asc';
 
-  const orderBy =
+  let orderBy: Prisma.Enumerable<Prisma.reviewOrderByWithRelationInput>;
+
+  if (query.orderBy === 'popular') {
+    orderBy = {
+      game: {
+        reviews: {
+          _count: sortOrder,
+        },
+      },
+    };
+  } else if (
     query.orderBy &&
     allowedOrderBy.length > 0 &&
     allowedOrderBy.includes(query.orderBy)
-      ? { [query.orderBy]: sortOrder }
-      : { created_at: 'desc' as Prisma.SortOrder };
+  ) {
+    orderBy = { [query.orderBy]: sortOrder };
+  } else {
+    orderBy = { created_at: 'desc' };
+  }
 
   return {
     where,
