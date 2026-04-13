@@ -30,7 +30,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('IPlayed API')
     .setDescription('API for IPlayed')
-    .setVersion('v0.4.0')
+    .setVersion('v1.0.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

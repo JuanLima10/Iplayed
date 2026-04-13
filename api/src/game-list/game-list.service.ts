@@ -57,12 +57,13 @@ export class GameListService {
     if (!list) throw new NotFoundError('List not found');
 
     const filters = buildPrismaQuery({ query, ...ListItemQuery });
+    const orderBy = { position: filter?.order ?? 'asc' };
     const where = { list_id: id, ...filters.where };
     const include = { game: true };
 
     const [count, items] = await Promise.all([
       this.prisma.list_item.count({ where }),
-      this.prisma.list_item.findMany({ ...filters, where, include }),
+      this.prisma.list_item.findMany({ ...filters, orderBy, where, include }),
     ]);
 
     const data = {

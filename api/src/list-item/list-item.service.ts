@@ -3,7 +3,7 @@ import { IgdbClient } from 'common/clients/igdb.client';
 import { ConflictError, NotFoundError } from 'common/errors/http-status.error';
 import { extractCoverId } from 'common/utils/cover-id-extract.util';
 import { PrismaService } from 'prisma/prisma.service';
-import { GameListMapper } from 'src/game-list/game-list.mapper';
+import { GameListService } from 'src/game-list/game-list.service';
 import { GameMapper } from 'src/game/game.mapper';
 import { CreateListItemDto } from './dto/create-list-item.dto';
 import { ReorderListItemsDto } from './dto/reorder-list-item.dto';
@@ -13,16 +13,9 @@ import { ListItemMapper } from './list-item.mapper';
 export class ListItemService {
   constructor(
     private prisma: PrismaService,
+    private list: GameListService,
     private igdb: IgdbClient,
   ) {}
-
-  async findListById(id: string) {
-    const list = await this.prisma.game_list.findUnique({ where: { id } });
-    if (!list) throw new NotFoundError('List not found');
-    const data = GameListMapper.toResponse(list);
-
-    return { data };
-  }
 
   async create(user_id: string, list_id: string, dto: CreateListItemDto) {
     const where = { id: list_id, user_id };
@@ -77,7 +70,7 @@ export class ListItemService {
       ),
     );
 
-    return this.findListById(list_id);
+    return this.list.findById(list_id);
   }
 
   async delete(user_id: string, list_id: string, item_id: string) {
