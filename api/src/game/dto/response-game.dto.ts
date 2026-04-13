@@ -22,7 +22,7 @@ export class ResponseGameDto {
 
   @ApiProperty({
     description: 'IGDB game slug',
-    example: 'the-witcher-3-wild-hunter',
+    example: 'the-witcher-3-wild-hunt',
     nullable: true,
   })
   slug!: string | null;

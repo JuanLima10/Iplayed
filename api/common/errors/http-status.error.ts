@@ -13,6 +13,12 @@ export class BadRequestError extends DomainError {
   }
 }
 
+export class ConflictError extends DomainError {
+  constructor(message = 'Conflict') {
+    super(message, HttpStatus.CONFLICT, 'conflict');
+  }
+}
+
 export class ForbiddenError extends DomainError {
   constructor(message = 'Forbidden') {
     super(message, HttpStatus.FORBIDDEN, 'forbidden');
