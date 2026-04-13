@@ -18,7 +18,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
       exceptionFactory: (errors) => {
-        return new BadRequestException(errors);
+        if (process.env.NODE_ENV === 'developer')
+          return new BadRequestException(errors);
       },
     }),
   );
@@ -29,7 +30,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('IPlayed API')
     .setDescription('API for IPlayed')
-    .setVersion('v0.3.0')
+    .setVersion('v0.4.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

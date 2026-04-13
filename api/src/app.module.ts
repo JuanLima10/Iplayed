@@ -7,6 +7,8 @@ import { GameStatusModule } from './game-status/game-status.module';
 import { GameModule } from './game/game.module';
 import { UserModule } from './user/user.module';
 import { ReviewModule } from './review/review.module';
+import { GameListModule } from './game-list/game-list.module';
+import { ListItemModule } from './list-item/list-item.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { ReviewModule } from './review/review.module';
     GameModule,
     GameStatusModule,
     ReviewModule,
+    GameListModule,
+    ListItemModule,
   ],
   controllers: [AppController],
 })

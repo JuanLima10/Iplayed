@@ -16,5 +16,6 @@ export interface IPrismaQuery {
   searchableFields?: string[];
   allowedOrderBy?: string[];
   allowedDateFields?: string[];
+  defaultOrderBy?: Record<string, string>;
   where?: IPrismaWhere;
 }

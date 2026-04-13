@@ -16,7 +16,7 @@ import {
 export class CreateReviewDto {
   @ApiProperty({
     description: 'Game slug',
-    example: 'the-witcher-3-wild-hunter',
+    example: 'the-witcher-3-wild-hunt',
   })
   @IsString()
   slug!: string;

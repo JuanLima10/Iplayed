@@ -5,6 +5,7 @@ export function buildPrismaQuery({
   query,
   searchableFields = [],
   allowedOrderBy = [],
+  defaultOrderBy = { created_at: 'desc' },
   where: baseWhere = {},
 }: IPrismaQuery) {
   const where: IPrismaWhere = { ...baseWhere };
@@ -79,7 +80,9 @@ export function buildPrismaQuery({
   ) {
     orderBy = { [query.orderBy]: sortOrder };
   } else {
-    orderBy = { created_at: 'desc' };
+    orderBy = Object.fromEntries(
+      Object.keys(defaultOrderBy).map((key) => [key, sortOrder]),
+    );
   }
 
   return {
