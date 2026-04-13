@@ -19,9 +19,19 @@ jest.mock(
   () => ({ GameMapper: { toResponse: jest.fn() } }),
   { virtual: true },
 );
+jest.mock(
+  'src/game-list/game-list.service',
+  () => ({
+    GameListService: jest
+      .fn()
+      .mockImplementation(() => ({ findById: jest.fn() })),
+  }),
+  { virtual: true },
+);
 
 import { extractCoverId } from 'common/utils/cover-id-extract.util';
 import { GameListMapper } from 'src/game-list/game-list.mapper';
+import { GameListService } from 'src/game-list/game-list.service';
 import { GameMapper } from 'src/game/game.mapper';
 import { ListItemMapper } from './list-item.mapper';
 
@@ -115,6 +125,7 @@ describe('ListItemService', () => {
       providers: [
         ListItemService,
         { provide: PrismaService, useValue: mockPrisma },
+        { provide: GameListService, useValue: { findById: jest.fn() } },
         { provide: IgdbClient, useValue: mockIgdbClient },
       ],
     }).compile();
@@ -227,9 +238,7 @@ describe('ListItemService', () => {
 
   describe('reorder', () => {
     it('should reorder items and return updated list', async () => {
-      mockPrisma.game_list.findUnique
-        .mockResolvedValueOnce(mockListEntity)
-        .mockResolvedValueOnce(mockListEntity);
+      mockPrisma.game_list.findUnique.mockResolvedValue(mockListEntity); // remove the chained Once
       mockPrisma.$transaction.mockResolvedValue([]);
 
       await service.reorder('user-id-1', 'list-id-1', {

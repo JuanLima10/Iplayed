@@ -30,6 +30,15 @@ jest.mock(
   () => ({ GameMapper: { toResponse: jest.fn() } }),
   { virtual: true },
 );
+jest.mock(
+  'src/game-list/game-list.service',
+  () => ({
+    GameListService: jest
+      .fn()
+      .mockImplementation(() => ({ findById: jest.fn() })),
+  }),
+  { virtual: true },
+);
 
 const mockListItemService = {
   create: jest.fn(),
