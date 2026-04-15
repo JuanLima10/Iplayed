@@ -11,6 +11,20 @@ type IWhere =
 
 export type IPrismaWhere = Record<string, IWhere>;
 
+export enum DateRangeType {
+  WEEK = 'week',
+  MONTH = 'month',
+  YEAR = 'year',
+  CUSTOM = 'custom',
+}
+
+export interface IDateRangeQuery {
+  range?: DateRangeType;
+  from?: string;
+  to?: string;
+  dateField?: string;
+}
+
 export interface IPrismaQuery {
   query: IQuery;
   searchableFields?: string[];

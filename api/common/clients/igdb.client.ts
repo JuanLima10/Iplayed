@@ -45,4 +45,20 @@ export class IgdbClient {
     const { data } = await this.client.post<IGameIgdb[]>('/games', query);
     return data[0];
   }
+
+  async getIgdbRandom(): Promise<IGameIgdb> {
+    const buildCount = { fields: IGDB_FIELDS_BASIC, limit: 1 };
+
+    const filters = buildIgdbQuery(buildCount);
+    const { headers } = await this.client.post<IGameIgdb[]>('/games', filters);
+    const count = parseCountHeader(headers);
+
+    const offset = Math.floor(Math.random() * Math.min(count, 100));
+    const buildRandom = { fields: IGDB_FIELDS_FULL, limit: 1, offset };
+
+    const query = buildIgdbQuery(buildRandom);
+    const { data } = await this.client.post<IGameIgdb[]>('/games', query);
+
+    return data[0];
+  }
 }

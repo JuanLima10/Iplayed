@@ -3,6 +3,7 @@ import { buildPrismaQuery } from 'common/builders/prisma-query.builder';
 import { IgdbClient } from 'common/clients/igdb.client';
 import { NotFoundError } from 'common/errors/http-status.error';
 import { extractCoverId } from 'common/utils/cover-id-extract.util';
+import { resolveDateRange } from 'common/utils/date-range.util';
 import { normalizePaginate } from 'common/utils/paginate-normalize.util';
 import { normalizeQuery } from 'common/utils/query-normalize';
 import { PrismaService } from 'prisma/prisma.service';
@@ -111,6 +112,30 @@ export class ReviewService {
     return { data, paginate };
   }
 
+  async findMostByRange(query: QueryReviewDto) {
+    const range = resolveDateRange(query);
+    const { limit = 10 } = query;
+    const where = { created_at: { gte: range?.start, lt: range?.end } };
+
+    const grouped = await this.prisma.review.groupBy({
+      by: ['game_id'],
+      where,
+      _count: { _all: true },
+      orderBy: { _count: { game_id: 'desc' } },
+      take: limit,
+    });
+
+    const id = { in: grouped.map((game) => game.game_id) };
+    const games = await this.prisma.game.findMany({ where: { id } });
+
+    const data = grouped.map(({ game_id, _count }) => ({
+      game: GameMapper.toResponse(games.find(({ id }) => id === game_id)!),
+      reviews: _count._all,
+    }));
+
+    return { data };
+  }
+
   async upsert(user_id: string, dto: CreateReviewDto) {
     const { slug, text, isFavorite, lastPlayedAt, ...status } = dto;
     const formatted = { is_favorite: isFavorite, last_played_at: lastPlayedAt };
@@ -155,8 +180,8 @@ export class ReviewService {
     const { count } = await this.prisma.review.deleteMany({
       where: { user_id, game: { slug } },
     });
-
     if (!count) throw new NotFoundError('Review not found');
+
     return { deleted: true };
   }
 }

@@ -4,6 +4,10 @@ import {
   IgdbOrderBy,
 } from 'common/interfaces/igdb.client.interface';
 
+function toUnix(date: string): number {
+  return Math.floor(new Date(date).getTime() / 1000);
+}
+
 export function buildIgdbQuery({
   query,
   fields,
@@ -23,7 +27,14 @@ export function buildIgdbQuery({
       : (query?.orderBy ?? IgdbOrderBy.POPULAR);
   const preset = presetKey ? IGDB_PRESETS[presetKey] : undefined;
 
-  const finalWhere = where ?? preset?.where;
+  const clauses: string[] = [];
+  if (where ?? preset?.where) clauses.push((where ?? preset?.where)!);
+  if (query?.releasedAfter)
+    clauses.push(`first_release_date >= ${toUnix(query.releasedAfter)}`);
+  if (query?.releasedBefore)
+    clauses.push(`first_release_date <= ${toUnix(query.releasedBefore)}`);
+
+  const finalWhere = clauses.length ? clauses.join(' & ') : undefined;
   const finalSortBy = sortBy ?? preset?.sortBy;
   const finalOrder = order ?? query?.order ?? preset?.order;
 

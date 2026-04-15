@@ -41,7 +41,10 @@ export const IgdbMapper = {
       aggregatedRating: igdb.aggregated_rating,
       video: parseYoutube(igdb.videos?.[igdb.videos.length - 1]?.video_id),
       screenshots: igdb.screenshots
-        ?.map((s) => parseImageIgdb(s.url))
+        ?.map((img) => parseImageIgdb(img.url))
+        .filter((img): img is string => Boolean(img)),
+      artworks: igdb.artworks
+        ?.map((img) => parseImageIgdb(img.url))
         .filter((img): img is string => Boolean(img)),
       developers,
       publishers,

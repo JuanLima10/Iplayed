@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsDateString,
   IsEnum,
   IsIn,
   IsInt,
@@ -15,6 +16,16 @@ export class GameQueryDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @ApiPropertyOptional({ example: '2020-01-01' })
+  @IsOptional()
+  @IsDateString()
+  releasedAfter?: string;
+
+  @ApiPropertyOptional({ example: '2024-12-31' })
+  @IsOptional()
+  @IsDateString()
+  releasedBefore?: string;
 
   @ApiPropertyOptional({ example: IgdbOrderBy.POPULAR })
   @IsOptional()

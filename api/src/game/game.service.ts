@@ -34,7 +34,12 @@ export class GameService {
   async findBySlug(slug: string): Promise<Response> {
     const igdb = await this.igdb.getIgdbBySlug(slug);
     if (!igdb) throw new NotFoundError('Game not found');
-
     return IgdbMapper.toResponse(igdb);
+  }
+
+  async findRandom(): Promise<Response> {
+    const game = await this.igdb.getIgdbRandom();
+    if (!game) throw new NotFoundError('No games found');
+    return IgdbMapper.toResponse(game);
   }
 }
