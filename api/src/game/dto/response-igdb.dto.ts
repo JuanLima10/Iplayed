@@ -48,6 +48,15 @@ export class ResponseIgdbDto {
   screenshots?: string[];
 
   @ApiPropertyOptional({
+    description: 'Game artworks',
+    example: [
+      'https://images.igdb.com/igdb/image/upload/t_1080p/farvemmmxav0bgt6wx7t.jpg',
+      'https://images.igdb.com/igdb/image/upload/t_1080p/z5t0yuhyiiui1ickwhgj.jpg',
+    ],
+  })
+  artworks?: string[];
+
+  @ApiPropertyOptional({
     description: 'Game video trailer',
     example: 'https://www.youtube.com/watch?v=yowv6_rspoM',
   })

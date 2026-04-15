@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { buildGameStatusCount } from 'common/builders/game-status-count.builder';
 import { buildPrismaQuery } from 'common/builders/prisma-query.builder';
 import { IgdbClient } from 'common/clients/igdb.client';
@@ -11,6 +12,7 @@ import {
   statusCounts,
 } from 'common/interfaces/game-status.interface';
 import { extractCoverId } from 'common/utils/cover-id-extract.util';
+import { resolveDateRange } from 'common/utils/date-range.util';
 import { normalizePaginate } from 'common/utils/paginate-normalize.util';
 import { normalizeQuery } from 'common/utils/query-normalize';
 import { PrismaService } from 'prisma/prisma.service';
@@ -53,6 +55,35 @@ export class GameStatusService {
     const paginate = normalizePaginate({ page, limit, count });
 
     return { data, paginate };
+  }
+
+  async findMostByRange(query: QueryGameStatusDto) {
+    const range = resolveDateRange(query);
+    const { status, limit = 10 } = query;
+
+    const where: Prisma.game_statusWhereInput = {
+      status,
+      ...(range && {
+        created_at: { gte: range.start, lt: range.end },
+      }),
+    };
+
+    const grouped = await this.prisma.game_status.groupBy({
+      by: ['game_id'],
+      where,
+      _count: { _all: true },
+      orderBy: { _count: { game_id: 'desc' } },
+      take: limit,
+    });
+
+    const games = await this.prisma.game.findMany({
+      where: { id: { in: grouped.map((g) => g.game_id) } },
+    });
+
+    return grouped.map(({ game_id, _count }) => ({
+      game: GameMapper.toResponse(games.find((g) => g.id === game_id)!),
+      status: _count._all,
+    }));
   }
 
   async upsert(

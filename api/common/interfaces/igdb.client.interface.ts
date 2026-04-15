@@ -16,6 +16,7 @@ export interface IGameIgdb {
   first_release_date?: number;
   cover?: { url: string } | null;
   screenshots?: { url: string }[];
+  artworks?: { url: string }[];
   videos?: { video_id: string }[];
   rating?: number;
   aggregated_rating?: number;
@@ -57,6 +58,8 @@ export interface IGameIgdbQuery {
 
 export interface IQueryIgdb extends IQuery {
   orderBy?: IgdbOrderBy;
+  releasedAfter?: string;
+  releasedBefore?: string;
 }
 
 interface IPresetIgdb {
@@ -65,13 +68,14 @@ interface IPresetIgdb {
   order: 'asc' | 'desc';
 }
 
-export const IGDB_FIELDS_BASIC = 'fields id, name, slug, cover.url';
+export const IGDB_FIELDS_BASIC =
+  'fields id, name, slug, cover.url, first_release_date';
 
 export const IGDB_FIELDS_FULL = `
   ${IGDB_FIELDS_BASIC},
   summary,
-  first_release_date,
   screenshots.url,
+  artworks.url,
   videos.video_id,
   rating,
   aggregated_rating,
@@ -92,18 +96,17 @@ export const IGDB_PRESETS = {
     order: 'desc',
   },
   [IgdbOrderBy.RATED]: {
-    where:
-      'aggregated_rating != null & aggregated_rating_count > 8 & category = 0',
+    where: 'aggregated_rating != null & aggregated_rating_count > 8',
     sortBy: 'aggregated_rating',
     order: 'desc',
   },
   [IgdbOrderBy.RECENT]: {
-    where: `first_release_date > ${Math.floor(new Date().getTime() / 1000)};`,
+    where: `first_release_date > ${Math.floor(new Date().getTime() / 1000)}`,
     sortBy: 'first_release_date',
     order: 'desc',
   },
   [IgdbOrderBy.AWAITED]: {
-    where: `first_release_date > ${Math.floor(new Date().getTime() / 1000)} & hype > 8;`,
+    where: `first_release_date > ${Math.floor(new Date().getTime() / 1000)} & hypes > 8`,
     sortBy: 'first_release_date',
     order: 'desc',
   },

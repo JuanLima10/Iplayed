@@ -2,6 +2,8 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsDateString,
+  IsEnum,
   IsIn,
   IsInt,
   IsNumber,
@@ -9,6 +11,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
+import { DateRangeType } from 'common/interfaces/prisma.interface';
 import { ReviewOrderBy } from 'common/interfaces/review.interface';
 
 export const ReviewQuery = {
@@ -43,6 +46,21 @@ export class QueryReviewDto {
   @Min(0)
   @Max(5)
   rating?: number;
+
+  @ApiPropertyOptional({ enum: DateRangeType })
+  @IsOptional()
+  @IsEnum(DateRangeType)
+  range?: DateRangeType;
+
+  @ApiPropertyOptional({ example: '2026-04-01' })
+  @IsOptional()
+  @IsDateString()
+  from?: string;
+
+  @ApiPropertyOptional({ example: '2026-04-30' })
+  @IsOptional()
+  @IsDateString()
+  to?: string;
 
   @ApiPropertyOptional({
     example: ReviewOrderBy.CREATED_AT,

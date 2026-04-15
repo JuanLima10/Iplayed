@@ -31,6 +31,11 @@ export class ReviewController {
     return this.service.findAll(query);
   }
 
+  @Get('/most')
+  async findMostByRange(@Query() query: QueryReviewDto) {
+    return this.service.findMostByRange(query);
+  }
+
   @Get('slug/:slug')
   @Swagger({ status: 200, res: ResponseReviewDto, array: true, auth: false })
   async findBySlug(

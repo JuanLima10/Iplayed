@@ -25,6 +25,11 @@ import { GameStatusService } from './game-status.service';
 export class GameStatusController {
   constructor(private readonly service: GameStatusService) {}
 
+  @Get('/most')
+  async findMost(@Query() query: QueryGameStatusDto) {
+    return this.service.findMostByRange(query);
+  }
+
   @Get(':userId')
   @Swagger({
     status: 200,

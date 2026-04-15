@@ -16,15 +16,21 @@ export class GameController {
     return this.service.findAll(query);
   }
 
-  @Get('igdb/:id')
-  @Swagger({ status: 200, res: ResponseIgdbDto, auth: false })
-  async findById(@Param('id') id: number) {
-    return this.service.findByIgdbId(id);
+  @Get('/random')
+  @Swagger({ status: 200, res: ResponseIgdbDto, array: true, auth: false })
+  async findRandom() {
+    return this.service.findRandom();
   }
 
   @Get(':slug')
   @Swagger({ status: 200, res: ResponseIgdbDto, auth: false })
   async findBySlug(@Param('slug') slug: string) {
     return this.service.findBySlug(slug);
+  }
+
+  @Get('igdb/:id')
+  @Swagger({ status: 200, res: ResponseIgdbDto, auth: false })
+  async findById(@Param('id') id: number) {
+    return this.service.findByIgdbId(id);
   }
 }
