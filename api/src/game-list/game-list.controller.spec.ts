@@ -39,6 +39,11 @@ jest.mock(
   () => ({ GameMapper: { toResponse: jest.fn() } }),
   { virtual: true },
 );
+jest.mock(
+  'src/user/user.mapper',
+  () => ({ UserMapper: { toResponse: jest.fn() } }),
+  { virtual: true },
+);
 
 const mockGameListService = {
   findAll: jest.fn(),

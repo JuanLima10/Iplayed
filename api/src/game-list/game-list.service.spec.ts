@@ -31,17 +31,26 @@ jest.mock(
   () => ({ GameMapper: { toResponse: jest.fn() } }),
   { virtual: true },
 );
+jest.mock(
+  'src/user/user.mapper',
+  () => ({
+    UserMapper: { toResponse: jest.fn() },
+  }),
+  { virtual: true },
+);
 
 import { buildPrismaQuery } from 'common/builders/prisma-query.builder';
 import { normalizePaginate } from 'common/utils/paginate-normalize.util';
 import { normalizeQuery } from 'common/utils/query-normalize';
 import { GameMapper } from 'src/game/game.mapper';
 import { ListItemMapper } from 'src/list-item/list-item.mapper';
+import { UserMapper } from 'src/user/user.mapper';
 import { GameListMapper } from './game-list.mapper';
 
 const mockListToResponse = GameListMapper.toResponse as jest.Mock;
 const mockItemToResponse = ListItemMapper.toResponse as jest.Mock;
 const mockGameToResponse = GameMapper.toResponse as jest.Mock;
+const mockUserToResponse = UserMapper.toResponse as jest.Mock;
 
 const mockPrisma = {
   game_list: {
@@ -68,6 +77,19 @@ const mockGameEntity = {
   cover_id: 'abc',
   created_at: new Date('2024-01-01'),
   updated_at: null,
+};
+
+const mockUserEntity = {
+  id: 'user-id-1',
+  provider: 'discord',
+  provider_id: '123456789',
+  username: 'testuser',
+  name: 'Test User',
+  email: 'test@example.com',
+  avatar_url: null,
+  active: true,
+  created_at: new Date('2024-01-01'),
+  updated_at: new Date('2024-01-01'),
 };
 
 const mockListEntity = {
@@ -112,6 +134,19 @@ const mockResponseGame = {
   updatedAt: null,
 };
 
+const mockResponseUser = {
+  id: 'user-id-1',
+  provider: 'discord',
+  providerId: '123456789',
+  username: 'testuser',
+  name: 'Test User',
+  email: 'test@example.com',
+  avatarUrl: null,
+  active: true,
+  createdAt: new Date('2024-01-01'),
+  updatedAt: new Date('2024-01-01'),
+};
+
 const mockFilters = {
   where: {},
   orderBy: { position: 'asc' },
@@ -119,8 +154,10 @@ const mockFilters = {
   take: 10,
 };
 const mockPaginate = { page: 1, limit: 10, pages: 1, count: 1 };
+
 const mockListWithItems = {
   ...mockListEntity,
+  user: mockUserEntity,
   items: [{ ...mockItemEntity, game: mockGameEntity }],
 };
 
@@ -142,6 +179,7 @@ describe('GameListService', () => {
     mockListToResponse.mockReturnValue(mockResponseList);
     mockItemToResponse.mockReturnValue(mockResponseItem);
     mockGameToResponse.mockReturnValue(mockResponseGame);
+    mockUserToResponse.mockReturnValue(mockResponseUser);
     (normalizeQuery as jest.Mock).mockReturnValue({ page: 1, limit: 10 });
     (buildPrismaQuery as jest.Mock).mockReturnValue({ ...mockFilters });
     (normalizePaginate as jest.Mock).mockReturnValue(mockPaginate);
@@ -164,11 +202,18 @@ describe('GameListService', () => {
       expect(buildPrismaQuery).toHaveBeenCalled();
       expect(mockListToResponse).toHaveBeenCalledTimes(1);
       expect(mockGameToResponse).toHaveBeenCalledWith(mockGameEntity);
+      expect(mockUserToResponse).toHaveBeenCalledWith(mockUserEntity);
       expect(result).toEqual({
         data: [
           {
             ...mockResponseList,
-            items: [{ ...mockResponseItem, game: mockResponseGame }],
+            user: mockResponseUser,
+            items: [
+              {
+                ...mockResponseItem,
+                game: mockResponseGame,
+              },
+            ],
           },
         ],
         paginate: mockPaginate,
@@ -204,7 +249,13 @@ describe('GameListService', () => {
         data: [
           {
             ...mockResponseList,
-            items: [{ ...mockResponseItem, game: mockResponseGame }],
+            user: mockResponseUser,
+            items: [
+              {
+                ...mockResponseItem,
+                game: mockResponseGame,
+              },
+            ],
           },
         ],
         paginate: mockPaginate,
@@ -229,7 +280,10 @@ describe('GameListService', () => {
 
   describe('findById', () => {
     it('should return list with paginated items', async () => {
-      mockPrisma.game_list.findUnique.mockResolvedValue(mockListEntity);
+      mockPrisma.game_list.findUnique.mockResolvedValue({
+        ...mockListEntity,
+        user: mockUserEntity,
+      });
       mockPrisma.list_item.count.mockResolvedValue(1);
       mockPrisma.list_item.findMany.mockResolvedValue([
         { ...mockItemEntity, game: mockGameEntity },
@@ -239,11 +293,18 @@ describe('GameListService', () => {
 
       expect(mockPrisma.game_list.findUnique).toHaveBeenCalledWith({
         where: { id: 'list-id-1' },
+        include: { user: true },
       });
       expect(result).toEqual({
         data: {
           ...mockResponseList,
-          items: [{ ...mockResponseItem, game: mockResponseGame }],
+          user: mockResponseUser,
+          items: [
+            {
+              ...mockResponseItem,
+              game: mockResponseGame,
+            },
+          ],
         },
         paginate: mockPaginate,
       });

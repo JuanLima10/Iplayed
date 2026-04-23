@@ -9,6 +9,7 @@ import { normalizeQuery } from 'common/utils/query-normalize';
 import { PrismaService } from 'prisma/prisma.service';
 import { GameStatusMapper } from 'src/game-status/game-status.mapper';
 import { GameMapper } from 'src/game/game.mapper';
+import { UserMapper } from 'src/user/user.mapper';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { QueryReviewDto, ReviewQuery } from './dto/query-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -26,7 +27,7 @@ export class ReviewService {
     const { page = 1, limit = 10 } = query;
 
     const filters = buildPrismaQuery({ query, ...ReviewQuery });
-    const include = { game: { include: { statuses: true } } };
+    const include = { user: true, game: { include: { statuses: true } } };
     if (rating !== undefined || isFavorite !== undefined) {
       filters.where.game = {
         statuses: { some: { rating, is_favorite: isFavorite } },
@@ -38,8 +39,9 @@ export class ReviewService {
       this.prisma.review.findMany({ ...filters, include }),
     ]);
 
-    const data = reviews.map(({ game, ...review }) => ({
+    const data = reviews.map(({ game, user, ...review }) => ({
       ...ReviewMapper.toResponse(review),
+      user: UserMapper.toResponse(user),
       game: GameMapper.toResponse(game),
       status:
         game.statuses?.[0] && GameStatusMapper.toResponse(game.statuses[0]),
@@ -55,7 +57,10 @@ export class ReviewService {
 
     const where = { user_id };
     const filters = buildPrismaQuery({ query, ...ReviewQuery, where });
-    const include = { game: { include: { statuses: { where: { user_id } } } } };
+    const include = {
+      user: true,
+      game: { include: { statuses: { where: { user_id } } } },
+    };
 
     if (rating !== undefined || isFavorite !== undefined) {
       filters.where.game = {
@@ -68,8 +73,9 @@ export class ReviewService {
       this.prisma.review.findMany({ ...filters, include }),
     ]);
 
-    const data = reviews.map(({ game, ...review }) => ({
+    const data = reviews.map(({ game, user, ...review }) => ({
       ...ReviewMapper.toResponse(review),
+      user: UserMapper.toResponse(user),
       game: GameMapper.toResponse(game),
       status:
         game.statuses?.[0] && GameStatusMapper.toResponse(game.statuses[0]),
@@ -88,7 +94,7 @@ export class ReviewService {
 
     const where = { game_id: game.id };
     const filters = buildPrismaQuery({ query, ...ReviewQuery, where });
-    const include = { game: { include: { statuses: true } } };
+    const include = { user: true, game: { include: { statuses: true } } };
 
     if (rating !== undefined || isFavorite !== undefined) {
       filters.where.game = {
@@ -101,8 +107,9 @@ export class ReviewService {
       this.prisma.review.findMany({ ...filters, include }),
     ]);
 
-    const data = reviews.map(({ game, ...review }) => ({
+    const data = reviews.map(({ user, game, ...review }) => ({
       ...ReviewMapper.toResponse(review),
+      user: UserMapper.toResponse(user),
       game: GameMapper.toResponse(game),
       status:
         game.statuses?.[0] && GameStatusMapper.toResponse(game.statuses[0]),

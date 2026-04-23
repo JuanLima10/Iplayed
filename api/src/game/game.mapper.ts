@@ -2,8 +2,8 @@ import { gameSelect, IGameSelect } from 'common/interfaces/game.interface';
 import { IGameIgdb } from 'common/interfaces/igdb.client.interface';
 import { extractCompanies } from 'common/utils/companies-extract.util';
 import { parseDate } from 'common/utils/date-parser.util';
-import { parseImageIgdb } from 'common/utils/image-parser.util';
-import { parseYoutube } from 'common/utils/youtube-parser.util';
+import { mapImageIgdb, parseImageIgdb } from 'common/utils/image-parser.util';
+import { extractVideoId } from 'common/utils/video-id-extract.util';
 import { PrismaMapper } from 'prisma/prisma.mapper';
 import { ResponseGameDto } from './dto/response-game.dto';
 import { ResponseIgdbDto } from './dto/response-igdb.dto';
@@ -39,13 +39,9 @@ export const IgdbMapper = {
       releaseDate: parseDate(igdb.first_release_date),
       rating: igdb.rating,
       aggregatedRating: igdb.aggregated_rating,
-      video: parseYoutube(igdb.videos?.[igdb.videos.length - 1]?.video_id),
-      screenshots: igdb.screenshots
-        ?.map((img) => parseImageIgdb(img.url))
-        .filter((img): img is string => Boolean(img)),
-      artworks: igdb.artworks
-        ?.map((img) => parseImageIgdb(img.url))
-        .filter((img): img is string => Boolean(img)),
+      video: extractVideoId(igdb.videos),
+      screenshots: mapImageIgdb(igdb.screenshots),
+      artworks: mapImageIgdb(igdb.artworks),
       developers,
       publishers,
       genres: igdb.genres?.map((g) => g.name),
