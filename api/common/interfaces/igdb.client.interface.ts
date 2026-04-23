@@ -17,7 +17,7 @@ export interface IGameIgdb {
   cover?: { url: string } | null;
   screenshots?: { url: string }[];
   artworks?: { url: string }[];
-  videos?: { video_id: string }[];
+  videos?: IGameIgdbVideo[];
   rating?: number;
   aggregated_rating?: number;
   genres?: {
@@ -39,6 +39,12 @@ export interface IGameIgdb {
     developer?: boolean;
     company: { name: string };
   }[];
+}
+
+export interface IGameIgdbVideo {
+  id: number;
+  name?: string;
+  video_id: string;
 }
 
 export interface IResponseIgdb {
@@ -76,6 +82,7 @@ export const IGDB_FIELDS_FULL = `
   summary,
   screenshots.url,
   artworks.url,
+  videos.name,
   videos.video_id,
   rating,
   aggregated_rating,
@@ -106,7 +113,7 @@ export const IGDB_PRESETS = {
     order: 'desc',
   },
   [IgdbOrderBy.AWAITED]: {
-    where: `first_release_date > ${Math.floor(new Date().getTime() / 1000)} & hypes > 8`,
+    where: `first_release_date > ${Math.floor(new Date().getTime() / 1000)} & hypes > 9`,
     sortBy: 'first_release_date',
     order: 'desc',
   },

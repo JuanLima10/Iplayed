@@ -10,6 +10,7 @@ import {
   QueryListItemDto,
 } from 'src/list-item/dto/query-list-item.dto';
 import { ListItemMapper } from 'src/list-item/list-item.mapper';
+import { UserMapper } from 'src/user/user.mapper';
 import { CreateGameListDto } from './dto/create-game-list.dto';
 import { GameListQuery, QueryGameListDto } from './dto/query-game-list.dto';
 import { UpdateGameListDto } from './dto/update-game-list.dto';
@@ -25,6 +26,7 @@ export class GameListService {
 
     const filters = buildPrismaQuery({ query, ...GameListQuery });
     const include = {
+      user: true,
       items: {
         include: { game: true },
         orderBy: { position: 'asc' as const },
@@ -37,8 +39,9 @@ export class GameListService {
       this.prisma.game_list.findMany({ ...filters, include }),
     ]);
 
-    const data = lists.map(({ items, ...list }) => ({
+    const data = lists.map(({ items, user, ...list }) => ({
       ...GameListMapper.toResponse(list),
+      user: UserMapper.toResponse(user),
       items: items.map(({ game, ...item }) => ({
         ...ListItemMapper.toResponse(item),
         game: GameMapper.toResponse(game),
@@ -53,8 +56,12 @@ export class GameListService {
     const query = normalizeQuery(filter);
     const { page = 1, limit = 10 } = query;
 
-    const list = await this.prisma.game_list.findUnique({ where: { id } });
-    if (!list) throw new NotFoundError('List not found');
+    const gameList = await this.prisma.game_list.findUnique({
+      where: { id },
+      include: { user: true },
+    });
+    if (!gameList) throw new NotFoundError('List not found');
+    const { user, ...list } = gameList;
 
     const filters = buildPrismaQuery({ query, ...ListItemQuery });
     const orderBy = { position: filter?.order ?? 'asc' };
@@ -68,6 +75,7 @@ export class GameListService {
 
     const data = {
       ...GameListMapper.toResponse(list),
+      user: UserMapper.toResponse(user),
       items: items.map(({ game, ...item }) => ({
         ...ListItemMapper.toResponse(item),
         game: GameMapper.toResponse(game),
@@ -85,6 +93,7 @@ export class GameListService {
     const where = { user_id };
     const filters = buildPrismaQuery({ query, ...GameListQuery, where });
     const include = {
+      user: true,
       items: {
         include: { game: true },
         orderBy: { position: 'asc' as const },
@@ -97,8 +106,9 @@ export class GameListService {
       this.prisma.game_list.findMany({ ...filters, include }),
     ]);
 
-    const data = lists.map(({ items, ...list }) => ({
+    const data = lists.map(({ items, user, ...list }) => ({
       ...GameListMapper.toResponse(list),
+      user: UserMapper.toResponse(user),
       items: items.map(({ game, ...item }) => ({
         ...ListItemMapper.toResponse(item),
         game: GameMapper.toResponse(game),

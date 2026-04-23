@@ -27,6 +27,13 @@ jest.mock(
   }),
   { virtual: true },
 );
+jest.mock(
+  'src/user/user.mapper',
+  () => ({
+    UserMapper: { toResponse: jest.fn() },
+  }),
+  { virtual: true },
+);
 
 import { buildPrismaQuery } from 'common/builders/prisma-query.builder';
 import { extractCoverId } from 'common/utils/cover-id-extract.util';
@@ -34,11 +41,13 @@ import { normalizePaginate } from 'common/utils/paginate-normalize.util';
 import { normalizeQuery } from 'common/utils/query-normalize';
 import { GameStatusMapper } from 'src/game-status/game-status.mapper';
 import { GameMapper } from 'src/game/game.mapper';
+import { UserMapper } from 'src/user/user.mapper';
 import { ReviewMapper } from './review.mapper';
 
 const mockReviewToResponse = ReviewMapper.toResponse as jest.Mock;
 const mockGameToResponse = GameMapper.toResponse as jest.Mock;
 const mockStatusToResponse = GameStatusMapper.toResponse as jest.Mock;
+const mockUserToResponse = UserMapper.toResponse as jest.Mock;
 
 const mockPrisma = {
   review: {
@@ -69,6 +78,19 @@ const mockGameEntity = {
   cover_id: 'abc',
   created_at: new Date('2024-01-01'),
   updated_at: null,
+};
+
+const mockUserEntity = {
+  id: 'user-id-1',
+  provider: 'discord',
+  provider_id: '123456789',
+  username: 'testuser',
+  name: 'Test User',
+  email: 'test@example.com',
+  avatar_url: null,
+  active: true,
+  created_at: new Date('2024-01-01'),
+  updated_at: new Date('2024-01-01'),
 };
 
 const mockGameStatusEntity = {
@@ -131,6 +153,19 @@ const mockResponseStatus = {
   updatedAt: null,
 };
 
+const mockResponseUser = {
+  id: 'user-id-1',
+  provider: 'discord',
+  providerId: '123456789',
+  username: 'testuser',
+  name: 'Test User',
+  email: 'test@example.com',
+  avatarUrl: null,
+  active: true,
+  createdAt: new Date('2024-01-01'),
+  updatedAt: new Date('2024-01-01'),
+};
+
 const mockFilters = {
   where: {},
   orderBy: { created_at: 'desc' },
@@ -142,7 +177,11 @@ const mockPaginate = { page: 1, limit: 10, pages: 1, count: 1 };
 
 const mockReviewWithGame = {
   ...mockReviewEntity,
-  game: { ...mockGameEntity, statuses: [mockGameStatusEntity] },
+  user: mockUserEntity,
+  game: {
+    ...mockGameEntity,
+    statuses: [mockGameStatusEntity],
+  },
 };
 
 describe('ReviewService', () => {
@@ -162,6 +201,7 @@ describe('ReviewService', () => {
     jest.clearAllMocks();
     mockReviewToResponse.mockReturnValue(mockResponseReview);
     mockGameToResponse.mockReturnValue(mockResponseGame);
+    mockUserToResponse.mockReturnValue(mockResponseUser);
     mockStatusToResponse.mockReturnValue(mockResponseStatus);
     (normalizeQuery as jest.Mock).mockReturnValue({ page: 1, limit: 10 });
     (buildPrismaQuery as jest.Mock).mockReturnValue({ ...mockFilters });
@@ -190,10 +230,12 @@ describe('ReviewService', () => {
       expect(mockReviewToResponse).toHaveBeenCalledTimes(1);
       expect(mockGameToResponse).toHaveBeenCalledWith(mockReviewWithGame.game);
       expect(mockStatusToResponse).toHaveBeenCalledWith(mockGameStatusEntity);
+      expect(mockUserToResponse).toHaveBeenCalledWith(mockUserEntity);
       expect(result).toEqual({
         data: [
           {
             ...mockResponseReview,
+            user: mockResponseUser,
             game: mockResponseGame,
             status: mockResponseStatus,
           },
@@ -256,6 +298,7 @@ describe('ReviewService', () => {
         data: [
           {
             ...mockResponseReview,
+            user: mockResponseUser,
             game: mockResponseGame,
             status: mockResponseStatus,
           },
@@ -297,6 +340,7 @@ describe('ReviewService', () => {
         data: [
           {
             ...mockResponseReview,
+            user: mockResponseUser,
             game: mockResponseGame,
             status: mockResponseStatus,
           },
