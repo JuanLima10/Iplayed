@@ -31,6 +31,12 @@ export class UnauthorizedError extends DomainError {
   }
 }
 
+export class TooManyRequestsError extends DomainError {
+  constructor(message = 'Too many requests') {
+    super(message, HttpStatus.TOO_MANY_REQUESTS, 'to-many-requests');
+  }
+}
+
 export class InternalServerError extends DomainError {
   constructor(message = 'Internal server error') {
     super(message, HttpStatus.INTERNAL_SERVER_ERROR, 'internal-server-error');
