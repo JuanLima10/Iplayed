@@ -16,7 +16,6 @@ export class AuthController {
   @Get('discord/callback')
   async discordCallback(@Res() res: Response, @Query('code') code: string) {
     const token = await this.service.handleDiscordCallback(code);
-
     const url = process.env.FRONTEND_URL;
     if (!url) throw new InternalServerError('FRONTEND_URL is not defined');
 
