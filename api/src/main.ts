@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PrismaErrorInterceptor } from 'common/errors/prisma.inteceptor';
@@ -18,10 +18,6 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-      exceptionFactory: (errors) => {
-        if (process.env.NODE_ENV === 'developer')
-          return new BadRequestException(errors);
-      },
     }),
   );
 

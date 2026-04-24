@@ -1,7 +1,4 @@
-# syntax = docker/dockerfile:1
-
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=24.14.1
+ARG NODE_VERSION=24.0.2
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="NestJS/Prisma"
@@ -30,7 +27,7 @@ RUN pnpm install --frozen-lockfile --prod=false
 
 # Generate Prisma Client
 COPY prisma .
-RUN npx prisma generate
+RUN pnpm prisma generate
 
 # Copy application code
 COPY . .
