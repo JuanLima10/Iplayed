@@ -6,11 +6,14 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { AxiosError } from 'axios';
 import { DomainError } from 'common/errors/domain.error';
 import {
   BadRequestError,
   InternalServerError,
   NotFoundError,
+  TooManyRequestsError,
+  UnauthorizedError,
 } from 'common/errors/http-status.error';
 import { getErrorStack } from 'common/utils/error-stack.util';
 import { Observable, catchError } from 'rxjs';
@@ -24,6 +27,36 @@ export class PrismaErrorInterceptor implements NestInterceptor {
       catchError((error: unknown) => {
         if (error instanceof DomainError) {
           throw error;
+        }
+
+        if (error instanceof AxiosError) {
+          const status = error.response?.status;
+          const data = error.response?.data as
+            | Record<string, unknown>
+            | undefined;
+          const detail = (data?.error_description as string) ?? error.message;
+
+          this.logger.error(
+            `AxiosError [${error.response?.status}] ${error.config?.url}`,
+            {
+              detail,
+              code: error.code,
+              requestData: error.config?.data as
+                | Record<string, unknown>
+                | undefined,
+            },
+          );
+
+          this.logger.error(
+            `AxiosError [${status}]: ${detail}`,
+            getErrorStack(error),
+          );
+
+          if (status === 401) throw new UnauthorizedError(detail);
+          if (status === 429) {
+            throw new TooManyRequestsError('External API rate limit exceeded');
+          }
+          throw new InternalServerError(detail);
         }
 
         if (error instanceof Prisma.PrismaClientKnownRequestError) {

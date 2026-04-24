@@ -22,23 +22,34 @@ export class AuthService {
     return `${process.env.DISCORD_OAUTH_URL}?${params.toString()}`;
   }
 
+  private processingCodes = new Set<string>();
+
   async handleDiscordCallback(code: string) {
     if (!code) throw new UnauthorizedError();
-    const data = await getDiscordUser(code);
-    const { email, name, username, ...update } = data;
+    if (this.processingCodes.has(code)) {
+      throw new UnauthorizedError('Code already being processed');
+    }
+    this.processingCodes.add(code);
 
-    const user = await this.prisma.user.upsert({
-      where: {
-        provider_provider_id: {
-          provider: 'discord',
-          provider_id: data.provider_id,
+    try {
+      const data = await getDiscordUser(code);
+      const { email, name, username, ...update } = data;
+
+      const user = await this.prisma.user.upsert({
+        where: {
+          provider_provider_id: {
+            provider: 'discord',
+            provider_id: data.provider_id,
+          },
         },
-      },
-      update: { ...update, active: true },
-      create: { ...data, name, active: true },
-    });
+        update: { ...update, active: true },
+        create: { ...data, name, active: true },
+      });
 
-    const { id: sub } = user;
-    return this.jwtService.sign({ sub, email, username });
+      const { id: sub } = user;
+      return this.jwtService.sign({ sub, email, username });
+    } finally {
+      this.processingCodes.delete(code);
+    }
   }
 }
