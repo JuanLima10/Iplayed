@@ -30,32 +30,26 @@ export class PrismaErrorInterceptor implements NestInterceptor {
         }
 
         if (error instanceof AxiosError) {
-          const status = error.response?.status;
           const data = error.response?.data as
             | Record<string, unknown>
             | undefined;
+          const headers = error.response?.headers as
+            | Record<string, string>
+            | undefined;
+
+          const status = error.response?.status;
+          const retryAfter = headers?.['retry-after'];
           const detail = (data?.error_description as string) ?? error.message;
 
           this.logger.error(
-            `AxiosError [${error.response?.status}] ${error.config?.url}`,
-            {
-              detail,
-              code: error.code,
-              requestData: error.config?.data as
-                | Record<string, unknown>
-                | undefined,
-            },
-          );
-
-          this.logger.error(
-            `AxiosError [${status}]: ${detail}`,
+            `AxiosError [${status}] ${error.config?.url}: 
+            ${detail} — retry-after: ${retryAfter ?? 'none'}`,
             getErrorStack(error),
           );
 
           if (status === 401) throw new UnauthorizedError(detail);
-          if (status === 429) {
+          if (status === 429)
             throw new TooManyRequestsError('External API rate limit exceeded');
-          }
           throw new InternalServerError(detail);
         }
 
