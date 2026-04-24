@@ -5,7 +5,7 @@
 <p align="center">
   <b>IPlayed</b> is a robust and well-structured backend API built to support a modern game tracking platform. Its architecture and tooling make it ideal for scaling, maintaining, and evolving over time while ensuring a clean developer experience.
 </p>
-<p align="center">v1.2.9</p>
+<p align="center">v1.2.10</p>
 
 # 🎮 IPlayed API
 
