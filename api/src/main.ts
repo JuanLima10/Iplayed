@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PrismaErrorInterceptor } from 'common/errors/prisma.inteceptor';
@@ -18,10 +18,6 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-      exceptionFactory: (errors) => {
-        if (process.env.NODE_ENV === 'developer')
-          return new BadRequestException(errors);
-      },
     }),
   );
 
@@ -31,7 +27,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('IPlayed API')
     .setDescription('API for IPlayed')
-    .setVersion('v1.2.6')
+    .setVersion('v1.2.7')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
