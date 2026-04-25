@@ -1,5 +1,10 @@
-import { redirect } from 'next/navigation';
+import Home from './(pages)/home/page'
+import PagesLayout from './(pages)/layout'
 
-export default function App() {
-  return redirect('/home')
+export default function Page() {
+  return (
+    <PagesLayout>
+      <Home />
+    </PagesLayout>
+  )
 }
