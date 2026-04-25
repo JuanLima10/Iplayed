@@ -13,8 +13,8 @@ export default async function Random() {
   const href = `/games/${game?.slug}`
 
   return (
-    <section className="relative h-125 w-full overflow-hidden rounded-t-lg">
-      <div className="absolute bottom-0 z-20 w-full space-y-4 p-4 sm:max-w-165 sm:px-11 sm:py-16">
+    <section className="relative h-125 w-full overflow-hidden sm:px-8">
+      <div className="absolute bottom-0 z-20 w-full space-y-4 p-5 sm:max-w-165 sm:px-11 sm:py-16">
         <div className="flex flex-wrap gap-2">
           <Badge>Hot 100</Badge>
           {game?.genres?.map((genre, index) => (
@@ -43,7 +43,7 @@ export default async function Random() {
         autoPlay
         muted
       />
-      <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-t from-background via-background/25 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-background via-background/25 to-transparent sm:bg-linear-to-t" />
     </section>
   )
 }

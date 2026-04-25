@@ -13,7 +13,7 @@ export async function Popular() {
   const games = await game_api.get({ limit: 20 })
 
   return (
-    <Carousel className="space-y-8 pt-8">
+    <Carousel className="space-y-8 px-5 pt-8 sm:px-8">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h1 className="text-xl font-bold text-card-foreground sm:text-3xl">

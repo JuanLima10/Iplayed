@@ -101,16 +101,16 @@ export function Video(props: IVideoProps) {
   return (
     <div
       className={clsx(
-        'relative h-full w-full overflow-hidden rounded-lg',
+        'relative mt-1 h-full w-full overflow-hidden rounded-md sm:rounded-lg',
         className
       )}
     >
       {(showPoster || hasError) && poster && (
         <Image
+          className="object-cover transition-opacity duration-500"
           src={poster}
           alt="video background"
           fill
-          className="object-cover transition-opacity duration-500"
           priority
           suppressHydrationWarning
         />

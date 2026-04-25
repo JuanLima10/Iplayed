@@ -8,10 +8,10 @@ import { MostStatus } from './components/status-most'
 
 export default async function Home() {
   return (
-    <main className="space-y-10.5 px-5 sm:px-8">
+    <main className="space-y-8 sm:space-y-10.5">
       <Random />
       <Popular />
-      <section className="flex w-full flex-wrap items-start gap-12 lg:flex-nowrap">
+      <section className="flex w-full flex-wrap items-start gap-12 px-5 sm:px-8 lg:flex-nowrap">
         <div className="flex flex-col gap-10.5">
           <MostReviewed />
           <Review />
