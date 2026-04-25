@@ -1,4 +1,6 @@
 import { cookies } from 'next/headers'
+import { ProblemDetails } from '../interfaces/problem-details.interface'
+import { ProblemError } from './error.lib'
 
 type HttpOptions = RequestInit & {
   auth?: boolean
@@ -18,9 +20,11 @@ export async function http<T>(
     : ''
 
   let token: string | undefined
+
   if (auth) {
-    const cookie = cookies()
-    token = (await cookie).get('iplayed_session')?.value
+    const cookieStore = await cookies()
+    token = cookieStore.get('iplayed_session')?.value
+
     if (!token) return null as T
   }
 
@@ -33,9 +37,18 @@ export async function http<T>(
     },
   })
 
+  if (res.status === 401) {
+    return null as T
+  }
+
   if (!res.ok) {
-    const error = await res.json().catch(() => null)
-    throw error ?? new Error(res.statusText)
+    const problem: ProblemDetails | null = await res.json().catch(() => null)
+
+    if (problem?.status) {
+      throw new ProblemError(problem)
+    }
+
+    throw new Error(res.statusText)
   }
 
   return res.json()
