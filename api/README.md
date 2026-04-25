@@ -5,9 +5,9 @@
 <p align="center">
   <b>IPlayed</b> is a robust and well-structured backend API built to support a modern game tracking platform. Its architecture and tooling make it ideal for scaling, maintaining, and evolving over time while ensuring a clean developer experience.
 </p>
-<p align="center">v1.2.10</p>
+<p align="center">v1.2.11</p>
 
-# 🎮 IPlayed API
+## 🎮 IPlayed API
 
 `IPlayed` is a backend API that allows users to track, review, and organize the video games they play. It supports game progress tracking, reviews, ratings, favorites, and custom game lists, all built with scalability and maintainability in mind.
 
