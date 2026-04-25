@@ -112,6 +112,7 @@ function CardReviewHeader(props: ICardReviewHeaderProps) {
 function CardReviewText(props: ICardReviewProps) {
   const { title, text } = props
 
+  const isMobile = useIsMobile()
   const maxLength = useMaxLength()
   const [expanded, setExpanded] = useState(false)
 
@@ -125,7 +126,7 @@ function CardReviewText(props: ICardReviewProps) {
         <p className={cn(`text-sm font-light`, expanded && 'pb-4')}>
           {expanded ? text : truncate(text, { maxLength })}
         </p>
-        {text.length > maxLength ? (
+        {text.length > maxLength && !isMobile ? (
           <CardReviewReadMore
             expanded={expanded}
             onToggle={() => setExpanded((prev) => !prev)}
