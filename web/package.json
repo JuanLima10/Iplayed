@@ -2,6 +2,7 @@
   "name": "web",
   "version": "0.0.1",
   "type": "module",
+  "author": "Juan Lima",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
