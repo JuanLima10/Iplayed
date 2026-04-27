@@ -25,7 +25,10 @@ export function useSearchQuery(query: ISearchQuery = {}) {
       return
     }
 
-    if (!value) return
+    if (!value) {
+      const params = new URLSearchParams()
+      params.delete(param)
+    }
 
     const timeout = setTimeout(() => {
       const params = new URLSearchParams()

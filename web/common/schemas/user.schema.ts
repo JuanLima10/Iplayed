@@ -23,8 +23,8 @@ export const UserQuerySchema = z.object({
   dateField: z.enum(['created_at', 'updated_at']).optional(),
   orderBy: z.enum(UserOrderBy).optional(),
   order: z.enum(['asc', 'desc']).optional(),
-  page: z.number().int().min(1).default(1),
-  limit: z.number().int().min(1).default(10),
+  page: z.number().int().min(1).default(1).optional(),
+  limit: z.number().int().min(1).default(10).optional(),
 })
 
 export type UserQuery = z.infer<typeof UserQuerySchema>
