@@ -1,8 +1,9 @@
 import { cn } from '@/common/utils/cn.util'
 import { ImageOff } from 'lucide-react'
 import Image from 'next/image'
+import { Skeleton } from './skeleton'
 
-type CoverProps = {
+interface ICover {
   src?: string | null
   alt: string
   width: number
@@ -11,7 +12,13 @@ type CoverProps = {
   isText?: boolean
 }
 
-function Cover(props: CoverProps) {
+interface ICoverSkeleton {
+  limit?: number
+  width?: number
+  height?: number
+}
+
+function Cover(props: ICover) {
   const { src, alt, className, width, height, isText = true } = props
 
   return (
@@ -33,4 +40,18 @@ function Cover(props: CoverProps) {
   )
 }
 
-export { Cover }
+function CoverSkeleton({
+  limit = 1,
+  width = 141,
+  height = 196,
+}: ICoverSkeleton) {
+  return Array.from({ length: limit }).map((_, index) => (
+    <Skeleton
+      className="h-full w-full animate-pulse rounded-lg border"
+      key={index}
+      style={{ width, height }}
+    />
+  ))
+}
+
+export { Cover, CoverSkeleton }

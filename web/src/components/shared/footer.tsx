@@ -35,7 +35,7 @@ export function Footer() {
           © 2026 Iplayed. Data via <a {...igdb}>IGDB</a>.
         </span>
       </div>
-      <nav className="flex flex-wrap items-center gap-8">
+      <nav className="flex flex-wrap items-center justify-center gap-8">
         <Link href="/home">Home</Link>
         <Link href="/games">Games</Link>
         <Link href="/people">People</Link>

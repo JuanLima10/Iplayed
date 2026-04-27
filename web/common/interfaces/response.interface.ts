@@ -1,9 +1,6 @@
+import { IPaginate } from './paginate.interface'
+
 export interface IResponse<T> {
   data: T
-  paginate?: {
-    page: number
-    limit: number
-    pages: number
-    count: number
-  }
+  paginate?: IPaginate
 }

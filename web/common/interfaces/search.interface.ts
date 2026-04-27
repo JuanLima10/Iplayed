@@ -1,3 +1,7 @@
+import { IGames } from './game.interface'
+import { IResponse } from './response.interface'
+import { IUser } from './user.interface'
+
 export const PATH_MAP = {
   '/people': {
     path: '/people',
@@ -7,6 +11,11 @@ export const PATH_MAP = {
     path: '/games',
     placeholder: 'Search games...',
   },
+}
+
+export interface ISearch {
+  games: IResponse<IGames[]>
+  users: IResponse<IUser[]>
 }
 
 export interface ISearchQuery {

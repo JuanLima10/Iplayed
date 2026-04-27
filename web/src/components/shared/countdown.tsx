@@ -1,4 +1,3 @@
-// components/countdown.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -35,7 +34,10 @@ export function Countdown({ releaseDate }: { releaseDate: string }) {
         <div key={label} className="flex items-start gap-2">
           {i > 0 && <span className="text-2xl leading-none font-bold">:</span>}
           <div className="flex flex-col items-center">
-            <span className="text-2xl leading-none font-bold">
+            <span
+              className="text-2xl leading-none font-bold"
+              suppressHydrationWarning
+            >
               {String(value).padStart(2, '0')}
             </span>
             <span className="text-xs">{label}</span>
