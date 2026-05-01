@@ -3,7 +3,7 @@ export enum VideoMode {
   background = 'background',
 }
 
-export interface IVideoProps {
+export interface IVideo {
   src?: string | null
   posters?: string[]
   mode?: VideoMode
@@ -11,4 +11,9 @@ export interface IVideoProps {
   loop?: boolean
   muted?: boolean
   className?: string
+}
+
+export interface IVideoDialog {
+  src: string
+  poster?: string
 }

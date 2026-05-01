@@ -16,7 +16,7 @@ import { useIsMobile } from '@/src/hooks/mobile-screen.hook'
 import { Heart } from 'lucide-react'
 import Link from 'next/link'
 import { ReactNode, useState } from 'react'
-import { Avatar, AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardHeader } from '../ui/card'
 import { Cover } from '../ui/cover'
@@ -28,6 +28,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog'
+import { Skeleton } from '../ui/skeleton'
 import { Stars } from '../ui/stars'
 import {
   Tooltip,
@@ -46,10 +47,12 @@ function CardReview({ children }: { children: ReactNode }) {
   )
 }
 
-function CardReviewContent({ children }: { children: ReactNode }) {
+function CardReviewContent(props: { children: ReactNode; className?: string }) {
+  const { children, className } = props
+
   return (
-    <Card className="relative min-h-46.5 w-full py-4">
-      <CardContent className="px-4">{children}</CardContent>
+    <Card className={cn('relative min-h-46.5 w-full py-4', className)}>
+      <CardContent className={cn('px-4', className)}>{children}</CardContent>
     </Card>
   )
 }
@@ -67,6 +70,7 @@ function CardReviewHeader(props: ICardReviewHeaderProps) {
         <Link href={`/people/${userId}`}>
           <Avatar>
             <AvatarImage src={avatarUrl} alt={name} />
+            <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
         </Link>
       )}
@@ -110,7 +114,7 @@ function CardReviewHeader(props: ICardReviewHeaderProps) {
 }
 
 function CardReviewText(props: ICardReviewProps) {
-  const { title, text } = props
+  const { title, text, className } = props
 
   const isMobile = useIsMobile()
   const maxLength = useMaxLength()
@@ -233,10 +237,43 @@ function CardReviewDialog(props: ICardReviewProps) {
   )
 }
 
+function CardReviewSkeleton({
+  cover = false,
+  className,
+}: {
+  cover?: boolean
+  className?: string
+}) {
+  return (
+    <div
+      className={cn(
+        'relative flex w-full items-start gap-2 sm:gap-4',
+        className
+      )}
+    >
+      {cover && <Skeleton className="h-46.5 w-35.25 rounded-lg sm:w-44.5" />}
+      <Card className="relative w-full py-4">
+        <CardHeader className="flex flex-wrap items-center gap-2 px-4 py-0">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-4 w-40" />
+          <Skeleton className="h-4 w-20" />
+        </CardHeader>
+        <CardContent className="space-y-3 px-4">
+          <Skeleton className="h-5 w-3/4" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-[95%]" />
+          <Skeleton className="h-4 w-[85%]" />
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 export {
   CardReview,
   CardReviewContent,
   CardReviewCover,
   CardReviewHeader,
+  CardReviewSkeleton,
   CardReviewText,
 }

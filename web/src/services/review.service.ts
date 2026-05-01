@@ -3,22 +3,22 @@ import { IReview as Review } from '@/common/interfaces/review.interface'
 import api from '@/common/lib/api.lib'
 import { http } from '@/common/lib/http.lib'
 import {
+  ReviewQuery as Params,
   ReviewCreate,
-  ReviewQuery,
   ReviewUpdate,
 } from '@/common/schemas/review.schema'
 
 class ReviewService {
-  async get(params?: ReviewQuery): Promise<Response<Review[]>> {
+  async get(params?: Params): Promise<Response<Review[]>> {
     return http<Response<Review[]>>('/review', { params })
   }
 
-  async most(params?: ReviewQuery): Promise<Response<Review[]>> {
+  async most(params?: Params): Promise<Response<Review[]>> {
     return http<Response<Review[]>>('/review/most', { params })
   }
 
-  async getBySlug(slug: string): Promise<Response<Review[]>> {
-    return http<Response<Review[]>>(`/review/${slug}`)
+  async getBySlug(slug: string, params?: Params): Promise<Response<Review[]>> {
+    return http<Response<Review[]>>(`/review/slug/${slug}`, { params })
   }
 
   async getByUser(userId: string): Promise<Response<Review[]>> {

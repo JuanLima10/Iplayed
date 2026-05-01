@@ -47,6 +47,8 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --breakpoint-xs: 470px;
 }
 
 :root {
@@ -107,10 +109,10 @@
   --border: rgba(25, 25, 50, 1);
   --input: rgba(25, 25, 50, 0.5);
   --ring: rgba(25, 25, 50, 1);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
+  --chart-1: rgba(63, 255, 139, 1);
+  --chart-2: rgba(85, 217, 237, 1);
+  --chart-3: rgb(251, 198, 55);
+  --chart-4: rgba(236, 38, 38, 1);
   --chart-5: oklch(0.269 0 0);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);

@@ -43,16 +43,21 @@ export interface IGameStatusMost {
 }
 
 export interface IGameStatusCount {
-  played: number
-  playing: number
-  wantPlay: number
-  abandoned: number
-  favorites: number
-  ratings: number
+  played: string
+  playing: string
+  wantPlay: string
+  abandoned: string
+  favorites: string
+  ratings: string
+}
+
+export interface IGameStatusRating {
+  avg: number
+  ratings: { stars: number; value: number }[]
 }
 
 export const StatusProgressLabel: Record<GameStatusProgress, string> = {
-  [GameStatusProgress.TO_PLAY]: 'Wished',
+  [GameStatusProgress.TO_PLAY]: 'Wishes',
   [GameStatusProgress.PLAYING]: 'Playing',
   [GameStatusProgress.COMPLETED]: 'Completed',
   [GameStatusProgress.ABANDONED]: 'Abandoned',

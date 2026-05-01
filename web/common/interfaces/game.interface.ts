@@ -33,3 +33,7 @@ export interface IGame {
   themes?: string[]
   similarGames?: IGames[]
 }
+
+export interface IGamePageParam {
+  params: Promise<{ slug: string }>
+}

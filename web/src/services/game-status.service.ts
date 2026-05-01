@@ -1,4 +1,5 @@
 import {
+  IGameStatusRating as Ratings,
   IGameStatus as Status,
   IGameStatusCount as StatusCount,
   IGameStatusMost as StatusMost,
@@ -24,8 +25,12 @@ class GameStatusService {
     return http<StatusMost[]>('/game-status/most', { params })
   }
 
-  async count(param: string): Promise<Response<StatusCount>> {
-    return http<Response<StatusCount>>(`/game-status/count/${param}`)
+  async count(param: string): Promise<StatusCount> {
+    return http<StatusCount>(`/game-status/count/${param}`)
+  }
+
+  async rating(slug: string): Promise<Ratings> {
+    return http<Ratings>(`/game-status/rating/${slug}`)
   }
 
   async upsert(body: StatusCreate): Promise<Status> {

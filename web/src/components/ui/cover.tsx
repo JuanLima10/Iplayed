@@ -8,6 +8,7 @@ interface ICover {
   alt: string
   width: number
   height: number
+  priority?: boolean
   className?: string
   isText?: boolean
 }
@@ -19,7 +20,7 @@ interface ICoverSkeleton {
 }
 
 function Cover(props: ICover) {
-  const { src, alt, className, width, height, isText = true } = props
+  const { src, alt, className, isText = true, ...img } = props
 
   return (
     <div className="relative rounded-lg border">
@@ -27,8 +28,7 @@ function Cover(props: ICover) {
         className={cn('rounded-lg object-cover', className)}
         src={src ?? '/cover-not-found.png'}
         alt={alt}
-        width={width}
-        height={height}
+        {...img}
         suppressHydrationWarning
       />
       {!src && (

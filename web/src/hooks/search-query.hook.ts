@@ -1,11 +1,12 @@
 import { ISearchQuery } from '@/common/interfaces/search.interface'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 export function useSearchQuery(query: ISearchQuery = {}) {
   const { path = '', param = 'search', debounceMs = 400 } = query
 
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
 
   const initialValue = searchParams.get(param) ?? ''
@@ -25,14 +26,14 @@ export function useSearchQuery(query: ISearchQuery = {}) {
       return
     }
 
-    if (!value) {
-      const params = new URLSearchParams()
-      params.delete(param)
-    }
+    if (pathname !== path) return
 
     const timeout = setTimeout(() => {
       const params = new URLSearchParams()
-      params.set(param, value)
+
+      if (value) {
+        params.set(param, value)
+      }
 
       router.replace(`${path}?${params.toString()}`, {
         scroll: false,
@@ -40,7 +41,7 @@ export function useSearchQuery(query: ISearchQuery = {}) {
     }, debounceMs)
 
     return () => clearTimeout(timeout)
-  }, [value, path, param, debounceMs, router])
+  }, [value, path, param, debounceMs, router, pathname])
 
   return {
     value,

@@ -1,8 +1,8 @@
 import { VideoMode } from '@/common/interfaces/video.interface'
 import { cn } from '@/common/utils/cn.util'
-import { Video } from '@/src/components/shared/video'
 import { Badge } from '@/src/components/ui/badge'
 import { buttonVariants } from '@/src/components/ui/button'
+import { Video } from '@/src/components/ui/video'
 import { game_api } from '@/src/services/game.service'
 import Link from 'next/link'
 

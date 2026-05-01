@@ -9,4 +9,5 @@ export interface IPaginateProps {
   paginate?: IPaginate
   param?: string
   className?: string
+  disabled?: boolean
 }
