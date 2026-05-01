@@ -54,6 +54,11 @@ export class GameStatusController {
     return this.service.count(param);
   }
 
+  @Get('rating/:slug')
+  async rating(@Param('slug') slug: string) {
+    return this.service.findRatingBySlug(slug);
+  }
+
   @Post()
   @Auth({ owner: true })
   @Swagger({ status: 201, res: ResponseGameStatusDto })

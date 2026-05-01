@@ -9,12 +9,15 @@ import {
 } from 'common/errors/http-status.error';
 import {
   gameStatusSelect,
+  STAR_BUCKETS,
   statusCounts,
 } from 'common/interfaces/game-status.interface';
+import { formatCount } from 'common/utils/count-format.util';
 import { extractCoverId } from 'common/utils/cover-id-extract.util';
 import { resolveDateRange } from 'common/utils/date-range.util';
 import { normalizePaginate } from 'common/utils/paginate-normalize.util';
 import { normalizeQuery } from 'common/utils/query-normalize';
+import { ratingToStars } from 'common/utils/rating-to-stars.util';
 import { PrismaService } from 'prisma/prisma.service';
 import { GameMapper } from 'src/game/game.mapper';
 import { CreateGameStatusDto } from './dto/create-game-status.dto';
@@ -86,6 +89,36 @@ export class GameStatusService {
     }));
   }
 
+  async findRatingBySlug(slug: string) {
+    const game = await this.prisma.game.findFirst({ where: { slug } });
+    if (!game) return { avg: null, ratings: [] };
+
+    const localRatings = await this.prisma.game_status.findMany({
+      where: { game_id: game.id, rating: { not: null } },
+      select: { rating: true },
+    });
+
+    const ratingsMap = new Map<number, number>();
+    STAR_BUCKETS.forEach((s) => ratingsMap.set(s, 0));
+
+    let sum = 0;
+    for (const { rating } of localRatings) {
+      const stars = ratingToStars(rating!);
+      ratingsMap.set(stars, (ratingsMap.get(stars) ?? 0) + 1);
+      sum += rating!;
+    }
+    const count = localRatings.length;
+    const avg = count > 0 ? sum / count : null;
+
+    return {
+      avg: avg ? Number(avg.toFixed(1)) : null,
+      ratings: STAR_BUCKETS.map((stars) => ({
+        stars,
+        value: ratingsMap.get(stars) ?? 0,
+      })),
+    };
+  }
+
   async upsert(
     user_id: string,
     dto: CreateGameStatusDto,
@@ -148,8 +181,14 @@ export class GameStatusService {
       }),
     ]);
 
-    const data = { played, playing, wantPlay, abandoned, favorites, ratings };
-    return { data };
+    return {
+      played: formatCount(played),
+      playing: formatCount(playing),
+      wantPlay: formatCount(wantPlay),
+      abandoned: formatCount(abandoned),
+      favorites: formatCount(favorites),
+      ratings: formatCount(ratings),
+    };
   }
 
   async countBest(user_id: string) {

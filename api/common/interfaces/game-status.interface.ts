@@ -16,6 +16,8 @@ export const statusCounts = [
   ['abandoned', progress_status.ABANDONED],
 ] as const;
 
+export const STAR_BUCKETS = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
+
 export interface IGameStatus {
   id: string;
   userId: string;
