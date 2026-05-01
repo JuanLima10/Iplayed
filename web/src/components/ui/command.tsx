@@ -104,7 +104,7 @@ function CommandDialog({
       </DialogHeader>
       <DialogContent
         className={cn(
-          'top-1/6 translate-y-0 overflow-hidden rounded-xl! p-0',
+          'top-5 translate-y-0 rounded-xl! p-0 sm:top-8',
           className
         )}
         showCloseButton={showCloseButton}
@@ -202,10 +202,16 @@ function CommandItem({
   href,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Item> & { href?: string }) {
+  const { setOpen } = useCommand()
+  const handleSelect = () => {
+    setOpen(false)
+  }
+
   return (
     <Link href={href ?? ''}>
       <CommandPrimitive.Item
         data-slot="command-item"
+        onSelect={handleSelect}
         className={cn(
           "group/command-item relative flex cursor-pointer items-center gap-2 rounded-sm p-2.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-muted data-selected:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-selected:*:[svg]:text-foreground",
           className

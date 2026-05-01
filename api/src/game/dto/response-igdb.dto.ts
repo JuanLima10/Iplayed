@@ -69,10 +69,10 @@ export class ResponseIgdbDto {
   rating?: number;
 
   @ApiPropertyOptional({
-    description: 'Game aggregated rating',
-    example: 5,
+    description: 'Game rating count',
+    example: 2800,
   })
-  aggregatedRating?: number;
+  ratingCount?: number;
 
   @ApiPropertyOptional({
     description: 'Publishers game',

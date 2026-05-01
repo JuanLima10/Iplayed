@@ -53,10 +53,10 @@ export function CommandSearch() {
   return (
     <Command className="w-full">
       <CommandTrigger className="w-full cursor-text" asChild>
-        <div className="flex h-9 w-full items-center gap-2 rounded-md border-2 border-input bg-input px-3 py-2 text-sm text-muted-foreground outline-none sm:min-w-60.25">
+        <div className="flex h-9 w-full items-center gap-2 rounded-md border-2 border-input bg-[#14142e] px-3 py-2 text-sm text-muted-foreground outline-none sm:min-w-60.25">
           <Search size={14} suppressHydrationWarning />
           <span className="font-semibold text-[#3b3b50]">Search...</span>
-          <kbd className="ml-auto rounded border border-border px-1.5 py-0.5 font-mono text-[11px]">
+          <kbd className="ml-auto rounded border border-border px-1.5 py-0.5 font-mono text-xs">
             ⌘K
           </kbd>
         </div>
@@ -78,7 +78,7 @@ export function CommandSearch() {
           <CommandEmpty>No results for &ldquo;{query}&rdquo;</CommandEmpty>
         )}
 
-        <CommandList>
+        <CommandList className="max-h-130 overflow-y-auto">
           {hasGames && (
             <CommandGroup heading={`Games ${`(${gameCount})`}`}>
               {results.games.data.map((game) => (

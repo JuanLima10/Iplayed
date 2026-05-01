@@ -87,7 +87,7 @@ export class ReviewService {
 
   async findBySlug(slug: string, filter: QueryReviewDto) {
     const game = await this.prisma.game.findFirst({ where: { slug } });
-    if (!game) throw new NotFoundError('Game not found');
+    if (!game) return { data: [] };
 
     const { isFavorite, rating, ...query } = normalizeQuery(filter);
     const { page = 1, limit = 10 } = query;

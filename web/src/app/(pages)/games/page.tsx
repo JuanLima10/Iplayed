@@ -1,19 +1,11 @@
-import { ISearchParams } from '@/common/interfaces/search-params.interface'
-import { CoverSkeleton } from '@/src/components/ui/cover'
-import { Suspense } from 'react'
 import { Order } from './components/order'
 import { OrderTabs } from './components/order-tabs'
 import { ReadGames } from './components/read-games'
 import { ReleaseYear } from './components/release-year'
 
-export default async function Games({ searchParams }: ISearchParams) {
-  const query = await searchParams
-  const suspenseKey = new URLSearchParams(
-    Object.entries(query ?? {}).map(([k, v]) => [k, String(v)])
-  ).toString()
-
+export default function Games() {
   return (
-    <main className="space-y-8 px-5 sm:px-8 md:space-y-12">
+    <main className="mx-auto max-w-360 space-y-8 px-5 pt-64 sm:px-8 sm:pt-32 md:space-y-12">
       <header className="flex flex-wrap items-end justify-between gap-8">
         <div className="max-w-125 space-y-2">
           <div className="flex items-end gap-3">
@@ -33,16 +25,7 @@ export default async function Games({ searchParams }: ISearchParams) {
           <ReleaseYear />
           <Order />
         </aside>
-        <Suspense
-          key={suspenseKey}
-          fallback={
-            <div className="flex min-h-98 flex-wrap items-center justify-center gap-3 pb-20">
-              <CoverSkeleton limit={12} width={141} height={186} />
-            </div>
-          }
-        >
-          <ReadGames searchParams={searchParams} />
-        </Suspense>
+        <ReadGames />
       </section>
     </main>
   )

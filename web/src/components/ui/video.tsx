@@ -1,6 +1,7 @@
 'use client'
 
-import { IVideoProps, VideoMode } from '@/common/interfaces/video.interface'
+import { IVideo, VideoMode } from '@/common/interfaces/video.interface'
+import { createPlayer } from '@/common/utils/player-create.util'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
@@ -20,7 +21,7 @@ function loadYouTubeAPI() {
   document.body.appendChild(tag)
 }
 
-export function Video(props: IVideoProps) {
+export function Video(props: IVideo) {
   const {
     src,
     posters = [],
@@ -46,55 +47,65 @@ export function Video(props: IVideoProps) {
   }, [posters])
 
   useEffect(() => {
-    if (!src) return
+    if (!src || !containerRef.current) return
 
-    loadYouTubeAPI()
+    let interval: any
 
-    window.onYouTubeIframeAPIReady = () => {
+    const init = () => {
       if (!containerRef.current) return
 
-      playerRef.current = new window.YT.Player(containerRef.current, {
-        videoId: src,
-        playerVars: {
-          autoplay: autoPlay ? 1 : 0,
-          mute: muted ? 1 : 0,
-          controls: isBackground ? 0 : 1,
-          disablekb: 1,
-          modestbranding: 1,
-          playsinline: 1,
-          rel: 0,
-          start: isBackground ? 60 : undefined,
+      playerRef.current = createPlayer({
+        container: containerRef.current,
+        src,
+        autoPlay,
+        muted,
+        isBackground,
+        onReady: (player) => {
+          if (isBackground) {
+            const duration = player.getDuration()
+
+            player.seekTo(20, true)
+            player.mute()
+            setShowPoster(false)
+
+            const endAt = Math.max(duration - 20, 60)
+
+            interval = setInterval(() => {
+              const current = player.getCurrentTime()
+              if (current >= endAt) {
+                player.pauseVideo()
+                setShowPoster(true)
+                clearInterval(interval)
+              }
+            }, 500)
+          } else {
+            setShowPoster(false)
+          }
         },
-        events: {
-          onReady: (event: any) => {
-            const player = event.target
-
-            if (isBackground) {
-              const duration = player.getDuration()
-
-              player.seekTo(20, true) // begin after 30 sec
-              const endAt = Math.max(duration - 20, 60) // cut last 20 sec
-
-              const interval = setInterval(() => {
-                const current = player.getCurrentTime()
-
-                if (current >= endAt) {
-                  player.pauseVideo()
-                  setShowPoster(true)
-                  clearInterval(interval)
-                }
-              }, 500)
-            }
-
-            if (autoPlay) setShowPoster(false)
-          },
-
-          onError: () => {
-            setHasError(true)
-            setShowPoster(true)
-          },
+        onError: () => {
+          setHasError(true)
+          setShowPoster(true)
         },
       })
+    }
+
+    if (window.YT?.Player) {
+      init()
+    } else {
+      loadYouTubeAPI()
+      const prev = window.onYouTubeIframeAPIReady
+      window.onYouTubeIframeAPIReady = () => {
+        prev?.()
+        init()
+      }
+    }
+
+    return () => {
+      if (interval) clearInterval(interval)
+      if (playerRef.current) {
+        playerRef.current.destroy()
+        playerRef.current = null
+      }
     }
   }, [src, autoPlay, muted, isBackground])
 
@@ -126,11 +137,15 @@ export function Video(props: IVideoProps) {
         <div
           ref={containerRef}
           className={clsx(
-            'absolute top-1/2 left-1/2',
-            '-translate-x-1/2 -translate-y-1/2',
-            'h-screen w-screen',
-            'min-h-[56.25vw] min-w-[177.77vh]',
-            !isBackground && 'h-full min-h-0 w-full min-w-0'
+            'absolute inset-0',
+            isBackground
+              ? [
+                  'top-1/2 left-1/2',
+                  '-translate-x-1/2 -translate-y-1/2',
+                  'h-screen w-screen',
+                  'min-h-[56.25vw] min-w-[177.77vh]',
+                ]
+              : ['h-full w-full']
           )}
         />
       </div>

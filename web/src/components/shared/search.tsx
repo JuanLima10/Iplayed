@@ -13,13 +13,13 @@ export function Search() {
   const gamesConfig = PATH_MAP['/games']
   const peopleConfig = PATH_MAP['/people']
 
+  const isPeople = pathname.startsWith(peopleConfig.path)
+  const { path, placeholder } = isPeople ? peopleConfig : gamesConfig
+
+  const { value, onChange } = useSearchQuery({ path })
+  const props = { placeholder, value, onChange }
+
   if (pathname === gamesConfig.path || pathname === peopleConfig.path) {
-    const isPeople = pathname.startsWith(peopleConfig.path)
-    const { path, placeholder } = isPeople ? peopleConfig : gamesConfig
-
-    const { value, onChange } = useSearchQuery({ path })
-    const props = { placeholder, value, onChange }
-
     return <Input className="w-full" icon={Icon} {...props} />
   }
 

@@ -5,7 +5,7 @@ import { Search } from './search'
 
 export function NavBar() {
   return (
-    <header className="flex flex-wrap-reverse justify-center gap-8 px-5 pt-8 pb-8 sm:px-8 sm:pb-16 lg:justify-between">
+    <header className="absolute right-1/2 z-10 flex w-full max-w-360 translate-x-1/2 flex-wrap-reverse justify-center gap-8 px-5 pt-8 pb-8 sm:px-8 sm:pb-16 lg:justify-between">
       <div className="flex flex-wrap items-end justify-center gap-8">
         <Image
           src="/logo.png"

@@ -1,5 +1,6 @@
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 
+import ReactQueryProvider from '@/common/providers/react-query.provider'
 import { cn } from '@/common/utils/cn.util'
 import { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
@@ -35,9 +36,9 @@ export default function RootLayout({
         inter.variable
       )}
     >
-      <body className="mx-auto max-w-360">
+      <body className="mx-auto">
         <ThemeProvider attribute="class" defaultTheme="dark">
-          {children}
+          <ReactQueryProvider>{children}</ReactQueryProvider>
         </ThemeProvider>
       </body>
     </html>

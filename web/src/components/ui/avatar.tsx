@@ -40,13 +40,17 @@ function AvatarImage({
 
 function AvatarFallback({
   className,
+  size = 'default',
   ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
+}: React.ComponentProps<typeof AvatarPrimitive.Fallback> & {
+  size?: 'default' | 'sm' | 'lg'
+}) {
   return (
     <AvatarPrimitive.Fallback
+      data-size={size}
       data-slot="avatar-fallback"
       className={cn(
-        'flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-accent',
+        'flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-accent',
         className
       )}
       {...props}

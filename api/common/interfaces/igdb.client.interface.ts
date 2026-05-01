@@ -18,8 +18,8 @@ export interface IGameIgdb {
   screenshots?: { url: string }[];
   artworks?: { url: string }[];
   videos?: IGameIgdbVideo[];
-  rating?: number;
-  aggregated_rating?: number;
+  total_rating?: number;
+  total_rating_count?: number;
   genres?: {
     id: number;
     name: string;
@@ -84,8 +84,8 @@ export const IGDB_FIELDS_FULL = `
   artworks.url,
   videos.name,
   videos.video_id,
-  rating,
-  aggregated_rating,
+  total_rating,
+  total_rating_count,
   genres.name,
   themes.name,
   similar_games.name,
@@ -98,13 +98,13 @@ export const IGDB_FIELDS_FULL = `
 
 export const IGDB_PRESETS = {
   [IgdbOrderBy.POPULAR]: {
-    where: 'rating_count != null',
-    sortBy: 'rating_count',
+    where: 'total_rating_count != null',
+    sortBy: 'total_rating_count',
     order: 'desc',
   },
   [IgdbOrderBy.RATED]: {
-    where: 'aggregated_rating != null & aggregated_rating_count > 8',
-    sortBy: 'aggregated_rating',
+    where: 'total_rating != null & aggregated_rating_count > 8',
+    sortBy: 'total_rating',
     order: 'desc',
   },
   [IgdbOrderBy.RECENT]: {
