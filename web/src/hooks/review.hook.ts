@@ -1,10 +1,17 @@
 import { IResponse as Response } from '@/common/interfaces/response.interface'
 import { IReview as Review } from '@/common/interfaces/review.interface'
-import api from '@/common/lib/api.lib'
-import { ReviewQuery as Params } from '@/common/schemas/review.schema'
+import { api, api_auth } from '@/common/lib/api.lib'
+import {
+  ReviewQuery as Params,
+  ReviewCreate,
+} from '@/common/schemas/review.schema'
 import { getNextData } from '@/common/utils/next-data-get.util'
 import { getNextPage } from '@/common/utils/next-page-get.util'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 export function useGetReview(slug?: string, params?: Params) {
   const baseUrl = slug ? `/review/slug/${slug}` : `/review`
@@ -12,10 +19,9 @@ export function useGetReview(slug?: string, params?: Params) {
   const { data, ...query } = useInfiniteQuery({
     queryKey: ['reviews', slug, params],
     queryFn: async ({ pageParam }) => {
-      const { data } = await api.get<Response<Review[]>>(baseUrl, {
+      return await api<Response<Review[]>>(baseUrl, {
         params: { ...params, page: pageParam },
       })
-      return data
     },
     initialPageParam: 1,
     getNextPageParam: ({ paginate }) => getNextPage(paginate),
@@ -27,4 +33,21 @@ export function useGetReview(slug?: string, params?: Params) {
   const loadMore = { fetchNextPage, hasNextPage, isFetchingNextPage }
 
   return { ...query, reviews, loadMore }
+}
+
+export function useUpsertReview() {
+  const queryClient = useQueryClient()
+  const queryKey = ['review', 'game-status']
+
+  const { mutateAsync: upsert, isPending } = useMutation({
+    mutationFn: async (body: ReviewCreate) => {
+      return await api_auth<Response<Review>>(`/review`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      })
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey }),
+  })
+
+  return { upsert, isPending }
 }

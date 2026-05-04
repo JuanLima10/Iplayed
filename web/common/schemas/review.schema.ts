@@ -1,23 +1,21 @@
 import { z } from 'zod'
-import {
-  ReviewDateRange,
-  ReviewOrderBy,
-  ReviewStatus,
-} from '../interfaces/review.interface'
+import { GameStatusProgress } from '../interfaces/game-status.interface'
+import { ReviewDateRange, ReviewOrderBy } from '../interfaces/review.interface'
 
 export const ReviewSchema = z.object({
+  igdbId: z.number().optional(),
   slug: z.string().min(1, 'Slug is required'),
   text: z
     .string()
     .min(3, 'Review is too short')
     .max(2000, 'Review is too long')
     .optional(),
-  progress: z.number().int().min(0).max(100),
-  status: ReviewStatus,
+  progress: z.number().int().min(0).max(100).optional(),
+  status: z.enum(GameStatusProgress).optional(),
   best: z.number().int().min(1).max(10).optional(),
-  isFavorite: z.boolean(),
-  rating: z.number().min(0).max(5).multipleOf(0.5),
-  lastPlayedAt: z.iso.datetime(),
+  isFavorite: z.boolean().optional(),
+  rating: z.number().min(0).max(5).multipleOf(0.5).optional(),
+  lastPlayedAt: z.iso.datetime().optional(),
 })
 
 export type ReviewCreate = z.infer<typeof ReviewSchema>

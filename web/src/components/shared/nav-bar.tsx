@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { Me } from './me'
 import { NavLink } from './nav-link'
 import { Search } from './search'
@@ -7,13 +8,15 @@ export function NavBar() {
   return (
     <header className="absolute right-1/2 z-10 flex w-full max-w-360 translate-x-1/2 flex-wrap-reverse justify-center gap-8 px-5 pt-8 pb-8 sm:px-8 sm:pb-16 lg:justify-between">
       <div className="flex flex-wrap items-end justify-center gap-8">
-        <Image
-          src="/logo.png"
-          alt="logo"
-          width={150}
-          height={36}
-          suppressHydrationWarning
-        />
+        <Link href="/home">
+          <Image
+            src="/logo.png"
+            alt="logo"
+            width={150}
+            height={36}
+            suppressHydrationWarning
+          />
+        </Link>
         <nav className="flex gap-6 font-medium">
           <NavLink href="/home">Home</NavLink>
           <NavLink href="/games">Games</NavLink>

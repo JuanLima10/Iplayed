@@ -20,6 +20,7 @@ import { normalizeQuery } from 'common/utils/query-normalize';
 import { ratingToStars } from 'common/utils/rating-to-stars.util';
 import { PrismaService } from 'prisma/prisma.service';
 import { GameMapper } from 'src/game/game.mapper';
+import { ReviewMapper } from 'src/review/review.mapper';
 import { CreateGameStatusDto } from './dto/create-game-status.dto';
 import {
   GameStatusQuery,
@@ -37,24 +38,34 @@ export class GameStatusService {
   ) {}
 
   async findByUserId(user_id: string, filter?: QueryGameStatusDto) {
-    const query = normalizeQuery(filter);
-    const { page = 1, limit = 10 } = query;
+    const normalize = normalizeQuery(filter);
+    const { page = 1, limit = 10, slug, ...query } = normalize;
 
     const where = { user_id };
+    const include = { include: { reviews: { where } } };
+    const select = { ...gameStatusSelect, game: include };
+
     const filters = buildPrismaQuery({ query, ...GameStatusQuery, where });
+    const gameWhere = { ...filters.where, ...(slug && { game: { slug } }) };
 
     const [count, gameStatus] = await Promise.all([
-      this.prisma.game_status.count({ where: filters.where }),
+      this.prisma.game_status.count({ where: gameWhere }),
       this.prisma.game_status.findMany({
         ...filters,
-        select: { ...gameStatusSelect, game: true },
+        where: gameWhere,
+        select,
       }),
     ]);
 
-    const data = gameStatus.map(({ game, ...status }) => ({
-      ...GameStatusMapper.toResponse(status),
-      game: GameMapper.toResponse(game),
-    }));
+    const data = gameStatus.map(({ game, ...status }) => {
+      const { reviews, ...gameData } = game;
+
+      return {
+        ...GameStatusMapper.toResponse(status),
+        game: GameMapper.toResponse(gameData),
+        review: reviews[0] ? ReviewMapper.toResponse(reviews[0]) : null,
+      };
+    });
     const paginate = normalizePaginate({ page, limit, count });
 
     return { data, paginate };

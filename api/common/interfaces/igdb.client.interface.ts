@@ -8,11 +8,20 @@ export enum IgdbOrderBy {
   AWAITED = 'awaited',
 }
 
+export interface IGames {
+  id: number;
+  name: string;
+  slug: string;
+  game_type?: { id: number; type: string };
+  cover?: { url: string } | null;
+}
+
 export interface IGameIgdb {
   id: number;
   name: string;
   slug: string;
   summary?: string;
+  storyline: string;
   first_release_date?: number;
   cover?: { url: string } | null;
   screenshots?: { url: string }[];
@@ -20,14 +29,15 @@ export interface IGameIgdb {
   videos?: IGameIgdbVideo[];
   total_rating?: number;
   total_rating_count?: number;
-  genres?: {
-    id: number;
-    name: string;
-  }[];
-  themes?: {
-    id: number;
-    name: string;
-  }[];
+  game_type: { id: number; type: string };
+  genres?: { id: number; name: string }[];
+  themes?: { id: number; name: string }[];
+  collections?: { id: number; games: IGames[] }[];
+  dlcs?: IGames[];
+  remakes?: IGames[];
+  remasters?: IGames[];
+  expansions?: IGames[];
+  parent_game?: IGames;
   similar_games?: {
     id: number;
     name: string;
@@ -80,6 +90,8 @@ export const IGDB_FIELDS_BASIC =
 export const IGDB_FIELDS_FULL = `
   ${IGDB_FIELDS_BASIC},
   summary,
+  storyline,
+  game_type.type,
   screenshots.url,
   artworks.url,
   videos.name,
@@ -88,6 +100,25 @@ export const IGDB_FIELDS_FULL = `
   total_rating_count,
   genres.name,
   themes.name,
+  dlcs.slug,
+  dlcs.name,
+  dlcs.cover.url,
+  remakes.slug,
+  remakes.name,
+  remakes.cover.url,
+  remasters.slug,
+  remasters.name,
+  remasters.cover.url,
+  expansions.slug,
+  expansions.name,
+  expansions.cover.url,
+  parent_game.slug,
+  parent_game.name,
+  parent_game.cover.url,
+  collections.games.slug,
+  collections.games.name,
+  collections.games.cover.url,
+  collections.games.game_type.type,
   similar_games.name,
   similar_games.slug,
   similar_games.cover.url,

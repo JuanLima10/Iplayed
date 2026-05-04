@@ -8,7 +8,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/home', request.url))
   }
 
-  const redirectTo = request.cookies.get('redirect_to')?.value ?? '/home'
+  const redirectValue = request.cookies.get('redirect_to')?.value
+  const redirectTo =
+    redirectValue && redirectValue !== '/auth' ? redirectValue : '/home'
   const response = NextResponse.redirect(new URL(redirectTo, request.url))
 
   response.cookies.set({

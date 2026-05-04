@@ -104,6 +104,73 @@ export class ResponseIgdbDto {
   themes?: string[];
 
   @ApiPropertyOptional({
+    description: 'Full storyline from IGDB',
+    example:
+      'The Witcher 3: Wild Hunt is an open-world action role-playing game developed by CD Projekt Red.\n\nSet in a dark fantasy world, the game follows Geralt of Rivia, a monster hunter searching for his adopted daughter, Ciri, while navigating political conflicts and supernatural threats. Gameplay features exploration, combat, character progression, and branching narratives shaped by player choices. Widely acclaimed for its writing, world-building, and depth, it is considered one of the most influential RPGs of its generation.',
+  })
+  storyline?: string;
+
+  @ApiPropertyOptional({ description: 'Game type name', example: 'Main Game' })
+  gameType?: string;
+
+  @ApiPropertyOptional({
+    description: 'Games with connection',
+    example: [
+      {
+        igdbId: 13166,
+        gameTitle: 'main game',
+        title: 'The Witcher 3: Wild Hunt - Blood and Wine',
+        slug: 'the-witcher-3-wild-hunt-blood-and-wine',
+        coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_thumb/co2lgo.jpg',
+      },
+      {
+        igdbId: 12503,
+        gameTitle: 'main game',
+        title: 'The Witcher 3: Wild Hunt - Hearts of Stone',
+        slug: 'the-witcher-3-wild-hunt-hearts-of-stone',
+        coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_thumb/co1t7q.jpg',
+      },
+    ],
+  })
+  collections?: {
+    type: string;
+    games: {
+      igdbId: number;
+      title: string;
+      slug: string;
+      coverUrl?: string;
+    }[];
+  }[];
+
+  @ApiPropertyOptional({
+    description: 'Games from the same franchise',
+    example: [
+      {
+        igdbId: 80,
+        title: 'The Witcher',
+        slug: 'the-witcher',
+        coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_1080p/co1xrx.jpg',
+      },
+      {
+        igdbId: 478,
+        title: 'The Witcher 2: Assassins of Kings',
+        slug: 'the-witcher-2-assassins-of-kings',
+        coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_1080p/co1wy4.jpg',
+      },
+    ],
+  })
+  franchises?: {
+    igdbId: number;
+    title: string;
+    slug: string;
+    coverUrl?: string;
+  }[];
+
+  @ApiPropertyOptional({
     description: 'Similar games',
     example: [
       {

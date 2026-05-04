@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
-export const GameListCreate = z.object({
+export const GameListSchema = z.object({
   name: z.string().min(1).max(100),
 })
-export type GameListCreate = z.infer<typeof GameListCreate>
+export type GameListCreate = z.infer<typeof GameListSchema>
 
-export const GameListUpdate = GameListCreate.partial
+export const GameListUpdate = GameListSchema.partial
 export type GameListUpdate = z.infer<typeof GameListUpdate>
 
 export const GameListQuery = z.object({

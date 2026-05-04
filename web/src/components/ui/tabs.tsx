@@ -53,7 +53,7 @@ function Tabs({
         data-orientation={orientation}
         {...swipe}
         className={cn(
-          'group/tabs flex touch-pan-y gap-2 data-horizontal:flex-col',
+          'group/tabs f flex touch-pan-y gap-2 data-horizontal:flex-col',
           className
         )}
         {...props}
@@ -63,7 +63,7 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  `relative inline-flex w-fit items-center gap-8 text-muted-foreground data-[variant=line]:rounded-none`,
+  `relative inline-flex w-fit flex-wrap items-center gap-8 text-muted-foreground data-[variant=line]:rounded-none`,
   {
     variants: {
       variant: {

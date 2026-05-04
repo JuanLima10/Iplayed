@@ -11,7 +11,14 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  app.enableCors();
+
+  const frontendUrl = process.env.FRONTEND_URL;
+  const frontendOrigin = frontendUrl ? new URL(frontendUrl).origin : undefined;
+
+  app.enableCors({
+    credentials: true,
+    origin: frontendOrigin,
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -27,7 +34,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('IPlayed API')
     .setDescription('API for IPlayed')
-    .setVersion('v1.3.0')
+    .setVersion('v1.3.1')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

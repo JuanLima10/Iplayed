@@ -21,13 +21,14 @@ export class CreateReviewDto {
   @IsString()
   slug!: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Review text',
     example: 'The best game ever made, GOAT.',
   })
+  @IsOptional()
   @IsString()
   @MinLength(3)
-  text!: string;
+  text?: string;
 
   @ApiPropertyOptional({
     description: 'User game progress (0–100)',
@@ -69,16 +70,17 @@ export class CreateReviewDto {
   @IsBoolean()
   isFavorite?: boolean;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'User rating for the game (0–5)',
     example: 4.5,
     minimum: 1,
     maximum: 5,
   })
+  @IsOptional()
   @IsNumber()
   @Min(0)
   @Max(5)
-  rating!: number;
+  rating?: number;
 
   @ApiPropertyOptional({
     example: '2026-04-11T18:00:00.000Z',

@@ -21,6 +21,7 @@ export const GameStatusPartial = GameStatusCreateSchema.partial()
 export type GameStatusUpdate = z.infer<typeof GameStatusCreateSchema>
 
 export const GameStatusQuerySchema = z.object({
+  slug: z.string().optional(),
   isBest: z.coerce.boolean().optional(),
   isFavorite: z.coerce.boolean().optional(),
   rating: z.coerce.number().min(0).max(5).optional(),

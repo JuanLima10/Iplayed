@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from '@/src/components/ui/dialog'
 import { InputGroup, InputGroupAddon } from '@/src/components/ui/input-group'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Slot } from 'radix-ui'
 
 function Command({
@@ -203,25 +203,29 @@ function CommandItem({
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Item> & { href?: string }) {
   const { setOpen } = useCommand()
-  const handleSelect = () => {
+  const router = useRouter()
+
+  function handleSelect() {
     setOpen(false)
+
+    if (href) {
+      router.push(href)
+    }
   }
 
   return (
-    <Link href={href ?? ''}>
-      <CommandPrimitive.Item
-        data-slot="command-item"
-        onSelect={handleSelect}
-        className={cn(
-          "group/command-item relative flex cursor-pointer items-center gap-2 rounded-sm p-2.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-muted data-selected:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-selected:*:[svg]:text-foreground",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        <CheckIcon className="ml-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" />
-      </CommandPrimitive.Item>
-    </Link>
+    <CommandPrimitive.Item
+      data-slot="command-item"
+      onSelect={handleSelect}
+      className={cn(
+        'group/command-item relative flex cursor-pointer items-center gap-2 rounded-sm p-2.5 text-sm outline-hidden select-none data-selected:bg-muted data-selected:text-foreground',
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <CheckIcon className="ml-auto opacity-0 data-selected:opacity-100" />
+    </CommandPrimitive.Item>
   )
 }
 
