@@ -25,6 +25,10 @@ export function buildPrismaQuery({
     });
   }
 
+  if (query.slug !== undefined) {
+    where.slug = query.slug;
+  }
+
   if (query.rating !== undefined) {
     where.rating = query.rating;
   }

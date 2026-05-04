@@ -13,6 +13,7 @@ export interface IQuery {
   month?: number;
   day?: number;
   dateField?: QueryDateField;
+  slug?: string;
   rating?: number;
   isBest?: boolean;
   isFavorite?: boolean;

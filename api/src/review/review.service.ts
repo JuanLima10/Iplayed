@@ -157,19 +157,23 @@ export class ReviewService {
       create: { igdb_id: igdb.id, title: igdb.name, slug: igdb.slug, cover_id },
     });
 
-    await this.prisma.game_status.upsert({
+    const gameStatus = await this.prisma.game_status.upsert({
       where: { user_id_game_id: { user_id, game_id } },
       update: { ...status, ...formatted },
       create: { ...status, ...formatted, user_id, game_id },
     });
 
-    const review = await this.prisma.review.upsert({
-      where: { user_id_game_id: { user_id, game_id } },
-      update: { text },
-      create: { text, user_id, game_id },
-    });
+    if (text) {
+      const review = await this.prisma.review.upsert({
+        where: { user_id_game_id: { user_id, game_id } },
+        update: { text },
+        create: { text, user_id, game_id },
+      });
 
-    return ReviewMapper.toResponse(review);
+      return ReviewMapper.toResponse(review);
+    }
+
+    return GameStatusMapper.toResponse(gameStatus);
   }
 
   async update(user_id: string, slug: string, dto: UpdateReviewDto) {

@@ -11,7 +11,14 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  app.enableCors();
+
+  const frontendUrl = process.env.FRONTEND_URL;
+  const frontendOrigin = frontendUrl ? new URL(frontendUrl).origin : undefined;
+
+  app.enableCors({
+    credentials: true,
+    origin: frontendOrigin,
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({

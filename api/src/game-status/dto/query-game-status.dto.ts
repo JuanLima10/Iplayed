@@ -9,6 +9,7 @@ import {
   IsInt,
   IsNumber,
   IsOptional,
+  IsString,
   Max,
   Min,
 } from 'class-validator';
@@ -20,6 +21,11 @@ export const GameStatusQuery = {
 } as const;
 
 export class QueryGameStatusDto {
+  @ApiPropertyOptional({ example: 'the-witcher-3-wild-hunt' })
+  @IsOptional()
+  @IsString()
+  slug?: string;
+
   @ApiPropertyOptional({ example: false })
   @IsOptional()
   @Transform(({ value }) => value === 'true')

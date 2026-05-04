@@ -7,8 +7,12 @@ declare module 'passport-jwt' {
     headers?: { authorization?: string };
   };
 
+  type AuthCookieRequest = AuthHeaderRequest & {
+    cookies?: { iplayed_session?: string };
+  };
+
   export interface StrategyOptions {
-    jwtFromRequest: JwtFromRequestFunction<AuthHeaderRequest>;
+    jwtFromRequest: JwtFromRequestFunction<AuthCookieRequest>;
     ignoreExpiration?: boolean;
     secretOrKey: string;
   }
@@ -21,9 +25,9 @@ declare module 'passport-jwt' {
   }
 
   export const ExtractJwt: {
-    fromAuthHeaderAsBearerToken(): JwtFromRequestFunction<AuthHeaderRequest>;
+    fromAuthHeaderAsBearerToken(): JwtFromRequestFunction<AuthCookieRequest>;
     fromExtractors(
-      extractors: JwtFromRequestFunction<AuthHeaderRequest>[],
-    ): JwtFromRequestFunction<AuthHeaderRequest>;
+      extractors: JwtFromRequestFunction<AuthCookieRequest>[],
+    ): JwtFromRequestFunction<AuthCookieRequest>;
   };
 }
