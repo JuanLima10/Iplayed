@@ -13,9 +13,9 @@ export async function GameActions(game: IGame) {
   const status = me && (await status_api.getByUser(me.id, { slug }))
 
   const auth = [
-    { Icon: Star, title: 'Rate/Review' },
-    { Icon: ListPlus, title: 'Add to list' },
-  ]
+    { Icon: Star, title: 'Rate/Review', variant: 'default' },
+    { Icon: ListPlus, title: 'Add to list', variant: 'outline' },
+  ] as const
 
   return (
     <div className="flex w-full flex-col gap-3">
@@ -25,8 +25,8 @@ export async function GameActions(game: IGame) {
           <UpsertLibrary userId={me.id} game={game} />
         </>
       ) : (
-        auth.map(({ Icon, title }, index) => (
-          <AuthRedirect key={index}>
+        auth.map(({ Icon, title, variant }, index) => (
+          <AuthRedirect key={index} variant={variant}>
             <Icon /> {title}
           </AuthRedirect>
         ))
