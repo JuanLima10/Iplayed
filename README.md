@@ -5,7 +5,7 @@
 <p align="center">
   <b>IPlayed</b> is a modern and performant frontend application built to deliver a smooth and immersive game tracking experience. It focuses on usability, accessibility, and scalable UI architecture.
 </p>
-<p align="center">v0.3.0</p>
+<p align="center">v0.3.1</p>
 
 ## 🎮 IPlayed Web
 
