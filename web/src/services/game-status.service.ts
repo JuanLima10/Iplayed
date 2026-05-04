@@ -7,21 +7,17 @@ import {
 import { IResponse as Response } from '@/common/interfaces/response.interface'
 import api from '@/common/lib/api.lib'
 import { http } from '@/common/lib/http.lib'
-import {
-  GameStatusCreate as StatusCreate,
-  GameStatusQuery as StatusQuery,
-  GameStatusUpdate as StatusUpdate,
-} from '@/common/schemas/game-status.schema'
+import { GameStatusQuery as Params } from '@/common/schemas/game-status.schema'
 
 class GameStatusService {
   async getByUser(
     userId: string,
-    params?: StatusQuery
+    params?: Params
   ): Promise<Response<Status[]>> {
     return http<Response<Status[]>>(`/game-status/${userId}`, { params })
   }
 
-  async most(params?: StatusQuery): Promise<StatusMost[]> {
+  async most(params?: Params): Promise<StatusMost[]> {
     return http<StatusMost[]>('/game-status/most', { params })
   }
 
@@ -31,16 +27,6 @@ class GameStatusService {
 
   async rating(slug: string): Promise<Ratings> {
     return http<Ratings>(`/game-status/rating/${slug}`)
-  }
-
-  async upsert(body: StatusCreate): Promise<Status> {
-    const { data } = await api.post<Status>('/game-status', body)
-    return data
-  }
-
-  async patch(slug: string, body: StatusUpdate): Promise<Status> {
-    const { data } = await api.patch<Status>(`/game-status/${slug}`, body)
-    return data
   }
 
   async delete(slug: string): Promise<void> {

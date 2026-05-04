@@ -36,7 +36,7 @@ class ReviewService {
   }
 
   async delete(): Promise<void> {
-    return await api.delete('/review')
+    await api.delete('/review')
   }
 }
 

@@ -1,41 +1,35 @@
-import { IGameList as GameList } from '@/common/interfaces/game-list.interface'
+import { IGameList as List } from '@/common/interfaces/game-list.interface'
 import { IResponse as Response } from '@/common/interfaces/response.interface'
 import api from '@/common/lib/api.lib'
 import { http } from '@/common/lib/http.lib'
 import {
-  GameListCreate,
-  GameListQuery,
-  GameListUpdate,
+  GameListCreate as ListCreate,
+  GameListUpdate as ListUpdate,
+  GameListQuery as Params,
 } from '@/common/schemas/game-list.schema'
 
 class GameListService {
-  async get(params?: GameListQuery): Promise<Response<GameList[]>> {
-    return http<Response<GameList[]>>('/game-list', { params })
+  async get(params?: Params): Promise<Response<List[]>> {
+    return http<Response<List[]>>('/game-list', { params })
   }
 
-  async getById(
-    id: string,
-    params?: Record<string, any>
-  ): Promise<Response<GameList>> {
-    return http<Response<GameList>>(`/game-list/${id}`, { params })
+  async getById(id: string, params?: Params): Promise<Response<List>> {
+    return http<Response<List>>(`/game-list/${id}`, { params })
   }
 
-  async getByUserId(
-    userId: string,
-    params?: GameListQuery
-  ): Promise<Response<GameList[]>> {
-    return http<Response<GameList[]>>(`/game-list/user/${userId}`, {
+  async getByUser(userId: string, params?: Params): Promise<Response<List[]>> {
+    return http<Response<List[]>>(`/game-list/user/${userId}`, {
       params,
     })
   }
 
-  async post(body: GameListCreate): Promise<GameList> {
-    const { data } = await api.post<GameList>('/game-list', body)
+  async post(body: ListCreate): Promise<List> {
+    const { data } = await api.post<List>('/game-list', body)
     return data
   }
 
-  async patch(id: string, body: GameListUpdate): Promise<GameList> {
-    const { data } = await api.patch<GameList>(`/game-list/${id}`, body)
+  async patch(id: string, body: ListUpdate): Promise<List> {
+    const { data } = await api.patch<List>(`/game-list/${id}`, body)
     return data
   }
 

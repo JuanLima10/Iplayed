@@ -23,7 +23,7 @@ class UserService {
   }
 
   async delete(): Promise<void> {
-    return await api.delete('/user')
+    await api.delete('/user')
   }
 }
 

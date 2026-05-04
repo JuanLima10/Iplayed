@@ -14,7 +14,9 @@ export function TooltipTruncate(props: ITruncate) {
   const { text, maxLength, ellipsis, trim } = props
   const { disabled = false, side = 'top', align = 'center' } = props
 
-  const truncated = truncate(props.text, { maxLength, ellipsis, trim })
+  if (!text) return
+
+  const truncated = truncate(text, { maxLength, ellipsis, trim })
   const content = props.renderText ? props.renderText(truncated) : truncated
 
   if (disabled || truncated === text) {

@@ -17,18 +17,18 @@ export function ReleaseYear() {
   const releasedBeforeYear =
     searchParams.get('releasedBefore')?.slice(0, 4) ?? String(MAX_YEAR)
 
-  const yearRange = useMemo(
+  const yearRange = useMemo<[number, number]>(
     () => [Number(releasedAfterYear), Number(releasedBeforeYear)],
     [releasedAfterYear, releasedBeforeYear]
   )
 
-  const [tempRange, setTempRange] = useState(yearRange)
+  const [tempRange, setTempRange] = useState<[number, number]>(yearRange)
 
   useEffect(() => {
     setTempRange(yearRange)
   }, [yearRange])
 
-  function updateParams(from: number, to: number) {
+  function updateParams([from, to]: [number, number]) {
     const params = new URLSearchParams(searchParams.toString())
 
     params.set('releasedAfter', `${from}-01-01`)
@@ -38,6 +38,18 @@ export function ReleaseYear() {
     push(`?${params.toString()}`)
   }
 
+  const onChage = (value?: number | [number, number] | undefined) => {
+    if (Array.isArray(value)) {
+      setTempRange([value[0], value[1]])
+    }
+  }
+
+  const onValueCommit = (value?: number | [number, number] | undefined) => {
+    if (Array.isArray(value)) {
+      updateParams([value[0], value[1]])
+    }
+  }
+
   return (
     <div className="w-full space-y-3">
       <h3 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
@@ -45,17 +57,18 @@ export function ReleaseYear() {
       </h3>
 
       <Slider
+        value={tempRange}
         min={MIN_YEAR}
         max={MAX_YEAR}
         step={1}
-        value={tempRange}
-        onValueChange={setTempRange}
-        onValueCommit={([from, to]) => updateParams(from, to)}
+        showValue={false}
+        onChange={onChage}
+        onValueCommit={onValueCommit}
       />
 
       <div className="flex justify-between text-xs text-muted-foreground">
-        <span>{yearRange[0]}</span>
-        <span>{yearRange[1]}</span>
+        <span>{tempRange[0]}</span>
+        <span>{tempRange[1]}</span>
       </div>
     </div>
   )

@@ -9,6 +9,7 @@ export enum GameOrderBy {
 export interface IGames {
   id?: string
   igdbId: number
+  gameType?: string
   title: string
   slug: string
   coverUrl?: string
@@ -17,9 +18,11 @@ export interface IGames {
 
 export interface IGame {
   igdbId: number
+  gameType?: string
   title: string
   slug: string
   summary?: string
+  storyline?: string
   coverUrl: string
   releaseDate: Date
   rating?: number
@@ -31,6 +34,8 @@ export interface IGame {
   publishers?: string[]
   genres?: string[]
   themes?: string[]
+  franchises?: IGames[]
+  collections?: { type: string; games: IGames[] }[]
   similarGames?: IGames[]
 }
 

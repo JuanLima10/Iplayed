@@ -4,11 +4,11 @@ export async function ListInfo({ slug }: { slug: string }) {
   const count = await status_api.count(slug)
 
   const items: Array<{ key: keyof typeof count; label: string }> = [
-    { key: 'ratings', label: 'Rated by' },
+    // { key: 'ratings', label: 'Rated by' },
     { key: 'played', label: 'Played by' },
     { key: 'favorites', label: 'Favorited by' },
-    // { key: 'playing', label: 'Playing now' },
-    // { key: 'wantPlay', label: 'Want to play' },
+    { key: 'wantPlay', label: 'Want to play' },
+    { key: 'playing', label: 'Playing now' },
     // { key: 'abandoned', label: 'Abandoned by' },
   ]
 

@@ -100,7 +100,7 @@ export function CommandSearch() {
               ))}
               {gameCount > 4 && (
                 <CommandItem href={`/games?search=${query}`}>
-                  Ver mais resultados...
+                  See more results...
                 </CommandItem>
               )}
             </CommandGroup>
@@ -127,7 +127,7 @@ export function CommandSearch() {
               ))}
               {userCount > 4 && (
                 <CommandItem href={`/people?search=${query}`}>
-                  Ver mais resultados...
+                  See more results...
                 </CommandItem>
               )}
             </CommandGroup>

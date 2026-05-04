@@ -37,10 +37,18 @@ export function Footer() {
           </span>
         </div>
         <nav className="flex flex-wrap items-center justify-center gap-8">
-          <Link href="/home">Home</Link>
-          <Link href="/games">Games</Link>
-          <Link href="/people">People</Link>
-          <Link href="/about">About</Link>
+          <Link className="hover:text-secondary" href="/home">
+            Home
+          </Link>
+          <Link className="hover:text-secondary" href="/games">
+            Games
+          </Link>
+          <Link className="hover:text-secondary" href="/people">
+            People
+          </Link>
+          <Link className="hover:text-secondary" href="/about">
+            About
+          </Link>
         </nav>
 
         <div className="flex items-center gap-1">

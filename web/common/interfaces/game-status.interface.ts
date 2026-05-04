@@ -1,5 +1,6 @@
 import { BookmarkCheck, Gamepad2, ShieldX, ShoppingBag } from 'lucide-react'
 import { IGames } from './game.interface'
+import { IReview } from './review.interface'
 
 export enum GameStatusProgress {
   TO_PLAY = 'TO_PLAY',
@@ -33,6 +34,7 @@ export interface IGameStatus {
   rating?: number | null
   lastPlayedAt?: string | null
   game?: IGames
+  review?: IReview
   createdAt: string
   updatedAt?: string | null
 }
@@ -57,7 +59,7 @@ export interface IGameStatusRating {
 }
 
 export const StatusProgressLabel: Record<GameStatusProgress, string> = {
-  [GameStatusProgress.TO_PLAY]: 'Wishes',
+  [GameStatusProgress.TO_PLAY]: 'Wish',
   [GameStatusProgress.PLAYING]: 'Playing',
   [GameStatusProgress.COMPLETED]: 'Completed',
   [GameStatusProgress.ABANDONED]: 'Abandoned',
@@ -70,3 +72,14 @@ export const StatusProgressIcon: Record<GameStatusProgress, React.ElementType> =
     [GameStatusProgress.COMPLETED]: BookmarkCheck,
     [GameStatusProgress.ABANDONED]: ShieldX,
   }
+
+export const StatusProgressColor: Record<GameStatusProgress, string> = {
+  [GameStatusProgress.TO_PLAY]:
+    'data-[state=off]:text-secondary data-[state=on]:text-background data-[state=on]:bg-secondary',
+  [GameStatusProgress.PLAYING]:
+    'data-[state=off]:text-primary data-[state=on]:text-background data-[state=on]:bg-primary',
+  [GameStatusProgress.COMPLETED]:
+    'data-[state=off]:text-chart-3 data-[state=on]:text-background data-[state=on]:bg-chart-3',
+  [GameStatusProgress.ABANDONED]:
+    'data-[state=off]:text-destructive data-[state=on]:text-background data-[state=on]:bg-destructive',
+}

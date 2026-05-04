@@ -1,18 +1,22 @@
 import { IGamePageParam } from '@/common/interfaces/game.interface'
-import { Button } from '@/src/components/ui/button'
+import { status_api } from '@/src/services/game-status.service'
 import { game_api } from '@/src/services/game.service'
-import { ListPlus, Star } from 'lucide-react'
-import { Banner } from '../components/banner'
-import { CardInfo } from '../components/card-info'
-import { ChartRating } from '../components/chart-rating'
-import { GameReview } from '../components/game-review'
-import { ListInfo } from '../components/list-info'
-import { ScreenshotGallery } from '../components/screenshot-gallery'
-import { TabsInfo } from '../components/tabs-info'
+import { user_api } from '@/src/services/user.service'
+import { Banner } from './components/banner'
+import { CardInfo } from './components/card-info'
+import { ChartRating } from './components/chart-rating'
+import { GameActions } from './components/game-actions'
+import { GameReview } from './components/game-review'
+import { ListInfo } from './components/list-info'
+import { ScreenshotGallery } from './components/screenshot-gallery'
+import { TabsInfo } from './components/tabs-info'
 
 export default async function Game({ params }: IGamePageParam) {
   const { slug } = await params
+
+  const me = await user_api.getMe()
   const game = await game_api.getBySlug(slug)
+  const status = me && (await status_api.getByUser(me.id, { slug }))
 
   if (game) {
     return (
@@ -22,19 +26,7 @@ export default async function Game({ params }: IGamePageParam) {
         <section className="mx-auto flex max-w-360 flex-wrap gap-8 px-5 sm:gap-16 md:flex-nowrap lg:px-24">
           <TabsInfo {...game} />
           <aside className="min-w-66 space-y-10 max-md:w-full">
-            <div className="flex w-full flex-col gap-3">
-              <Button className="min-w-full" size="md" disabled>
-                <Star suppressHydrationWarning /> Rate/Review
-              </Button>
-              <Button
-                className="min-w-full"
-                size="md"
-                variant="outline"
-                disabled
-              >
-                <ListPlus suppressHydrationWarning /> Add to list
-              </Button>
-            </div>
+            <GameActions {...game} />
             <ChartRating slug={slug} />
             <ListInfo slug={slug} />
           </aside>

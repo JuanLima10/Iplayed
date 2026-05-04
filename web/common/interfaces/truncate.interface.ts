@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 export interface ITruncate {
-  text: string
+  text?: string
   maxLength: number
   ellipsis?: string
   trim?: boolean
