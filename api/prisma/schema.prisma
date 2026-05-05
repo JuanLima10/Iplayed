@@ -13,6 +13,15 @@ enum progress_status {
   ABANDONED
 }
 
+enum feed_event_type {
+  REVIEW_LIKED
+  REVIEW_CREATED
+  REVIEW_UPDATED
+  STATUS_UPDATED
+  LIST_CREATED
+  LIST_ITEM_ADDED
+}
+
 model user {
   id          String    @id @default(uuid())
   provider    String
@@ -20,6 +29,7 @@ model user {
   username    String?
   name        String?
   email       String?
+  password    String?
   avatar_url  String?
   created_at  DateTime  @default(now())
   updated_at  DateTime? @updatedAt
@@ -28,10 +38,28 @@ model user {
   game_statuses game_status[]
   lists         game_list[]
   reviews       review[]
+  review_likes  review_like[]
+  feed_events   feed_event[]
+  following     follow[]        @relation("follower")
+  followers     follow[]        @relation("following")
   sync_metadata sync_metadata[]
 
   @@unique([provider, provider_id])
+  @@unique([username])
   @@index([username])
+}
+
+model follow {
+  id           String   @id @default(uuid())
+  follower     user     @relation("follower", fields: [follower_id], references: [id], onDelete: Cascade)
+  follower_id  String
+  following    user     @relation("following", fields: [following_id], references: [id], onDelete: Cascade)
+  following_id String
+  created_at   DateTime @default(now())
+
+  @@unique([follower_id, following_id])
+  @@index([follower_id])
+  @@index([following_id])
 }
 
 model game {
@@ -80,9 +108,23 @@ model review {
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
 
+  likes review_like[]
+
   @@unique([user_id, game_id])
   @@index([user_id])
   @@index([game_id])
+}
+
+model review_like {
+  id         String   @id @default(uuid())
+  user       user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String
+  review     review   @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id  String
+  created_at DateTime @default(now())
+
+  @@unique([user_id, review_id])
+  @@index([review_id])
 }
 
 model game_list {
@@ -92,6 +134,7 @@ model game_list {
   name       String
   created_at DateTime    @default(now())
   updated_at DateTime?   @updatedAt
+  is_private Boolean     @default(false)
   items      list_item[]
 
   @@unique([user_id, name])
@@ -110,6 +153,17 @@ model list_item {
   @@unique([list_id, game_id])
   @@index([list_id])
   @@index([game_id])
+}
+
+model feed_event {
+  id         String          @id @default(uuid())
+  user       user            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String
+  type       feed_event_type
+  payload    Json // event data (review, game, list, etc.)
+  created_at DateTime        @default(now())
+
+  @@index([user_id, created_at])
 }
 
 model sync_metadata {

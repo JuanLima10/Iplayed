@@ -5,6 +5,10 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { DomainError } from 'common/errors/domain.error';
+import {
+  responseMessageError,
+  responseValidationError,
+} from 'common/utils/validation-error-response.util';
 import { Request, Response } from 'express';
 
 @Catch()
@@ -14,7 +18,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    // Domain Errors
+    // Domain errors
     if (exception instanceof DomainError) {
       return response.status(exception.statusCode).json({
         type: `https://iplayed.dev/errors/${exception.type}`,
@@ -29,11 +33,23 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // Nest HttpException
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
+      const res = exception.getResponse();
+
+      let detail: unknown;
+
+      if (responseValidationError(res)) {
+        detail = res.errors;
+      } else if (responseMessageError(res)) {
+        detail = res.message;
+      } else {
+        detail = exception.message;
+      }
+
       return response.status(status).json({
         type: `https://iplayed.dev/errors/http-exception`,
         title: exception.message,
         status,
-        detail: exception.message,
+        detail,
         instance: request.url,
         timestamp: new Date().toISOString(),
       });

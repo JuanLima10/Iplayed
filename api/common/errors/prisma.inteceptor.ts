@@ -1,6 +1,7 @@
 import {
   CallHandler,
   ExecutionContext,
+  HttpException,
   Injectable,
   Logger,
   NestInterceptor,
@@ -25,34 +26,47 @@ export class PrismaErrorInterceptor implements NestInterceptor {
   intercept(_: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError((error: unknown) => {
+        // Domain errors
         if (error instanceof DomainError) {
           throw error;
         }
 
+        // HttpException (ValidationPipe, guards, etc)
+        if (error instanceof HttpException) {
+          throw error;
+        }
+
+        //Axios errors
         if (error instanceof AxiosError) {
           const data = error.response?.data as
             | Record<string, unknown>
             | undefined;
+
           const headers = error.response?.headers as
             | Record<string, string>
             | undefined;
 
           const status = error.response?.status;
           const retryAfter = headers?.['retry-after'];
-          const detail = (data?.error_description as string) ?? error.message;
+          const detail =
+            (data?.error_description as string) ??
+            (data?.message as string) ??
+            error.message;
 
           this.logger.error(
-            `AxiosError [${status}] ${error.config?.url}: 
-            ${detail} — retry-after: ${retryAfter ?? 'none'}`,
+            `AxiosError [${status}] ${error.config?.url}: ${detail}
+             — retry-after: ${retryAfter ?? 'none'}`,
             getErrorStack(error),
           );
 
           if (status === 401) throw new UnauthorizedError(detail);
           if (status === 429)
             throw new TooManyRequestsError('External API rate limit exceeded');
+
           throw new InternalServerError(detail);
         }
 
+        // Prisma known errors
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           switch (error.code) {
             case 'P2025':
@@ -70,11 +84,13 @@ export class PrismaErrorInterceptor implements NestInterceptor {
           }
         }
 
+        // Prisma unknown errors
         if (error instanceof Prisma.PrismaClientUnknownRequestError) {
           this.logger.error('Unknown Prisma error', getErrorStack(error));
           throw new InternalServerError();
         }
 
+        // Fallback real
         this.logger.error('Unhandled application error', getErrorStack(error));
 
         throw new InternalServerError();

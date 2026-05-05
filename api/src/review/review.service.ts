@@ -27,7 +27,10 @@ export class ReviewService {
     const { page = 1, limit = 10 } = query;
 
     const filters = buildPrismaQuery({ query, ...ReviewQuery });
-    const include = { user: true, game: { include: { statuses: true } } };
+
+    const _count = { select: { likes: true } };
+    const include = { user: true, game: true, _count };
+
     if (rating !== undefined || isFavorite !== undefined) {
       filters.where.game = {
         statuses: { some: { rating, is_favorite: isFavorite } },
@@ -39,13 +42,25 @@ export class ReviewService {
       this.prisma.review.findMany({ ...filters, include }),
     ]);
 
-    const data = reviews.map(({ game, user, ...review }) => ({
-      ...ReviewMapper.toResponse(review),
-      user: UserMapper.toResponse(user),
-      game: GameMapper.toResponse(game),
-      status:
-        game.statuses?.[0] && GameStatusMapper.toResponse(game.statuses[0]),
-    }));
+    const statuses = await this.prisma.game_status.findMany({
+      where: {
+        OR: reviews.map(({ user_id, game_id }) => ({ user_id, game_id })),
+      },
+    });
+
+    const data = reviews.map(({ user, game, _count, ...review }) => {
+      const status = statuses.find(
+        ({ game_id, user_id }) => game_id === game.id && user_id === user.id,
+      );
+
+      return {
+        ...ReviewMapper.toResponse(review),
+        user: UserMapper.toResponse(user),
+        game: GameMapper.toResponse(game),
+        status: status && GameStatusMapper.toResponse(status),
+        likes: _count.likes,
+      };
+    });
     const paginate = normalizePaginate({ page, limit, count });
 
     return { data, paginate };
@@ -57,10 +72,10 @@ export class ReviewService {
 
     const where = { user_id };
     const filters = buildPrismaQuery({ query, ...ReviewQuery, where });
-    const include = {
-      user: true,
-      game: { include: { statuses: { where: { user_id } } } },
-    };
+
+    const _count = { select: { likes: true } };
+    const game = { include: { statuses: { where: { user_id } } } };
+    const include = { user: true, game, _count };
 
     if (rating !== undefined || isFavorite !== undefined) {
       filters.where.game = {
@@ -73,13 +88,17 @@ export class ReviewService {
       this.prisma.review.findMany({ ...filters, include }),
     ]);
 
-    const data = reviews.map(({ game, user, ...review }) => ({
-      ...ReviewMapper.toResponse(review),
-      user: UserMapper.toResponse(user),
-      game: GameMapper.toResponse(game),
-      status:
-        game.statuses?.[0] && GameStatusMapper.toResponse(game.statuses[0]),
-    }));
+    const data = reviews.map(({ user, game, _count, ...review }) => {
+      const status = game.statuses?.[0];
+
+      return {
+        ...ReviewMapper.toResponse(review),
+        user: UserMapper.toResponse(user),
+        game: GameMapper.toResponse(game),
+        status: status && GameStatusMapper.toResponse(status),
+        likes: _count.likes,
+      };
+    });
     const paginate = normalizePaginate({ page, limit, count });
 
     return { data, paginate };
@@ -94,7 +113,12 @@ export class ReviewService {
 
     const where = { game_id: game.id };
     const filters = buildPrismaQuery({ query, ...ReviewQuery, where });
-    const include = { user: true, game: { include: { statuses: true } } };
+
+    const _count = { select: { likes: true } };
+    const user = {
+      include: { game_statuses: { where: { game_id: game.id } } },
+    };
+    const include = { user, game: true, _count };
 
     if (rating !== undefined || isFavorite !== undefined) {
       filters.where.game = {
@@ -107,13 +131,17 @@ export class ReviewService {
       this.prisma.review.findMany({ ...filters, include }),
     ]);
 
-    const data = reviews.map(({ user, game, ...review }) => ({
-      ...ReviewMapper.toResponse(review),
-      user: UserMapper.toResponse(user),
-      game: GameMapper.toResponse(game),
-      status:
-        game.statuses?.[0] && GameStatusMapper.toResponse(game.statuses[0]),
-    }));
+    const data = reviews.map(({ user, game, _count, ...review }) => {
+      const status = user.game_statuses?.[0];
+
+      return {
+        ...ReviewMapper.toResponse(review),
+        user: UserMapper.toResponse(user),
+        game: GameMapper.toResponse(game),
+        status: status && GameStatusMapper.toResponse(status),
+        likes: _count.likes,
+      };
+    });
     const paginate = normalizePaginate({ page, limit, count });
 
     return { data, paginate };
