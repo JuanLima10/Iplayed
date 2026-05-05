@@ -9,6 +9,9 @@ import { GameModule } from './game/game.module';
 import { ListItemModule } from './list-item/list-item.module';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
+import { FollowModule } from './follow/follow.module';
+import { ReviewLikeModule } from './review-like/review-like.module';
+import { FeedModule } from './feed/feed.module';
 
 @Module({
   imports: [
@@ -21,6 +24,9 @@ import { UserModule } from './user/user.module';
     ReviewModule,
     GameListModule,
     ListItemModule,
+    FollowModule,
+    ReviewLikeModule,
+    FeedModule,
   ],
   controllers: [AppController],
 })

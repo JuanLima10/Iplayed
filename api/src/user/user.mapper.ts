@@ -8,8 +8,6 @@ export const UserMapper: PrismaMapper<IUserSelect, ResponseUserDto> = {
   toResponse(this: void, user) {
     return {
       id: user.id,
-      provider: user.provider,
-      providerId: user.provider_id,
       username: user.username,
       name: user.name,
       email: user.email,

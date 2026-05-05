@@ -42,6 +42,12 @@ export class UserController {
     return this.service.findById(id);
   }
 
+  @Get('username/:username')
+  @Swagger({ status: 200, res: ResponseUserDto, auth: false })
+  async findByUsername(@Param('username') username: string) {
+    return this.service.findByUsername(username);
+  }
+
   @Patch()
   @Auth({ owner: true })
   @Swagger({ status: 200, res: ResponseUserDto })

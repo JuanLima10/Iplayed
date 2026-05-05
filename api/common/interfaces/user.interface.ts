@@ -1,5 +1,17 @@
 import { Prisma } from '@prisma/client';
 
+export interface IUser {
+  id: string;
+  provider: string;
+  providerId: string;
+  username: string;
+  name: string;
+  email: string;
+  avatarUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export const userSelect = {
   id: true,
   provider: true,

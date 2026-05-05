@@ -40,6 +40,18 @@ export class UserService {
     return UserMapper.toResponse(user);
   }
 
+  async findByUsername(username: string): Promise<ResponseUserDto> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        active: true,
+        username: { equals: username, mode: 'insensitive' },
+      },
+    });
+
+    if (!user) throw new NotFoundError('User not found');
+    return UserMapper.toResponse(user);
+  }
+
   async update(id: string, data: UpdateUserDto): Promise<ResponseUserDto> {
     const user = await this.prisma.user.update({
       where: { id, active: true },

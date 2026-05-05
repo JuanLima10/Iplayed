@@ -8,18 +8,6 @@ export class ResponseUserDto {
   id!: string;
 
   @ApiProperty({
-    description: 'Authentication provider',
-    example: 'discord',
-  })
-  provider!: string;
-
-  @ApiProperty({
-    description: 'Provider user ID (Discord ID)',
-    example: '290541329165844481',
-  })
-  providerId!: string;
-
-  @ApiProperty({
     description: 'Unique username',
     example: 'username',
     nullable: true,
