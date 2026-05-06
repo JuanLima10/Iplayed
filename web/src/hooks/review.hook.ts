@@ -7,6 +7,7 @@ import {
 } from '@/common/schemas/review.schema'
 import { getNextData } from '@/common/utils/next-data-get.util'
 import { getNextPage } from '@/common/utils/next-page-get.util'
+import { querySuccess } from '@/common/utils/success-query.util'
 import {
   useInfiniteQuery,
   useMutation,
@@ -37,7 +38,7 @@ export function useGetReview(slug?: string, params?: Params) {
 
 export function useUpsertReview() {
   const queryClient = useQueryClient()
-  const queryKey = ['review', 'game-status']
+  const queryKey = [['review'], ['status-count'], ['status-rating']]
 
   const { mutateAsync: upsert, isPending } = useMutation({
     mutationFn: async (body: ReviewCreate) => {
@@ -46,7 +47,7 @@ export function useUpsertReview() {
         body: JSON.stringify(body),
       })
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey }),
+    onSuccess: () => querySuccess(queryClient, queryKey),
   })
 
   return { upsert, isPending }

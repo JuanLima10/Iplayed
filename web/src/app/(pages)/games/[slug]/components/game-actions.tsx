@@ -1,8 +1,8 @@
 import { IGame } from '@/common/interfaces/game.interface'
+import { AuthRedirect } from '@/src/components/shared/auth-redirect'
 import { status_api } from '@/src/services/game-status.service'
 import { user_api } from '@/src/services/user.service'
 import { ListPlus, Star } from 'lucide-react'
-import { AuthRedirect } from './auth-redirect'
 import { UpsertLibrary } from './upsert-library'
 import { UpsertReview } from './upsert-review'
 
@@ -26,7 +26,7 @@ export async function GameActions(game: IGame) {
         </>
       ) : (
         auth.map(({ Icon, title, variant }, index) => (
-          <AuthRedirect key={index} variant={variant}>
+          <AuthRedirect key={index} size="md" variant={variant}>
             <Icon /> {title}
           </AuthRedirect>
         ))
