@@ -1,7 +1,5 @@
 import { IGamePageParam } from '@/common/interfaces/game.interface'
-import { status_api } from '@/src/services/game-status.service'
 import { game_api } from '@/src/services/game.service'
-import { user_api } from '@/src/services/user.service'
 import { Banner } from './components/banner'
 import { CardInfo } from './components/card-info'
 import { ChartRating } from './components/chart-rating'
@@ -9,14 +7,12 @@ import { GameActions } from './components/game-actions'
 import { GameReview } from './components/game-review'
 import { ListInfo } from './components/list-info'
 import { ScreenshotGallery } from './components/screenshot-gallery'
+import { SimilarGames } from './components/similar-games'
 import { TabsInfo } from './components/tabs-info'
 
 export default async function Game({ params }: IGamePageParam) {
   const { slug } = await params
-
-  const me = await user_api.getMe()
   const game = await game_api.getBySlug(slug)
-  const status = me && (await status_api.getByUser(me.id, { slug }))
 
   if (game) {
     return (
@@ -38,6 +34,8 @@ export default async function Game({ params }: IGamePageParam) {
           <GameReview slug={slug} />
           <CardInfo {...game} />
         </section>
+
+        <SimilarGames games={game.similarGames} />
       </main>
     )
   }

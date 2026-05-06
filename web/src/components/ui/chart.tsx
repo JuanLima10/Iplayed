@@ -1,11 +1,13 @@
 'use client'
 
+import { useMemo } from 'react'
 import {
   Bar,
   BarChart,
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
 } from 'recharts'
+import { Skeleton } from './skeleton'
 
 function ChartTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null
@@ -58,4 +60,24 @@ function ChartBar({
   )
 }
 
-export { ChartBar, ChartTooltip }
+function ChartBarSkeleton() {
+  const bars = useMemo(
+    () =>
+      Array.from({ length: 9 }).map(() => Math.floor(Math.random() * 61 + 40)),
+    []
+  )
+
+  return (
+    <div className="flex h-24 w-full items-end gap-0.5 px-1">
+      {bars.map((height, i) => (
+        <Skeleton
+          key={i}
+          className="w-full rounded-t-sm rounded-b-none"
+          style={{ height: `${height}%` }}
+        />
+      ))}
+    </div>
+  )
+}
+
+export { ChartBar, ChartBarSkeleton, ChartTooltip }

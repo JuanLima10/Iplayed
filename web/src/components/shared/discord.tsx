@@ -3,14 +3,18 @@
 import Image from 'next/image'
 import { Button } from '../ui/button'
 
-function redirectAuth() {
-  document.cookie = `redirect_to=${window.location.pathname}; Path=/;`
+function redirectDiscord() {
   window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/discord`
 }
 
-export function SignIn() {
+export function Discord() {
   return (
-    <Button variant="tertiary" onClick={redirectAuth}>
+    <Button
+      className="min-w-full"
+      variant="tertiary"
+      size="md"
+      onClick={redirectDiscord}
+    >
       <Image
         src="/icons/discord.png"
         alt="discord"

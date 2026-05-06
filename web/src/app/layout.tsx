@@ -5,6 +5,7 @@ import { cn } from '@/common/utils/cn.util'
 import { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import { ReactNode } from 'react'
+import { Toaster } from '../components/ui/sonner'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body className="mx-auto">
         <ThemeProvider attribute="class" defaultTheme="dark">
           <ReactQueryProvider>{children}</ReactQueryProvider>
+          <Toaster position="top-center" />
         </ThemeProvider>
       </body>
     </html>

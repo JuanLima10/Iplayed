@@ -103,8 +103,8 @@
   --tertiary-foreground: rgba(255 255 255);
   --muted: rgba(25, 25, 50, 0.5);
   --muted-foreground: rgba(255, 255, 255, 0.35);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: rgba(255, 255, 255, 0.5);
+  --accent-foreground: rgba(11, 11, 36, 1);
   --destructive: rgba(236, 38, 38, 1);
   --border: rgba(25, 25, 50, 1);
   --input: rgba(25, 25, 50, 0.5);

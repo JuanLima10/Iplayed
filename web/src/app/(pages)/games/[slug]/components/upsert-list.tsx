@@ -5,7 +5,6 @@ import {
   GameListCreate,
   GameListSchema,
 } from '@/common/schemas/game-list.schema'
-import { normalizeDefaults } from '@/common/utils/default-normalize.util'
 import { Button } from '@/src/components/ui/button'
 import {
   Dialog,
@@ -29,7 +28,7 @@ export function UpsertList({ list }: { list?: IGameList }) {
 
   const { handleSubmit, control } = useForm<GameListCreate>({
     resolver: zodResolver(GameListSchema),
-    defaultValues: { ...normalizeDefaults(list) },
+    defaultValues: { name: list?.name ?? '' },
   })
 
   async function onSubmit(body: GameListCreate) {
@@ -46,7 +45,9 @@ export function UpsertList({ list }: { list?: IGameList }) {
       </DialogTrigger>
       <DialogContent className="w-lg">
         <DialogHeader>
-          <DialogTitle>Create a new list</DialogTitle>
+          <DialogTitle>
+            {list ? 'Update a new list' : 'Create a new list'}
+          </DialogTitle>
         </DialogHeader>
         <form className="space-y-6 p-4">
           <Controller

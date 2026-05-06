@@ -1,5 +1,5 @@
 import { cn } from '@/common/utils/cn.util'
-import { LucideIcon } from 'lucide-react'
+import { Eye, EyeOff, LucideIcon } from 'lucide-react'
 import * as React from 'react'
 import { Label } from './label'
 
@@ -19,8 +19,12 @@ function Input({
   error,
   ...props
 }: InputProps) {
+  const [showPassword, setShowPassword] = React.useState(false)
+  const isPassword = type === 'password'
+  const resolvedType = isPassword ? (showPassword ? 'text' : 'password') : type
+
   return (
-    <div className="space-y-2.5">
+    <div className="relative space-y-2.5">
       {label && (
         <Label>
           {label}
@@ -40,10 +44,27 @@ function Input({
             suppressHydrationWarning
           />
         )}
-        <input type={type} data-slot="input" className="outline-0" {...props} />
+        <input
+          type={resolvedType}
+          data-slot="input"
+          className="w-full outline-0"
+          {...props}
+        />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="ml-auto shrink-0 text-muted-foreground transition-colors hover:text-foreground"
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+          </button>
+        )}
       </div>
       {error && (
-        <span className="absolute text-xs text-destructive">{error}</span>
+        <span className="absolute -bottom-5 text-xs text-destructive">
+          {error}
+        </span>
       )}
     </div>
   )

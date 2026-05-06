@@ -40,13 +40,10 @@ async function request<T>(
     },
   })
 
-  if (res.status === 401) {
-    return null as T
-  }
-
   if (!res.ok) {
-    const problem: ProblemDetails | null =
-      await parseBody<ProblemDetails | null>(res).catch(() => null)
+    const problem = await parseBody<ProblemDetails | null>(res).catch(
+      () => null
+    )
 
     if (problem?.status) {
       throw new ProblemError(problem)

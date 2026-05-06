@@ -7,7 +7,7 @@ import { Check, Loader2 } from 'lucide-react'
 import { useController, useFormContext } from 'react-hook-form'
 import { UpsertList } from './upsert-list'
 
-export function ReadLists(props: { lists?: IGameList[]; loading: boolean }) {
+export function ReadList(props: { lists?: IGameList[]; loading: boolean }) {
   const { lists, loading } = props
 
   const { control } = useFormContext()

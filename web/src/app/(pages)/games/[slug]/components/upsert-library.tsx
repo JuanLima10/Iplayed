@@ -28,7 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ListPlus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { ReadLists } from './read-lists'
+import { ReadList } from './read-list'
 
 export function UpsertLibrary(props: { userId: string; game: IGame }) {
   const {
@@ -89,7 +89,7 @@ export function UpsertLibrary(props: { userId: string; game: IGame }) {
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 px-4">
               <div className="space-y-1 text-center">
-                <ReadLists lists={lists} loading={isLoading} />
+                <ReadList lists={lists} loading={isLoading} />
                 <ButtonLoadMore variant="link" {...loadMore} />
               </div>
               <DrawerFooter className="px-0">

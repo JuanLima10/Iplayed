@@ -53,6 +53,11 @@ export interface IGameStatusCount {
   ratings: string
 }
 
+export interface IGameStatusItem {
+  key: keyof IGameStatusCount
+  label: string
+}
+
 export interface IGameStatusRating {
   avg: number
   ratings: { stars: number; value: number }[]
