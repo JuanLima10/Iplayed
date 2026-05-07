@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 import { ProblemDetails } from '../interfaces/problem-details.interface'
 import { ProblemError } from './error.lib'
 
@@ -30,12 +31,16 @@ async function request<T>(
   { auth = false, params, headers, ...options }: ApiOptions = {}
 ): Promise<T> {
   const query = buildQuery(params)
+  const token = auth && typeof window !== 'undefined'
+    ? Cookies.get('iplayed_session')
+    : undefined
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}${query}`, {
     ...options,
     credentials: auth ? 'include' : options.credentials,
     headers: {
       'Content-Type': 'application/json',
+      ...(auth && token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
   })
