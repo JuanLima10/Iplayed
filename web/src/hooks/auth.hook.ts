@@ -14,6 +14,7 @@ export function useLoginAuth() {
       return await api<{ token: string }>(`/auth/sign-in`, {
         method: 'POST',
         body: JSON.stringify(body),
+        credentials: 'include',
       })
     },
     onSuccess: ({ token }) => saveSession(token, push),
@@ -31,6 +32,7 @@ export function useCreateAuth() {
       return await api<{ token: string }>(`/auth/sign-up`, {
         method: 'POST',
         body: JSON.stringify(body),
+        credentials: 'include',
       })
     },
     onSuccess: ({ token }) => saveSession(token, push),
@@ -44,7 +46,14 @@ export function useLogout() {
   const { refresh } = useRouter()
 
   const { mutateAsync: logout, isPending } = useMutation({
-    mutationFn: async () => Cookies.remove('iplayed_session'),
+    mutationFn: async () => {
+      await api('/auth/sign-out', {
+        method: 'POST',
+        credentials: 'include',
+      })
+
+      Cookies.remove('iplayed_session')
+    },
     onSuccess: () => refresh(),
   })
 
