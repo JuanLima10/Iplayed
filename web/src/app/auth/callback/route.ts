@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getSessionCookieOptions } from '@/common/utils/session-cookie.util'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -17,10 +18,8 @@ export async function GET(request: NextRequest) {
     name: 'iplayed_session',
     value: token,
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
     maxAge: 60 * 60 * 24 * 7,
+    ...getSessionCookieOptions(),
   })
 
   return response
