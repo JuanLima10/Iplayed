@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -10,10 +12,14 @@ const mockAuthService = {
 };
 
 interface MockResponse {
+  clearCookie: jest.Mock<void, [string, Record<string, unknown>?]>;
+  cookie: jest.Mock<void, [string, string, Record<string, unknown>?]>;
   redirect: jest.Mock<void, [string]>;
 }
 
 const mockRes: MockResponse = {
+  clearCookie: jest.fn<void, [string, Record<string, unknown>?]>(),
+  cookie: jest.fn<void, [string, string, Record<string, unknown>?]>(),
   redirect: jest.fn<void, [string]>(),
 };
 
@@ -61,6 +67,14 @@ describe('AuthController', () => {
       expect(mockAuthService.handleDiscordCallback).toHaveBeenCalledWith(
         'valid-code',
       );
+      expect(mockRes.cookie).toHaveBeenCalledWith(
+        'iplayed_session',
+        'mocked.jwt.token',
+        expect.objectContaining({
+          httpOnly: true,
+          path: '/',
+        }),
+      );
 
       const [[redirectUrl]] = mockRes.redirect.mock.calls;
       expect(redirectUrl).toContain(process.env.FRONTEND_URL);
@@ -72,9 +86,24 @@ describe('AuthController', () => {
         new Error('Auth failed'),
       );
 
-      await expect(
-        controller.discordCallback(mockRes as never, 'bad-code'),
-      ).rejects.toThrow('Auth failed');
+      await controller.discordCallback(mockRes as never, 'bad-code');
+
+      const [[redirectUrl]] = mockRes.redirect.mock.calls;
+      expect(redirectUrl).toContain(process.env.FRONTEND_URL);
+      expect(redirectUrl).toContain('error=auth_failed');
+    });
+  });
+
+  describe('signOut', () => {
+    it('should clear the session cookie', () => {
+      controller.signOut(mockRes as never);
+
+      expect(mockRes.clearCookie).toHaveBeenCalledWith(
+        'iplayed_session',
+        expect.objectContaining({
+          path: '/',
+        }),
+      );
     });
   });
 });
