@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { buildIgdbQuery } from 'common/builders/igdb-query.builder';
 import {
   IGameIgdb,
@@ -9,16 +9,26 @@ import {
   IResponseIgdb,
 } from 'common/interfaces/igdb.client.interface';
 import { parseCountHeader } from 'common/utils/header-count-parser.util';
+import { IgdbOAuthClient } from './igdb-oauth.client';
 
 @Injectable()
 export class IgdbClient {
-  private client = axios.create({
-    baseURL: 'https://api.igdb.com/v4',
-    headers: {
-      'Client-ID': process.env.IGDB_CLIENT_ID!,
-      Authorization: `Bearer ${process.env.IGDB_ACCESS_TOKEN}`,
-    },
-  });
+  private readonly client: AxiosInstance;
+
+  constructor(private readonly authService: IgdbOAuthClient) {
+    this.client = axios.create({
+      baseURL: 'https://api.igdb.com/v4',
+      headers: {
+        'Client-ID': process.env.IGDB_CLIENT_ID!,
+      },
+    });
+
+    this.client.interceptors.request.use(async (config) => {
+      const token = await this.authService.getAccessToken();
+      config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    });
+  }
 
   async getIgdb(query?: IQueryIgdb): Promise<IResponseIgdb> {
     const filters = buildIgdbQuery({ query, fields: IGDB_FIELDS_BASIC });

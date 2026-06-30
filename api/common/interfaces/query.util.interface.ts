@@ -4,6 +4,7 @@ type QueryDirection = 'asc' | 'desc';
 type QueryDateField = 'created_at' | 'updated_at';
 
 export interface IQuery {
+  followingId?: string;
   page?: number;
   limit?: number;
   search?: string;

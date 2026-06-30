@@ -66,7 +66,9 @@ export class AuthService {
     if (!user) throw new NotFoundError('User not found');
     const { id, email, username, active, password } = user;
 
-    if (!active) throw new UnauthorizedError('Invalid credentials');
+    if (!active) {
+      await this.prisma.user.update({ where: { id }, data: { active: true } });
+    }
     if (!password) throw new UnauthorizedError('Use OAuth to sign in');
 
     const valid = await bcrypt.compare(dto.password, password);

@@ -53,9 +53,12 @@ export class UserService {
   }
 
   async update(id: string, data: UpdateUserDto): Promise<ResponseUserDto> {
+    const { avatarUrl, ...body } = data;
+    const formatted = { avatar_url: avatarUrl };
+
     const user = await this.prisma.user.update({
       where: { id, active: true },
-      data,
+      data: { ...body, ...formatted },
     });
     if (!user) throw new NotFoundError('User not found');
     return UserMapper.toResponse(user);
