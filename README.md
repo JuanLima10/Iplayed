@@ -5,7 +5,7 @@
 <p align="center">
   <b>IPlayed</b> is a modern and performant frontend application built to deliver a smooth and immersive game tracking experience. It focuses on usability, accessibility, and scalable UI architecture.
 </p>
-<p align="center">v0.4.2</p>
+<p align="center">v0.5.0</p>
 
 ## 🎮 IPlayed Web
 
@@ -66,3 +66,35 @@ This structure encourages separation of concerns and makes the application easie
 ```bash
 $ pnpm install
 ```
+
+> Create a `.env` file based on `.env.exemple` and set the required environment variables.
+
+```bash
+# development
+$ pnpm run dev
+
+# production build
+$ pnpm run build
+
+# start production server
+$ pnpm run start
+```
+
+### 🎨 UI & Design System
+
+The project uses shadcn/ui as a base component library, fully customized with Tailwind CSS.
+
+- Authentication flows
+- Game data synchronization
+- Reviews, ratings, and lists
+- Pagination and filtering
+
+Make sure the backend is running and properly configured before starting the frontend.
+
+## 💡 Notes
+
+This frontend is designed to evolve alongside the backend, sharing common principles such as:
+
+- Type safety
+- Predictable data flow
+- Clean and maintainable architecture
