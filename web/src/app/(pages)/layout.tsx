@@ -7,10 +7,6 @@ export default async function PagesLayout({
 }: {
   children: ReactNode
 }) {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 1000)
-  })
-
   return (
     <>
       <NavBar />

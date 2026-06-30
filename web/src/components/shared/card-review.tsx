@@ -41,9 +41,7 @@ const gradient = `linear-gradient(to top,#12122B 25%,rgba(11, 11, 36, 0.5) 50%, 
 
 function CardReview({ children }: { children: ReactNode }) {
   return (
-    <div className="relative flex w-full items-start gap-2 sm:gap-4">
-      {children}
-    </div>
+    <div className="relative flex items-stretch gap-2 sm:gap-4">{children}</div>
   )
 }
 
@@ -52,13 +50,15 @@ function CardReviewContent(props: { children: ReactNode; className?: string }) {
 
   return (
     <Card className={cn('relative min-h-46.5 w-full py-4', className)}>
-      <CardContent className={cn('px-4', className)}>{children}</CardContent>
+      <CardContent className={cn('flex h-full flex-col px-4', className)}>
+        {children}
+      </CardContent>
     </Card>
   )
 }
 
 function CardReviewHeader(props: ICardReviewHeaderProps) {
-  const { userId, name, avatarUrl, isAvatar = true, ...info } = props
+  const { username, name, avatarUrl, isAvatar = true, ...info } = props
   const { rating, isFavorite, status, progress } = info
 
   const isMobile = useIsMobile()
@@ -67,10 +67,12 @@ function CardReviewHeader(props: ICardReviewHeaderProps) {
   return (
     <CardHeader className="flex flex-wrap items-center gap-2 px-0">
       {isAvatar && (
-        <Link href={`/people/${userId}`}>
-          <Avatar>
+        <Link href={`/people/${username}`}>
+          <Avatar size="sm">
             <AvatarImage src={avatarUrl} alt={name} />
-            <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>
+              {username.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         </Link>
       )}
@@ -148,7 +150,7 @@ function CardReviewCover(props: ICardReviewCoverProps) {
   return (
     <Link href={`/games/${slug}`}>
       <Cover
-        className={cn('h-full sm:w-44.5', className)}
+        className={cn('h-full w-44.5 sm:h-46.5', className)}
         src={coverUrl}
         alt={slug}
         width={178}

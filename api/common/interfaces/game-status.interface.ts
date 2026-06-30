@@ -2,6 +2,7 @@ import { Prisma, progress_status } from '@prisma/client';
 import { IGame } from './game.interface';
 
 export enum GameStatusOrderBy {
+  BEST = 'best',
   RATING = 'rating',
   PROGRESS = 'progress',
   CREATED_AT = 'created_at',

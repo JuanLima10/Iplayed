@@ -1,4 +1,4 @@
-import { IGamePageParam } from '@/common/interfaces/game.interface'
+import { IGamePageParams } from '@/common/interfaces/game.interface'
 import { game_api } from '@/src/services/game.service'
 import { Banner } from './components/banner'
 import { CardInfo } from './components/card-info'
@@ -10,7 +10,7 @@ import { ScreenshotGallery } from './components/screenshot-gallery'
 import { SimilarGames } from './components/similar-games'
 import { TabsInfo } from './components/tabs-info'
 
-export default async function Game({ params }: IGamePageParam) {
+export default async function GamePage({ params }: IGamePageParams) {
   const { slug } = await params
   const game = await game_api.getBySlug(slug)
 

@@ -26,16 +26,16 @@ export function useSearchQuery(query: ISearchQuery = {}) {
       return
     }
 
-    if (pathname !== path) return
-
     const timeout = setTimeout(() => {
-      const params = new URLSearchParams()
+      const params = new URLSearchParams(searchParams.toString())
 
-      if (value) {
+      if (value.trim()) {
         params.set(param, value)
+      } else {
+        params.delete(param)
       }
 
-      router.replace(`${path}?${params.toString()}`, {
+      router.replace(`${pathname}?${params.toString()}`, {
         scroll: false,
       })
     }, debounceMs)

@@ -5,7 +5,7 @@ import { normalizePaginate } from 'common/utils/paginate-normalize.util';
 import { normalizeQuery } from 'common/utils/query-normalize';
 import { PrismaService } from 'prisma/prisma.service';
 import { UserMapper } from 'src/user/user.mapper';
-import { QueryFollowDto } from './dto/query-follow.dto';
+import { FollowQuery, QueryFollowDto } from './dto/query-follow.dto';
 
 @Injectable()
 export class FollowService {
@@ -18,8 +18,8 @@ export class FollowService {
     const query = normalizeQuery(filter);
     const { page = 1, limit = 10 } = query;
 
-    const where = { following_id: user.id };
-    const filters = buildPrismaQuery({ query, ...QueryFollowDto, where });
+    const where = { following_id: user.id, follower: { active: true } };
+    const filters = buildPrismaQuery({ query, ...FollowQuery, where });
 
     const [count, follows] = await Promise.all([
       this.prisma.follow.count({ where: filters.where }),
@@ -41,8 +41,8 @@ export class FollowService {
     const query = normalizeQuery(filter);
     const { page = 1, limit = 10 } = query;
 
-    const where = { follower_id: user.id };
-    const filters = buildPrismaQuery({ query, ...QueryFollowDto, where });
+    const where = { follower_id: user.id, following: { active: true } };
+    const filters = buildPrismaQuery({ query, ...FollowQuery, where });
 
     const [count, follows] = await Promise.all([
       this.prisma.follow.count({ where: filters.where }),

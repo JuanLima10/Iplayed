@@ -21,8 +21,8 @@ class ReviewService {
     return http<Response<Review[]>>(`/review/slug/${slug}`, { params })
   }
 
-  async getByUser(userId: string): Promise<Response<Review[]>> {
-    return http<Response<Review[]>>(`/review/user/${userId}`)
+  async getByUser(id: string, params?: Params): Promise<Response<Review[]>> {
+    return http<Response<Review[]>>(`/review/user/${id}`, { params })
   }
 
   async post(body: ReviewCreate): Promise<Review> {

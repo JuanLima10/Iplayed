@@ -25,6 +25,10 @@ export function buildPrismaQuery({
     });
   }
 
+  if (query.followingId !== undefined) {
+    where.following_id = query.followingId;
+  }
+
   if (query.slug !== undefined) {
     where.slug = query.slug;
   }

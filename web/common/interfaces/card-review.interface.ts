@@ -14,6 +14,7 @@ export interface ICardReviewCoverProps {
 
 export interface ICardReviewHeaderProps {
   userId: string
+  username: string
   name: string
   avatarUrl?: string
   status?: GameStatusProgress

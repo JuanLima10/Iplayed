@@ -17,6 +17,10 @@ class UserService {
     return http<User>(`/user/${id}`)
   }
 
+  async getByUsername(username: string): Promise<User> {
+    return http<User>(`/user/username/${username}`)
+  }
+
   async patch(body: UserUpdate): Promise<User> {
     const { data } = await api.patch<User>('/user', body)
     return data

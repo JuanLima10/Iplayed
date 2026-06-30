@@ -1,3 +1,5 @@
+import { ISearchParams } from './search-params.interface'
+
 export enum UserOrderBy {
   'email',
   'username',
@@ -15,4 +17,8 @@ export interface IUser {
   avatarUrl: string
   createdAt: string
   updatedAt: string
+}
+
+export interface IUserParams extends ISearchParams {
+  params: Promise<{ username: string }>
 }

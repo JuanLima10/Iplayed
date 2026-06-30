@@ -1,4 +1,9 @@
-import { BookmarkCheck, Gamepad2, ShieldX, ShoppingBag } from 'lucide-react'
+import {
+  BookmarkCheck,
+  Gamepad2,
+  GamepadDirectional,
+  ShieldX,
+} from 'lucide-react'
 import { IGames } from './game.interface'
 import { IReview } from './review.interface'
 
@@ -17,10 +22,12 @@ export enum GameStatusDateRange {
 }
 
 export enum GameStatusOrderBy {
-  PROGRESS = 'PROGRESS',
-  RATING = 'RATING',
-  CREATED_AT = 'CREATED_AT',
-  UPDATED_AT = 'UPDATED_AT',
+  BEST = 'best',
+  RATING = 'rating',
+  PROGRESS = 'progress',
+  CREATED_AT = 'created_at',
+  UPDATED_AT = 'updated_at',
+  LAST_PLAYED_AT = 'last_played_at',
 }
 
 export interface IGameStatus {
@@ -51,6 +58,7 @@ export interface IGameStatusCount {
   abandoned: string
   favorites: string
   ratings: string
+  reviews: string
 }
 
 export interface IGameStatusItem {
@@ -64,7 +72,7 @@ export interface IGameStatusRating {
 }
 
 export const StatusProgressLabel: Record<GameStatusProgress, string> = {
-  [GameStatusProgress.TO_PLAY]: 'Wish',
+  [GameStatusProgress.TO_PLAY]: 'Wish play',
   [GameStatusProgress.PLAYING]: 'Playing',
   [GameStatusProgress.COMPLETED]: 'Completed',
   [GameStatusProgress.ABANDONED]: 'Abandoned',
@@ -72,7 +80,7 @@ export const StatusProgressLabel: Record<GameStatusProgress, string> = {
 
 export const StatusProgressIcon: Record<GameStatusProgress, React.ElementType> =
   {
-    [GameStatusProgress.TO_PLAY]: ShoppingBag,
+    [GameStatusProgress.TO_PLAY]: GamepadDirectional,
     [GameStatusProgress.PLAYING]: Gamepad2,
     [GameStatusProgress.COMPLETED]: BookmarkCheck,
     [GameStatusProgress.ABANDONED]: ShieldX,

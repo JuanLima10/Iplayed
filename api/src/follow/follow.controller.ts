@@ -1,8 +1,9 @@
-import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from 'common/decorators/auth.decorator';
 import { CurrentUser } from 'common/decorators/current-user.decorator';
 import { Swagger } from 'common/decorators/swagger.decorator';
+import { QueryFollowDto } from './dto/query-follow.dto';
 import { FollowService } from './follow.service';
 
 @ApiTags('Follow')
@@ -12,14 +13,14 @@ export class FollowController {
 
   @Get('followers/:userId')
   @Swagger({ status: 200 })
-  followers(@Param('userId') userId: string) {
-    return this.service.findFollowers(userId);
+  followers(@Param('userId') userId: string, @Query() query: QueryFollowDto) {
+    return this.service.findFollowers(userId, query);
   }
 
   @Get('following/:userId')
   @Swagger({ status: 200 })
-  following(@Param('userId') userId: string) {
-    return this.service.findFollowing(userId);
+  following(@Param('userId') userId: string, @Query() query: QueryFollowDto) {
+    return this.service.findFollowing(userId, query);
   }
 
   @Post(':userId')

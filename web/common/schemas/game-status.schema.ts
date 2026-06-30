@@ -9,7 +9,7 @@ export const GameStatusCreateSchema = z.object({
   igdbId: z.number().int(),
   progress: z.number().int().min(0).max(100).optional(),
   status: z.enum(GameStatusProgress),
-  best: z.number().int().min(1).max(5).optional(),
+  best: z.number().int().min(1).max(5).nullable().optional(),
   isFavorite: z.boolean().optional(),
   rating: z.number().min(0).max(5).optional(),
   lastPlayedAt: z.iso.datetime().optional(),
@@ -21,6 +21,7 @@ export const GameStatusPartial = GameStatusCreateSchema.partial()
 export type GameStatusUpdate = z.infer<typeof GameStatusCreateSchema>
 
 export const GameStatusQuerySchema = z.object({
+  search: z.string().optional(),
   slug: z.string().optional(),
   isBest: z.coerce.boolean().optional(),
   isFavorite: z.coerce.boolean().optional(),
@@ -36,3 +37,24 @@ export const GameStatusQuerySchema = z.object({
 })
 
 export type GameStatusQuery = z.infer<typeof GameStatusQuerySchema>
+
+export const GAME_STATUS_ORDER_BY_OPTIONS = [
+  {
+    label: 'Rating',
+    value: GameStatusOrderBy.RATING,
+  },
+  {
+    label: 'Progress',
+    value: GameStatusOrderBy.PROGRESS,
+  },
+  {
+    label: 'Created',
+    value: GameStatusOrderBy.CREATED_AT,
+    defaultOrder: 'asc',
+  },
+  {
+    label: 'Updated',
+    value: GameStatusOrderBy.UPDATED_AT,
+    defaultOrder: 'asc',
+  },
+] as const

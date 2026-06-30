@@ -19,12 +19,12 @@ export function useGetReview(slug?: string, params?: Params) {
 
   const { data, ...query } = useInfiniteQuery({
     queryKey: ['reviews', slug, params],
+    initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       return await api<Response<Review[]>>(baseUrl, {
         params: { ...params, page: pageParam },
       })
     },
-    initialPageParam: 1,
     getNextPageParam: ({ paginate }) => getNextPage(paginate),
     select: (data) => ({ ...data, reviews: getNextData(data) }),
   })

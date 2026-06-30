@@ -3,7 +3,7 @@
 import { IUser } from '@/common/interfaces/user.interface'
 import { cn } from '@/common/utils/cn.util'
 import { useLogout } from '@/src/hooks/auth.hook'
-import { LogOut } from 'lucide-react'
+import { LogOut, Settings, User2 } from 'lucide-react'
 import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { buttonVariants } from '../ui/button'
 import {
@@ -22,7 +22,7 @@ export function ProfileDropdown(me: IUser) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer" size="lg">
+        <Avatar className="cursor-pointer">
           <AvatarImage src={avatarUrl} />
           <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
           <AvatarBadge />
@@ -31,6 +31,14 @@ export function ProfileDropdown(me: IUser) {
 
       <DropdownMenuContent className="mt-2" align="end">
         <DropdownMenuLabel>{name}</DropdownMenuLabel>
+        <DropdownMenuItem href={`/people/${username}`}>
+          <User2 suppressHydrationWarning />
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem href={`/settings`}>
+          <Settings suppressHydrationWarning />
+          Settings
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className={cn(

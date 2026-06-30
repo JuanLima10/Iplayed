@@ -39,7 +39,8 @@ export class GameStatusService {
 
   async findByUserId(user_id: string, filter?: QueryGameStatusDto) {
     const normalize = normalizeQuery(filter);
-    const { page = 1, limit = 10, slug, ...query } = normalize;
+    const { slug, ...query } = normalize;
+    const { page = 1, limit = 10 } = query;
 
     const where = { user_id };
     const include = { include: { reviews: { where } } };
@@ -183,12 +184,15 @@ export class GameStatusService {
 
     const [played, playing, wantPlay, abandoned] = counts;
 
-    const [favorites, ratings] = await Promise.all([
+    const [favorites, ratings, reviews] = await Promise.all([
       this.prisma.game_status.count({
         where: { ...baseWhere, is_favorite: true },
       }),
       this.prisma.game_status.count({
         where: { ...baseWhere, rating: { not: null } },
+      }),
+      this.prisma.review.count({
+        where: { user_id: param },
       }),
     ]);
 
@@ -199,6 +203,7 @@ export class GameStatusService {
       abandoned: formatCount(abandoned),
       favorites: formatCount(favorites),
       ratings: formatCount(ratings),
+      reviews: formatCount(reviews),
     };
   }
 

@@ -18,9 +18,15 @@ import { DateRangeType } from 'common/interfaces/prisma.interface';
 
 export const GameStatusQuery = {
   allowedOrderBy: Object.values(GameStatusOrderBy),
-} as const;
+  searchableFields: ['game.title', 'game.slug'],
+};
 
 export class QueryGameStatusDto {
+  @ApiPropertyOptional({ example: 'the witcher' })
+  @IsOptional()
+  @IsString()
+  search?: string;
+
   @ApiPropertyOptional({ example: 'the-witcher-3-wild-hunt' })
   @IsOptional()
   @IsString()
@@ -74,15 +80,17 @@ export class QueryGameStatusDto {
   @IsIn(['asc', 'desc'])
   order?: 'asc' | 'desc';
 
-  @IsOptional()
+  @ApiPropertyOptional({ example: 1 })
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  page?: number;
+  @IsOptional()
+  page?: number = 1;
 
-  @IsOptional()
+  @ApiPropertyOptional({ example: 10 })
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  limit?: number;
+  @IsOptional()
+  limit?: number = 10;
 }
