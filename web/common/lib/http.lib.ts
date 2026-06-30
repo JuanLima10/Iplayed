@@ -45,6 +45,7 @@ export async function http<T>(
     const problem: ProblemDetails | null = await res.json().catch(() => null)
 
     if (problem?.status) {
+      if (problem.status === 404) return null as T
       throw new ProblemError(problem)
     }
 

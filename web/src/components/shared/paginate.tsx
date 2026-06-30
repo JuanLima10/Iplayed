@@ -32,6 +32,7 @@ function Pagination({
       const params = new URLSearchParams(searchParams.toString())
       params.set(param, String(p))
       push(`?${params.toString()}`, { scroll: false })
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     },
     [push, searchParams, param]
   )

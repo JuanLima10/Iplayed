@@ -6,7 +6,7 @@ import { Review } from './components/review'
 import { MostReviewed } from './components/reviewed-most'
 import { MostStatus } from './components/status-most'
 
-export default async function Home() {
+export default async function HomePage() {
   return (
     <main className="mx-auto max-w-360 space-y-8 pt-64 sm:space-y-10.5 sm:pt-32">
       <Random />

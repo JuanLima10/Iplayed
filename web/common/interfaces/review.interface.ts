@@ -47,3 +47,20 @@ export interface IReview {
   }
   reviews?: number
 }
+
+export const REVIEW_ORDER_BY_OPTIONS = [
+  {
+    label: 'Popular',
+    value: ReviewOrderBy.POPULAR,
+  },
+  {
+    label: 'Created',
+    value: ReviewOrderBy.CREATED_AT,
+    defaultOrder: 'asc',
+  },
+  {
+    label: 'Updated',
+    value: ReviewOrderBy.UPDATED_AT,
+    defaultOrder: 'asc',
+  },
+] as const

@@ -10,14 +10,14 @@ function Avatar({
   size = 'default',
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Root> & {
-  size?: 'default' | 'sm' | 'lg'
+  size?: 'default' | 'sm' | 'lg' | 'xl'
 }) {
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
       data-size={size}
       className={cn(
-        'group/avatar relative flex size-8 shrink-0 overflow-hidden select-none data-[size=lg]:size-10 data-[size=sm]:size-6',
+        'group/avatar relative flex size-10 shrink-0 overflow-hidden select-none data-[size=lg]:size-16 data-[size=sm]:size-8 data-[size=xl]:size-42',
         className
       )}
       {...props}
@@ -46,7 +46,7 @@ function AvatarFallback({
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        'flex size-full items-center justify-center rounded-full bg-tertiary text-xs font-semibold group-data-[size=lg]/avatar:text-sm',
+        'flex size-full items-center justify-center rounded-full bg-tertiary text-xs font-semibold group-data-[size=lg]/avatar:text-lg group-data-[size=xl]/avatar:text-4xl',
         className
       )}
       {...props}
@@ -91,7 +91,7 @@ function AvatarGroupCount({
     <div
       data-slot="avatar-group-count"
       className={cn(
-        'relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground ring-2 ring-background group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:size-6 [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3',
+        'relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground ring-2 ring-background group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:size-8 [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3',
         className
       )}
       {...props}

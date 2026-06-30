@@ -26,7 +26,7 @@ export function Order() {
       <div className="flex gap-2">
         <Button
           size="sm"
-          variant={order === 'asc' ? 'ghost' : 'default'}
+          variant={order === 'asc' ? 'outline' : 'default'}
           onClick={() => updateOrder('desc')}
         >
           Desc
@@ -34,7 +34,7 @@ export function Order() {
 
         <Button
           size="sm"
-          variant={order === 'asc' ? 'default' : 'ghost'}
+          variant={order === 'asc' ? 'default' : 'outline'}
           onClick={() => updateOrder('asc')}
         >
           Asc

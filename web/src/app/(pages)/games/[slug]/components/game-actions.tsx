@@ -27,7 +27,7 @@ export async function GameActions(game: IGame) {
       ) : (
         auth.map(({ Icon, title, variant }, index) => (
           <AuthRedirect key={index} size="md" variant={variant}>
-            <Icon /> {title}
+            <Icon suppressHydrationWarning /> {title}
           </AuthRedirect>
         ))
       )}

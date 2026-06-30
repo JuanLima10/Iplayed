@@ -1,9 +1,9 @@
-import { Order } from './components/order'
+import { Order } from '@/src/components/shared/order'
 import { OrderTabs } from './components/order-tabs'
 import { ReadGames } from './components/read-games'
 import { ReleaseYear } from './components/release-year'
 
-export default function Games() {
+export default function GamesPage() {
   return (
     <main className="mx-auto max-w-360 space-y-8 px-5 pt-64 sm:px-8 sm:pt-32 md:space-y-12">
       <header className="flex flex-wrap items-end justify-between gap-8">

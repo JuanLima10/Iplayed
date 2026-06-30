@@ -2,7 +2,7 @@
 
 import { ProblemDetails } from '@/common/interfaces/problem-details.interface'
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { redirect } from 'next/navigation'
 
 interface ErrorProps {
   error: Error & Partial<ProblemDetails>
@@ -12,13 +12,7 @@ interface ErrorProps {
 export default function Error({ error, reset }: ErrorProps) {
   const is401 = error.status === 401
 
-  useEffect(() => {
-    if (!is401) {
-      console.error(error)
-    }
-  }, [error, is401])
-
-  if (is401) return null
+  if (is401) return redirect('/')
 
   return (
     <div className="flex h-svh w-full flex-col items-center justify-center gap-4">

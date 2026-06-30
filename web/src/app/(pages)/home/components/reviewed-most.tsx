@@ -19,7 +19,7 @@ export async function MostReviewed() {
             <hr className="w-8 border-2 border-primary" />
           </div>
 
-          <Link className="text-sm text-primary hover:underline" href="/people">
+          <Link className="text-sm text-primary hover:underline" href="/games">
             View more
           </Link>
         </div>

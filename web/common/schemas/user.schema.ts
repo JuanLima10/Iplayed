@@ -1,12 +1,15 @@
 import { z } from 'zod'
+import { GameStatusProgress as Progress } from '../interfaces/game-status.interface'
 import { UserOrderBy } from '../interfaces/user.interface'
+import { UserTab } from '../utils/tab-resolver.util'
+import { GameStatusQuery } from './game-status.schema'
 
 export const UserSchema = z.object({
   email: z.email(),
   username: z.string().min(3).max(50),
   name: z.string().min(2).max(100),
   avatarUrl: z.url(),
-  provider: z.enum(['discord']),
+  provider: z.string(),
   active: z.boolean(),
 })
 
@@ -28,3 +31,24 @@ export const UserQuerySchema = z.object({
 })
 
 export type UserQuery = z.infer<typeof UserQuerySchema>
+
+export const USER_VALID_TABS = {
+  overview: 'overview',
+  playing: 'playing',
+  played: 'played',
+  favorites: 'favorites',
+  reviews: 'reviews',
+  wishes: 'wishes',
+}
+
+export const USER_TABS_CONFIG: Record<
+  UserTab,
+  { label: string; params?: Partial<GameStatusQuery> }
+> = {
+  overview: { label: 'Overview' },
+  playing: { label: 'Playing', params: { status: Progress.PLAYING } },
+  played: { label: 'Played', params: { status: Progress.COMPLETED } },
+  favorites: { label: 'Favorites', params: { isFavorite: true } },
+  wishes: { label: 'Wish play', params: { status: Progress.TO_PLAY } },
+  reviews: { label: 'Reviews' },
+}

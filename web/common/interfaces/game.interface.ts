@@ -24,7 +24,7 @@ export interface IGame {
   summary?: string
   storyline?: string
   coverUrl: string
-  releaseDate: Date
+  releaseDate: string
   rating?: number
   aggregatedRating?: number
   video?: string
@@ -39,6 +39,6 @@ export interface IGame {
   similarGames?: IGames[]
 }
 
-export interface IGamePageParam {
+export interface IGamePageParams {
   params: Promise<{ slug: string }>
 }

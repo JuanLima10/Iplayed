@@ -57,7 +57,11 @@ function Input({
             className="ml-auto shrink-0 text-muted-foreground transition-colors hover:text-foreground"
             tabIndex={-1}
           >
-            {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+            {showPassword ? (
+              <EyeOff size={14} suppressHydrationWarning />
+            ) : (
+              <Eye size={14} suppressHydrationWarning />
+            )}
           </button>
         )}
       </div>
