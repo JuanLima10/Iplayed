@@ -3,6 +3,7 @@ import { GameStatusProgress as Progress } from '../interfaces/game-status.interf
 import { UserOrderBy } from '../interfaces/user.interface'
 import { UserTab } from '../utils/tab-resolver.util'
 import { GameStatusQuery } from './game-status.schema'
+export type { UserTab }
 
 export const UserSchema = z.object({
   email: z.email(),
